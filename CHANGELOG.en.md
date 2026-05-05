@@ -1,0 +1,12 @@
+# Changelog
+
+## 0.1.0
+
+- Initialized the uni-app + Vue 3.5.x + TypeScript + Vite 6 template.
+- Added Wot Design Uni, UnoCSS, Pinia and API auto imports.
+- Added development and build scripts for H5, WeChat Mini Program, Alipay Mini Program, Douyin Mini Program, App and Harmony App.
+- Added five primary pages and a custom bottom tabbar: Home, Mine, Components, Examples and Other.
+- Added a Wot Design Uni component center grouped by official categories, with clickable detail examples.
+- Added a business example center covering basic, junior, intermediate, advanced and complex scenarios.
+- Added dynamic form validation, input linkage, Toast, Popup, Calendar, DatetimePicker, DropMenu, NoticeBar and Dialog to the basic example.
+- Added Chinese README, English README, License and Git ignore rules.

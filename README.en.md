@@ -1,0 +1,89 @@
+# uniapp-template-ts-vue3
+
+A reusable uni-app application template for H5, WeChat Mini Program, Alipay Mini Program, Douyin Mini Program, App and Harmony App targets.
+
+[中文文档](./README.md)
+
+## Features
+
+- uni-app + Vite 6 + Vue 3.5.x + TypeScript
+- Wot Design Uni with easycom and composable API auto imports
+- UnoCSS with shared theme variables and cross-platform base styles
+- Pinia store setup and common folders such as `store`, `hooks`, `utils`, `pages`, `styles` and `static`
+- Custom bottom tabbar with five primary pages: Home, Mine, Components, Examples and Other
+- Component center grouped by Wot Design Uni categories, with clickable detail examples
+- Example center split by complexity: basic, junior, intermediate, advanced and complex
+- Basic example includes dynamic form validation, input linkage, Toast, Popup, Calendar, DatetimePicker, DropMenu, NoticeBar and Dialog
+
+## Structure
+
+```text
+src
+├── components        # Shared components, such as PageShell and custom Tabbar
+├── hooks             # Composable business hooks
+├── pages             # Pages and business examples
+├── static            # Static assets
+├── store             # Pinia stores
+├── styles            # Global styles
+├── types             # Type declarations and auto-import declarations
+└── utils             # Utilities, route data and component metadata
+```
+
+## Environment Files
+
+The template ships with three environment files:
+
+- `.env.development`
+- `.env.test`
+- `.env.production`
+
+Use `.env.local` or `.env.*.local` for private local settings. These files are ignored by Git.
+
+## Install
+
+```bash
+pnpm install
+```
+
+## Development
+
+```bash
+pnpm dev:h5
+pnpm dev:mp-weixin
+pnpm dev:mp-alipay
+pnpm dev:mp-toutiao
+pnpm dev:app
+pnpm dev:app-harmony
+```
+
+## Build
+
+```bash
+pnpm build:h5
+pnpm build:mp-weixin
+pnpm build:mp-alipay
+pnpm build:mp-toutiao
+pnpm build:app
+pnpm build:app-harmony
+```
+
+## Check
+
+```bash
+pnpm typecheck
+```
+
+## Auto Imports
+
+`vite.config.ts` configures `unplugin-auto-import` for:
+
+- Vue APIs such as `ref`, `reactive`, `computed` and `watch`
+- Pinia APIs such as `defineStore` and `storeToRefs`
+- uni-app lifecycle APIs such as `onLoad`, `onShow` and `onReady`
+- Wot Design Uni APIs such as `useToast`, `useMessage` and `useNotify`
+
+Generated type declarations are written to `src/types/auto-imports.d.ts`.
+
+## License
+
+[MIT](./LICENSE)

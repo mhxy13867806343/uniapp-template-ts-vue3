@@ -1,0 +1,113 @@
+{
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^wd-(.*)": "wot-design-uni/components/wd-$1/wd-$1.vue"
+    }
+  },
+  "pages": [
+    {
+      "path": "pages/home/index",
+      "style": {
+        "navigationBarTitleText": "首页"
+      }
+    },
+    {
+      "path": "pages/mine/index",
+      "style": {
+        "navigationBarTitleText": "我的"
+      }
+    },
+    {
+      "path": "pages/components/index",
+      "style": {
+        "navigationBarTitleText": "组件"
+      }
+    },
+    {
+      "path": "pages/components/detail",
+      "style": {
+        "navigationBarTitleText": "组件示例"
+      }
+    },
+    {
+      "path": "pages/examples/index",
+      "style": {
+        "navigationBarTitleText": "示例"
+      }
+    },
+    {
+      "path": "pages/examples/basic",
+      "style": {
+        "navigationBarTitleText": "基础示例"
+      }
+    },
+    {
+      "path": "pages/examples/junior",
+      "style": {
+        "navigationBarTitleText": "初级示例"
+      }
+    },
+    {
+      "path": "pages/examples/intermediate",
+      "style": {
+        "navigationBarTitleText": "中级示例"
+      }
+    },
+    {
+      "path": "pages/examples/advanced",
+      "style": {
+        "navigationBarTitleText": "高级示例"
+      }
+    },
+    {
+      "path": "pages/examples/complex",
+      "style": {
+        "navigationBarTitleText": "复杂示例"
+      }
+    },
+    {
+      "path": "pages/other/index",
+      "style": {
+        "navigationBarTitleText": "其他"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "UniApp Template",
+    "navigationBarBackgroundColor": "#ffffff",
+    "backgroundColor": "#f6f8fb",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#667085",
+    "selectedColor": "#1e88e5",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "height": "50px",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/mine/index",
+        "text": "我的"
+      },
+      {
+        "pagePath": "pages/components/index",
+        "text": "组件"
+      },
+      {
+        "pagePath": "pages/examples/index",
+        "text": "示例"
+      },
+      {
+        "pagePath": "pages/other/index",
+        "text": "其他"
+      }
+    ]
+  }
+}

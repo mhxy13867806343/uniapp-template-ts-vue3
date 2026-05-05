@@ -1,0 +1,89 @@
+# uniapp-template-ts-vue3
+
+通用 uni-app 应用模板，面向 H5、微信小程序、支付宝小程序、抖音小程序、App 和鸿蒙 App。
+
+[English](./README.en.md)
+
+## 特性
+
+- uni-app + Vite 6 + Vue 3.5.x + TypeScript
+- Wot Design Uni 组件体系，已配置 easycom 和组合式 API 自动导入
+- UnoCSS 原子化样式，统一主题变量和跨端基础样式
+- Pinia 状态管理，内置 `store/hooks/utils/pages/styles/static` 等常用目录
+- 自定义底部 Tabbar，5 个主页面：首页、我的、组件、示例、其他
+- 组件中心按 Wot Design Uni 分类展示，支持点击进入组件示例详情
+- 示例中心按复杂度拆分：基础、初级、中级、高级、复杂
+- 基础示例覆盖动态表单验证、输入联动、Toast、Popup、Calendar、DatetimePicker、DropMenu、NoticeBar、Dialog
+
+## 目录结构
+
+```text
+src
+├── components        # 通用组件，例如 PageShell、自定义 Tabbar
+├── hooks             # 组合式业务 Hook
+├── pages             # 页面与业务示例
+├── static            # 静态资源
+├── store             # Pinia 状态
+├── styles            # 全局样式
+├── types             # 类型声明与自动导入声明
+└── utils             # 工具函数、路由与组件数据
+```
+
+## 环境变量
+
+模板提供了三套环境文件：
+
+- `.env.development`
+- `.env.test`
+- `.env.production`
+
+本地私有配置请使用 `.env.local` 或 `.env.*.local`，这些文件已被 `.gitignore` 排除。
+
+## 安装
+
+```bash
+pnpm install
+```
+
+## 开发
+
+```bash
+pnpm dev:h5
+pnpm dev:mp-weixin
+pnpm dev:mp-alipay
+pnpm dev:mp-toutiao
+pnpm dev:app
+pnpm dev:app-harmony
+```
+
+## 构建
+
+```bash
+pnpm build:h5
+pnpm build:mp-weixin
+pnpm build:mp-alipay
+pnpm build:mp-toutiao
+pnpm build:app
+pnpm build:app-harmony
+```
+
+## 校验
+
+```bash
+pnpm typecheck
+```
+
+## 自动导入
+
+`vite.config.ts` 已配置 `unplugin-auto-import`，默认自动导入：
+
+- Vue API：`ref`、`reactive`、`computed`、`watch` 等
+- Pinia：`defineStore`、`storeToRefs`
+- uni-app 生命周期：`onLoad`、`onShow`、`onReady` 等
+- Wot Design Uni API：`useToast`、`useMessage`、`useNotify` 等
+
+自动导入类型会输出到 `src/types/auto-imports.d.ts`。
+
+## 许可证
+
+[MIT](./LICENSE)
