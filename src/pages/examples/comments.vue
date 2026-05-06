@@ -258,7 +258,14 @@ function approveReply(reply: Reply) {
         </view>
       </view>
 
-      <wd-popup v-model="replyVisible" position="bottom" safe-area-inset-bottom root-portal custom-class="reply-popup">
+      <wd-popup
+        v-model="replyVisible"
+        position="bottom"
+        safe-area-inset-bottom
+        root-portal
+        custom-class="reply-popup"
+        :z-index="1200"
+      >
         <view class="reply-panel">
           <view class="reply-title">{{ replyTargetTitle }}</view>
           <view v-if="currentReply" class="reply-quote">{{ currentReply.content }}</view>
@@ -546,7 +553,7 @@ function approveReply(reply: Reply) {
   display: grid;
   gap: 22rpx;
   background: #fff;
-  padding: 32rpx 32rpx calc(48rpx + env(safe-area-inset-bottom));
+  padding: 32rpx 32rpx calc(64rpx + env(safe-area-inset-bottom));
 }
 
 .reply-title {
