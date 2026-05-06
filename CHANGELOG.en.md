@@ -15,4 +15,5 @@
 - Added a waterfall feed example and detail page with life, ecommerce, news and moments styles, including ecommerce product details.
 - Added a subscription payment template with plan selection, monthly/yearly billing, WeChat Pay, Alipay and bank card methods.
 - Added indexed contacts, system messages and comment interaction examples.
+- Enhanced the comment example with first-level comments, nested replies, replying to nested comments, review handling, and fixed the mobile reply popup overlap with the bottom tabbar.
 - Added Chinese README, English README, License and Git ignore rules.
