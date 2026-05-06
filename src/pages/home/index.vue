@@ -1,9 +1,26 @@
 <script setup lang="ts">
 import PageShell from '@/components/PageShell.vue'
 import { useAppEnv } from '@/hooks/useAppEnv'
+import { useBackRefresh } from '@/hooks/useBackRefresh'
+import { usePagePagination, useStepPagination } from '@/hooks/pagination'
 import { usePlatform } from '@/hooks/usePlatform'
 import { useAppStore } from '@/store'
+import { appCache } from '@/utils/cache'
 import { navigateToExample } from '@/utils/exampleScenarios'
+import {
+  formatCompactNumber,
+  formatCurrency,
+  formatDateTime,
+  formatDuration,
+  formatFileSize,
+  formatPercent,
+  formatRelativeTime,
+  getSpecialLength,
+  maskBankCard,
+  maskPhone,
+  numberToChinese,
+  truncateBySpecialLength
+} from '@/utils/format'
 
 const appStore = useAppStore()
 const { appEnv } = useAppEnv()
@@ -35,6 +52,114 @@ const channels = [
   { name: '抖音小程序', progress: 74 },
   { name: '鸿蒙 App', progress: 68 }
 ]
+
+const pagePagination = usePagePagination({ page: 2, pageSize: 10, total: 58 })
+const stepPagination = useStepPagination({ offset: 20, step: 20, total: 86 })
+const backRefresh = useBackRefresh('home-demo')
+const sampleText = 'UniApp模板🚀#H5小程序'
+const cacheDemoKey = 'home:tools'
+
+appCache.set(cacheDemoKey, { page: 'home', module: 'tools' }, 5 * 60 * 1000)
+
+const utilityItems = computed(() => [
+  {
+    label: 'dayjs 时间格式化',
+    value: formatDateTime(Date.now(), 'YYYY-MM-DD HH:mm'),
+    desc: 'formatDateTime(Date.now())'
+  },
+  {
+    label: '数字转中文',
+    value: numberToChinese(20260506),
+    desc: 'numberToChinese(20260506)'
+  },
+  {
+    label: '特殊字符长度',
+    value: `${getSpecialLength(sampleText)} 位`,
+    desc: sampleText
+  },
+  {
+    label: '金额格式化',
+    value: formatCurrency(56800),
+    desc: 'formatCurrency(56800)'
+  },
+  {
+    label: '特殊长度截断',
+    value: truncateBySpecialLength(sampleText, 14),
+    desc: 'truncateBySpecialLength(text, 14)'
+  },
+  {
+    label: '手机号脱敏',
+    value: maskPhone('13800138000'),
+    desc: 'maskPhone(13800138000)'
+  },
+  {
+    label: '银行卡脱敏',
+    value: maskBankCard('6222888866661234'),
+    desc: 'maskBankCard(cardNo)'
+  },
+  {
+    label: '文件大小',
+    value: formatFileSize(128 * 1024 * 1024),
+    desc: 'formatFileSize(bytes)'
+  },
+  {
+    label: '百分比',
+    value: formatPercent(0.8625),
+    desc: 'formatPercent(0.8625)'
+  },
+  {
+    label: '万/亿缩写',
+    value: formatCompactNumber(1286420),
+    desc: 'formatCompactNumber(1286420)'
+  },
+  {
+    label: '相对时间',
+    value: formatRelativeTime(Date.now() - 2 * 60 * 60 * 1000),
+    desc: 'formatRelativeTime(time)'
+  },
+  {
+    label: '时长格式化',
+    value: formatDuration(3725),
+    desc: 'formatDuration(3725)'
+  }
+])
+
+const hookItems = computed(() => [
+  {
+    label: '页码分页',
+    value: `第 ${pagePagination.page.value}/${pagePagination.totalPage.value} 页`,
+    desc: `page=${pagePagination.params.value.page}, pageSize=${pagePagination.params.value.pageSize}`
+  },
+  {
+    label: '步长分页',
+    value: `已展示 ${stepPagination.visibleCount.value} 条`,
+    desc: `offset=${stepPagination.params.value.offset}, limit=${stepPagination.params.value.limit}`
+  },
+  {
+    label: '返回上一页不刷新',
+    value: 'useBackRefresh',
+    desc: 'backWithoutRefresh() / backWithRefresh()'
+  },
+  {
+    label: '请求封装',
+    value: 'requests.ts',
+    desc: 'createRequest() / request()'
+  },
+  {
+    label: '缓存封装',
+    value: appCache.has(cacheDemoKey) ? 'TTL 已写入' : '未命中',
+    desc: 'appCache.set/get/getOrSet/clearExpired'
+  }
+])
+
+function previewBackRefresh() {
+  backRefresh.markBackSilent({ from: 'home' })
+  const result = backRefresh.consumeBackRefresh()
+  uni.showToast({
+    title: result.shouldRefresh ? '返回后刷新' : '返回不刷新',
+    icon: 'none'
+  })
+}
 
 appStore.markReady()
 </script>
@@ -117,6 +242,31 @@ appStore.markReady()
           </wd-cell>
         </wd-cell-group>
       </view>
+
+      <view class="panel-section">
+        <view class="section-head">
+          <text>工具方法</text>
+          <wd-button size="small" type="primary" plain @click="previewBackRefresh">返回示例</wd-button>
+        </view>
+
+        <view class="utility-grid">
+          <view v-for="item in utilityItems" :key="item.label" class="utility-card">
+            <view class="utility-label">{{ item.label }}</view>
+            <view class="utility-value">{{ item.value }}</view>
+            <view class="utility-desc">{{ item.desc }}</view>
+          </view>
+        </view>
+
+        <view class="hook-list">
+          <view v-for="item in hookItems" :key="item.label" class="hook-row">
+            <view>
+              <view class="hook-title">{{ item.label }}</view>
+              <view class="hook-desc">{{ item.desc }}</view>
+            </view>
+            <wd-tag plain>{{ item.value }}</wd-tag>
+          </view>
+        </view>
+      </view>
     </view>
   </PageShell>
 </template>
@@ -160,7 +310,8 @@ appStore.markReady()
 }
 
 .metric-grid,
-.shortcut-grid {
+.shortcut-grid,
+.utility-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20rpx;
@@ -220,5 +371,54 @@ appStore.markReady()
 
 :deep(.task-tag) {
   margin-right: 12rpx;
+}
+
+.utility-card {
+  min-width: 0;
+  border: 1rpx solid #eef2f7;
+  border-radius: 10rpx;
+  background: #f8fafc;
+  padding: 20rpx;
+}
+
+.utility-label,
+.hook-title {
+  color: var(--app-muted);
+  font-size: 24rpx;
+}
+
+.utility-value {
+  overflow: hidden;
+  margin-top: 10rpx;
+  color: var(--app-ink);
+  font-size: 28rpx;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.utility-desc,
+.hook-desc {
+  overflow: hidden;
+  margin-top: 8rpx;
+  color: #98a2b3;
+  font-size: 22rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hook-list {
+  display: grid;
+  gap: 14rpx;
+  margin-top: 20rpx;
+}
+
+.hook-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18rpx;
+  border-top: 1rpx solid #eef2f7;
+  padding-top: 16rpx;
 }
 </style>

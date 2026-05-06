@@ -17,4 +17,8 @@
 - Added indexed contacts, system messages and comment interaction examples.
 - Enhanced the comment example with first-level comments, nested replies, replying to nested comments, review handling, and fixed the mobile reply popup overlap with the bottom tabbar.
 - Added switchable dynamic form, music player, playlist list, media search, app update and folder tree examples; media search supports swipeable channels, more categories, search history and hot searches, and the dynamic form was enhanced with pickers, radios, textarea notes and editable detail rows.
+- Added `src/utils/format.ts` for dayjs date formatting, currency formatting, number-to-Chinese conversion, special character length calculation, visual-length truncation, phone/ID/bank-card masking, file size, percentage, compact numbers, relative time and duration formatting.
+- Added `src/utils/cache.ts`, a uni storage wrapper with namespace support, TTL expiration, payload reads, getOrSet, expired-cache cleanup and namespace clearing.
+- Added `src/hooks/requests.ts`, `src/hooks/pagination.ts` and `src/hooks/useBackRefresh.ts` for request wrappers, page pagination, step pagination and back navigation without refresh.
+- Added a utility methods section below Today Tasks on the home dashboard with live formatter output, cache status and hook parameter examples.
 - Added Chinese README, English README, License and Git ignore rules.

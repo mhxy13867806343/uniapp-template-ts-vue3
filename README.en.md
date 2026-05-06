@@ -10,6 +10,7 @@ A reusable uni-app application template for H5, WeChat Mini Program, Alipay Mini
 - Wot Design Uni with easycom and composable API auto imports
 - UnoCSS with shared theme variables and cross-platform base styles
 - Pinia store setup and common folders such as `store`, `hooks`, `utils`, `pages`, `styles` and `static`
+- Built-in utility methods and business hooks: `format.ts`, `cache.ts`, `requests.ts`, page pagination, step pagination and back navigation without refresh
 - Custom bottom tabbar with five primary pages: Home, Mine, Components, Examples and Other
 - Component center grouped by Wot Design Uni categories, with clickable detail examples
 - Example center split by complexity: basic, junior, intermediate, advanced and complex
@@ -18,6 +19,7 @@ A reusable uni-app application template for H5, WeChat Mini Program, Alipay Mini
 - Waterfall example with four feed styles: life, ecommerce, news and moments, with detail pages
 - Subscription payment example with membership plans, monthly/yearly billing, WeChat Pay, Alipay and bank card methods
 - Business interaction examples for indexed contacts, system messages, first-level/nested comment replies and mobile reply popups
+- Home dashboard now includes a utility methods section for dayjs date formatting, number-to-Chinese conversion, special character length, phone/bank-card masking, file size, percentage, cache and pagination hooks
 - Built-in login and registration templates, each with five switchable layouts
 - Added pages for plugin setup, style guidelines, i18n and HBX template usage
 
