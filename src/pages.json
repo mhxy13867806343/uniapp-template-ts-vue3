@@ -55,6 +55,30 @@
       }
     },
     {
+      "path": "pages/examples/dynamic-form",
+      "style": {
+        "navigationBarTitleText": "动态表单"
+      }
+    },
+    {
+      "path": "pages/examples/music-player",
+      "style": {
+        "navigationBarTitleText": "音乐播放器"
+      }
+    },
+    {
+      "path": "pages/examples/playlists",
+      "style": {
+        "navigationBarTitleText": "歌单列表"
+      }
+    },
+    {
+      "path": "pages/examples/folders",
+      "style": {
+        "navigationBarTitleText": "文件夹树形"
+      }
+    },
+    {
       "path": "pages/examples/junior",
       "style": {
         "navigationBarTitleText": "初级示例"

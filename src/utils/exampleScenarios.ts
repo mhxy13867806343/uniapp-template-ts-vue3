@@ -15,6 +15,34 @@ export const exampleScenarios: ExampleScenario[] = [
     tags: ['Form', 'Input', 'Switch']
   },
   {
+    level: '表单',
+    title: '动态表单',
+    path: 'dynamic-form',
+    description: '切换业务类型时，字段、校验规则和实时摘要同步变化。',
+    tags: ['Dynamic', 'Validate', 'Form']
+  },
+  {
+    level: '媒体',
+    title: '音乐播放器',
+    path: 'music-player',
+    description: '移动端播放面板，包含进度、音量、播放状态和队列。',
+    tags: ['Music', 'Player', 'Queue']
+  },
+  {
+    level: '媒体',
+    title: '歌单列表',
+    path: 'playlists',
+    description: '歌单分类、横向歌单卡片、歌曲列表和收藏操作。',
+    tags: ['Playlist', 'Song', 'List']
+  },
+  {
+    level: '文件',
+    title: '文件夹树形',
+    path: 'folders',
+    description: '文件夹树形结构，支持展开收起、层级缩进和搜索过滤。',
+    tags: ['Folder', 'Tree', 'Search']
+  },
+  {
     level: '初级',
     title: '商品列表',
     path: 'junior',
