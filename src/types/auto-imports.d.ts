@@ -20,7 +20,9 @@ declare global {
   const defineStore: typeof import('pinia').defineStore
   const effectScope: typeof import('vue').effectScope
   const exampleScenarios: typeof import('../utils/exampleScenarios').exampleScenarios
+  const feedCategories: typeof import('../utils/waterfallFeeds').feedCategories
   const findComponent: typeof import('../utils/wotComponents').findComponent
+  const formatCount: typeof import('../utils/waterfallFeeds').formatCount
   const getActivePinia: typeof import('pinia').getActivePinia
   const getActiveTabName: typeof import('../utils/tabbar').getActiveTabName
   const getComponentApi: typeof import('../utils/wotComponents').getComponentApi
@@ -29,6 +31,7 @@ declare global {
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
   const getPlatformInfo: typeof import('../utils/platform').getPlatformInfo
+  const getWaterfallFeed: typeof import('../utils/waterfallFeeds').getWaterfallFeed
   const h: typeof import('vue').h
   const inject: typeof import('vue').inject
   const isProxy: typeof import('vue').isProxy
@@ -112,6 +115,7 @@ declare global {
   const watchEffect: typeof import('vue').watchEffect
   const watchPostEffect: typeof import('vue').watchPostEffect
   const watchSyncEffect: typeof import('vue').watchSyncEffect
+  const waterfallFeeds: typeof import('../utils/waterfallFeeds').waterfallFeeds
 }
 // for type re-export
 declare global {
@@ -133,6 +137,9 @@ declare global {
   // @ts-ignore
   export type { TabbarName, TabbarItem } from '../utils/tabbar'
   import('../utils/tabbar')
+  // @ts-ignore
+  export type { WaterfallFeed } from '../utils/waterfallFeeds'
+  import('../utils/waterfallFeeds')
   // @ts-ignore
   export type { ComponentItem, ComponentGroup, ApiRow } from '../utils/wotComponents'
   import('../utils/wotComponents')
@@ -157,7 +164,9 @@ declare module 'vue' {
     readonly defineStore: UnwrapRef<typeof import('pinia')['defineStore']>
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
     readonly exampleScenarios: UnwrapRef<typeof import('../utils/exampleScenarios')['exampleScenarios']>
+    readonly feedCategories: UnwrapRef<typeof import('../utils/waterfallFeeds')['feedCategories']>
     readonly findComponent: UnwrapRef<typeof import('../utils/wotComponents')['findComponent']>
+    readonly formatCount: UnwrapRef<typeof import('../utils/waterfallFeeds')['formatCount']>
     readonly getActivePinia: UnwrapRef<typeof import('pinia')['getActivePinia']>
     readonly getActiveTabName: UnwrapRef<typeof import('../utils/tabbar')['getActiveTabName']>
     readonly getComponentApi: UnwrapRef<typeof import('../utils/wotComponents')['getComponentApi']>
@@ -166,6 +175,7 @@ declare module 'vue' {
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getCurrentWatcher: UnwrapRef<typeof import('vue')['getCurrentWatcher']>
     readonly getPlatformInfo: UnwrapRef<typeof import('../utils/platform')['getPlatformInfo']>
+    readonly getWaterfallFeed: UnwrapRef<typeof import('../utils/waterfallFeeds')['getWaterfallFeed']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
     readonly isProxy: UnwrapRef<typeof import('vue')['isProxy']>
@@ -249,5 +259,6 @@ declare module 'vue' {
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>
     readonly watchPostEffect: UnwrapRef<typeof import('vue')['watchPostEffect']>
     readonly watchSyncEffect: UnwrapRef<typeof import('vue')['watchSyncEffect']>
+    readonly waterfallFeeds: UnwrapRef<typeof import('../utils/waterfallFeeds')['waterfallFeeds']>
   }
 }

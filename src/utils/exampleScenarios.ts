@@ -41,6 +41,13 @@ export const exampleScenarios: ExampleScenario[] = [
     path: 'complex',
     description: '订单详情、履约节点、客户信息和操作闭环。',
     tags: ['Collapse', 'Timeline', 'Action']
+  },
+  {
+    level: '内容流',
+    title: '瀑布流',
+    path: 'waterfall',
+    description: '短视频/本地生活风格内容流，支持分类、动态加载和详情页。',
+    tags: ['Waterfall', 'Feed', 'Detail']
   }
 ]
 

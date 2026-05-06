@@ -79,6 +79,18 @@
       }
     },
     {
+      "path": "pages/examples/waterfall",
+      "style": {
+        "navigationBarTitleText": "瀑布流示例"
+      }
+    },
+    {
+      "path": "pages/examples/waterfall-detail",
+      "style": {
+        "navigationBarTitleText": "内容详情"
+      }
+    },
+    {
       "path": "pages/other/index",
       "style": {
         "navigationBarTitleText": "其他"

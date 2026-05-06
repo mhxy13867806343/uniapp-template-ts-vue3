@@ -14,6 +14,7 @@ A reusable uni-app application template for H5, WeChat Mini Program, Alipay Mini
 - Component center grouped by Wot Design Uni categories, with clickable detail examples
 - Example center split by complexity: basic, junior, intermediate, advanced and complex
 - Basic example includes dynamic form validation, input linkage, Toast, Popup, Calendar, DatetimePicker, DropMenu, NoticeBar and Dialog
+- Waterfall example for short-video/local-life style feeds, category filters, dynamic loading and detail pages
 - Built-in login and registration templates, each with five switchable layouts
 - Added pages for plugin setup, style guidelines, i18n and HBX template usage
 
