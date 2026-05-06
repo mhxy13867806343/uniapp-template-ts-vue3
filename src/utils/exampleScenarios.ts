@@ -55,6 +55,27 @@ export const exampleScenarios: ExampleScenario[] = [
     path: 'subscription',
     description: '会员套餐选择、月年切换和微信、支付宝、银行卡支付方式。',
     tags: ['Premium', 'Payment', 'Subscription']
+  },
+  {
+    level: '通讯',
+    title: '联系人',
+    path: 'contacts',
+    description: '通讯录字母索引、联系人搜索、分组筛选、详情弹层和快捷跟进。',
+    tags: ['Contact', 'IndexBar', 'Popup']
+  },
+  {
+    level: '消息',
+    title: '系统消息',
+    path: 'messages',
+    description: '系统通知、未读统计、分类筛选、标记已读和业务动作。',
+    tags: ['Message', 'Unread', 'Notice']
+  },
+  {
+    level: '互动',
+    title: '评论相关',
+    path: 'comments',
+    description: '评论筛选、点赞、二级回复和底部回复弹层。',
+    tags: ['Comment', 'Reply', 'Like']
   }
 ]
 

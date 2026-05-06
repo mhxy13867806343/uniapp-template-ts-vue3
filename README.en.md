@@ -16,6 +16,7 @@ A reusable uni-app application template for H5, WeChat Mini Program, Alipay Mini
 - Basic example includes dynamic form validation, input linkage, Toast, Popup, Calendar, DatetimePicker, DropMenu, NoticeBar and Dialog
 - Waterfall example with four feed styles: life, ecommerce, news and moments, with detail pages
 - Subscription payment example with membership plans, monthly/yearly billing, WeChat Pay, Alipay and bank card methods
+- Business interaction examples for indexed contacts, system messages and comment replies
 - Built-in login and registration templates, each with five switchable layouts
 - Added pages for plugin setup, style guidelines, i18n and HBX template usage
 

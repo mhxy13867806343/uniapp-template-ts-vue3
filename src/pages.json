@@ -97,6 +97,24 @@
       }
     },
     {
+      "path": "pages/examples/contacts",
+      "style": {
+        "navigationBarTitleText": "联系人"
+      }
+    },
+    {
+      "path": "pages/examples/messages",
+      "style": {
+        "navigationBarTitleText": "系统消息"
+      }
+    },
+    {
+      "path": "pages/examples/comments",
+      "style": {
+        "navigationBarTitleText": "评论相关"
+      }
+    },
+    {
       "path": "pages/other/index",
       "style": {
         "navigationBarTitleText": "其他"
