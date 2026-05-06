@@ -18,8 +18,8 @@ export const exampleScenarios: ExampleScenario[] = [
     level: '表单',
     title: '动态表单',
     path: 'dynamic-form',
-    description: '切换业务类型时，字段、校验规则和实时摘要同步变化。',
-    tags: ['Dynamic', 'Validate', 'Form']
+    description: '切换业务类型时，字段、校验规则、下拉单选、明细行和实时摘要同步变化。',
+    tags: ['Dynamic', 'Picker', 'Rows']
   },
   {
     level: '媒体',
