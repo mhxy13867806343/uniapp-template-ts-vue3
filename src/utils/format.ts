@@ -21,6 +21,7 @@ const DEFAULT_VISUAL_LENGTH_OPTIONS: Required<VisualLengthOptions> = {
 const CHINESE_DIGITS = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九']
 const SECTION_UNITS = ['', '万', '亿', '兆']
 const INNER_UNITS = ['', '十', '百', '千']
+const WEEKDAY_TEXT = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
 
 export function formatDateTime(value: DateInput, template = 'YYYY-MM-DD HH:mm:ss') {
   if (!value) return ''
@@ -34,6 +35,31 @@ export function formatDate(value: DateInput, template = 'YYYY-MM-DD') {
 
 export function formatTime(value: DateInput, template = 'HH:mm') {
   return formatDateTime(value, template)
+}
+
+export function formatWeekday(value: DateInput, prefix = '') {
+  const date = dayjs(value)
+  if (!date.isValid()) return ''
+  return `${prefix}${WEEKDAY_TEXT[date.day()]}`
+}
+
+export function formatDateRange(start: DateInput, end: DateInput, template = 'YYYY-MM-DD') {
+  const startText = formatDateTime(start, template)
+  const endText = formatDateTime(end, template)
+  if (!startText && !endText) return ''
+  if (!startText) return endText
+  if (!endText) return startText
+  return `${startText} 至 ${endText}`
+}
+
+export function formatCountdown(milliseconds: number | string) {
+  const totalSeconds = Math.max(0, Math.floor(Number(milliseconds || 0) / 1000))
+  const days = Math.floor(totalSeconds / 86400)
+  const hours = Math.floor((totalSeconds % 86400) / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+  const time = [hours, minutes, seconds].map((item) => String(item).padStart(2, '0')).join(':')
+  return days > 0 ? `${days}天 ${time}` : time
 }
 
 export function formatNumber(value: number | string, digits = 0) {
@@ -53,6 +79,13 @@ export function formatPercent(value: number | string, digits = 2) {
   const number = Number(value)
   if (Number.isNaN(number)) return '0%'
   return `${(number * 100).toFixed(digits)}%`
+}
+
+export function formatSignedNumber(value: number | string, digits = 0) {
+  const number = Number(value)
+  if (Number.isNaN(number)) return '0'
+  const sign = number > 0 ? '+' : ''
+  return `${sign}${formatNumber(number, digits)}`
 }
 
 export function formatCompactNumber(value: number | string, digits = 1) {
@@ -98,6 +131,15 @@ export function formatRelativeTime(value: DateInput, now: DateInput = Date.now()
   return `${Math.floor(absSeconds / 31536000)} 年${suffix}`
 }
 
+export function formatListText(values: Array<string | number>, separator = '、', emptyText = '--') {
+  const list = values.filter((item) => item !== '')
+  return list.length ? list.join(separator) : emptyText
+}
+
+export function formatBoolean(value: boolean, trueText = '是', falseText = '否') {
+  return value ? trueText : falseText
+}
+
 export function maskText(value: string, start = 3, end = 4, mask = '****') {
   if (!value) return ''
   if (value.length <= start + end) return value
@@ -120,6 +162,28 @@ export function maskBankCard(value: string) {
   const card = value.replace(/\s+/gu, '')
   if (card.length <= 8) return card
   return `${card.slice(0, 4)} **** **** ${card.slice(-4)}`
+}
+
+export function formatQuery(params: Record<string, unknown>) {
+  return Object.entries(params)
+    .filter(([, value]) => value !== undefined && value !== null && value !== '')
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
+    .join('&')
+}
+
+export function parseQuery(query: string) {
+  const search = query.replace(/^\?/u, '')
+  if (!search) return {} as Record<string, string>
+
+  return search.split('&').reduce<Record<string, string>>((result, item) => {
+    const [key, value = ''] = item.split('=')
+    if (key) result[decodeURIComponent(key)] = decodeURIComponent(value)
+    return result
+  }, {})
+}
+
+export function formatAddress(parts: Array<string | undefined | null>, separator = '') {
+  return parts.filter(Boolean).join(separator)
 }
 
 function convertSectionToChinese(value: number) {

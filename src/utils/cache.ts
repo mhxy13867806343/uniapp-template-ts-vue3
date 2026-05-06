@@ -59,12 +59,23 @@ export function createCache(options: CacheOptions = {}) {
     return payload
   }
 
+  function getTtl(key: string) {
+    const payload = getPayload(key)
+    if (!payload?.expiresAt) return 0
+    return Math.max(0, payload.expiresAt - Date.now())
+  }
+
   function has(key: string) {
     return get(key) !== undefined
   }
 
   function remove(key: string) {
     uni.removeStorageSync(getKey(key))
+  }
+
+  function update<T extends Record<string, unknown>>(key: string, patch: Partial<T>, ttl = defaultTtl) {
+    const current = get<T>(key, {} as T)
+    return set(key, { ...current, ...patch }, ttl)
   }
 
   function keys() {
@@ -94,17 +105,42 @@ export function createCache(options: CacheOptions = {}) {
     return value
   }
 
+  function setAsync<T>(key: string, value: T, ttl = defaultTtl) {
+    const payload = set(key, value, ttl)
+    return Promise.resolve(payload)
+  }
+
+  function getAsync<T>(key: string, fallback?: T) {
+    return Promise.resolve(get(key, fallback))
+  }
+
+  function removeAsync(key: string) {
+    remove(key)
+    return Promise.resolve()
+  }
+
+  function clearAsync() {
+    clear()
+    return Promise.resolve()
+  }
+
   return {
     getKey,
     set,
     get,
     getPayload,
+    getTtl,
     has,
     remove,
+    update,
     keys,
     clear,
     clearExpired,
-    getOrSet
+    getOrSet,
+    setAsync,
+    getAsync,
+    removeAsync,
+    clearAsync
   }
 }
 

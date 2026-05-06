@@ -12,11 +12,13 @@ declare global {
   const appEnv: typeof import('../utils/env').appEnv
   const componentGroups: typeof import('../utils/wotComponents').componentGroups
   const componentList: typeof import('../utils/wotComponents').componentList
+  const composeValidators: typeof import('../utils/validate').composeValidators
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp
   const createCache: typeof import('../utils/cache').createCache
   const createPinia: typeof import('pinia').createPinia
   const createRequest: typeof import('../hooks/requests').createRequest
+  const createValidateResult: typeof import('../utils/validate').createValidateResult
   const customRef: typeof import('vue').customRef
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
   const defineComponent: typeof import('vue').defineComponent
@@ -25,19 +27,27 @@ declare global {
   const exampleScenarios: typeof import('../utils/exampleScenarios').exampleScenarios
   const feedCategories: typeof import('../utils/waterfallFeeds').feedCategories
   const findComponent: typeof import('../utils/wotComponents').findComponent
+  const formatAddress: typeof import('../utils/format').formatAddress
   const formatBankCard: typeof import('../utils/format').formatBankCard
+  const formatBoolean: typeof import('../utils/format').formatBoolean
   const formatCompactNumber: typeof import('../utils/format').formatCompactNumber
   const formatCount: typeof import('../utils/waterfallFeeds').formatCount
+  const formatCountdown: typeof import('../utils/format').formatCountdown
   const formatCurrency: typeof import('../utils/format').formatCurrency
   const formatDate: typeof import('../utils/format').formatDate
+  const formatDateRange: typeof import('../utils/format').formatDateRange
   const formatDateTime: typeof import('../utils/format').formatDateTime
   const formatDuration: typeof import('../utils/format').formatDuration
   const formatEmpty: typeof import('../utils/format').formatEmpty
   const formatFileSize: typeof import('../utils/format').formatFileSize
+  const formatListText: typeof import('../utils/format').formatListText
   const formatNumber: typeof import('../utils/format').formatNumber
   const formatPercent: typeof import('../utils/format').formatPercent
+  const formatQuery: typeof import('../utils/format').formatQuery
   const formatRelativeTime: typeof import('../utils/format').formatRelativeTime
+  const formatSignedNumber: typeof import('../utils/format').formatSignedNumber
   const formatTime: typeof import('../utils/format').formatTime
+  const formatWeekday: typeof import('../utils/format').formatWeekday
   const getActivePinia: typeof import('pinia').getActivePinia
   const getActiveTabName: typeof import('../utils/tabbar').getActiveTabName
   const getComponentApi: typeof import('../utils/wotComponents').getComponentApi
@@ -51,11 +61,21 @@ declare global {
   const getWaterfallFeed: typeof import('../utils/waterfallFeeds').getWaterfallFeed
   const h: typeof import('vue').h
   const inject: typeof import('vue').inject
+  const isBankCard: typeof import('../utils/validate').isBankCard
+  const isChineseName: typeof import('../utils/validate').isChineseName
+  const isEmail: typeof import('../utils/validate').isEmail
+  const isEmpty: typeof import('../utils/validate').isEmpty
+  const isIdCard: typeof import('../utils/validate').isIdCard
+  const isNumberLike: typeof import('../utils/validate').isNumberLike
+  const isPhone: typeof import('../utils/validate').isPhone
+  const isPlateNumber: typeof import('../utils/validate').isPlateNumber
   const isProxy: typeof import('vue').isProxy
   const isReactive: typeof import('vue').isReactive
   const isReadonly: typeof import('vue').isReadonly
   const isRef: typeof import('vue').isRef
   const isShallow: typeof import('vue').isShallow
+  const isStrongPassword: typeof import('../utils/validate').isStrongPassword
+  const isUrl: typeof import('../utils/validate').isUrl
   const lifeFeeds: typeof import('../utils/waterfallFeeds').lifeFeeds
   const mapActions: typeof import('pinia').mapActions
   const mapGetters: typeof import('pinia').mapGetters
@@ -67,6 +87,8 @@ declare global {
   const maskIdCard: typeof import('../utils/format').maskIdCard
   const maskPhone: typeof import('../utils/format').maskPhone
   const maskText: typeof import('../utils/format').maskText
+  const maxLength: typeof import('../utils/validate').maxLength
+  const minLength: typeof import('../utils/validate').minLength
   const momentFeeds: typeof import('../utils/waterfallFeeds').momentFeeds
   const navigateBack: typeof import('../utils/router').navigateBack
   const navigateTo: typeof import('../utils/router').navigateTo
@@ -98,12 +120,15 @@ declare global {
   const onUnmounted: typeof import('vue').onUnmounted
   const onUpdated: typeof import('vue').onUpdated
   const onWatcherCleanup: typeof import('vue').onWatcherCleanup
+  const parseQuery: typeof import('../utils/format').parseQuery
+  const pattern: typeof import('../utils/validate').pattern
   const provide: typeof import('vue').provide
   const reactive: typeof import('vue').reactive
   const readonly: typeof import('vue').readonly
   const redirectTo: typeof import('../utils/router').redirectTo
   const ref: typeof import('vue').ref
   const request: typeof import('../hooks/requests').request
+  const required: typeof import('../utils/validate').required
   const resolveComponent: typeof import('vue').resolveComponent
   const sceneTabs: typeof import('../utils/waterfallFeeds').sceneTabs
   const setActivePinia: typeof import('pinia').setActivePinia
@@ -185,6 +210,9 @@ declare global {
   export type { TabbarName, TabbarItem } from '../utils/tabbar'
   import('../utils/tabbar')
   // @ts-ignore
+  export type { ValidateResult, Validator } from '../utils/validate'
+  import('../utils/validate')
+  // @ts-ignore
   export type { WaterfallScene, WaterfallFeed } from '../utils/waterfallFeeds'
   import('../utils/waterfallFeeds')
   // @ts-ignore
@@ -203,11 +231,13 @@ declare module 'vue' {
     readonly appEnv: UnwrapRef<typeof import('../utils/env')['appEnv']>
     readonly componentGroups: UnwrapRef<typeof import('../utils/wotComponents')['componentGroups']>
     readonly componentList: UnwrapRef<typeof import('../utils/wotComponents')['componentList']>
+    readonly composeValidators: UnwrapRef<typeof import('../utils/validate')['composeValidators']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
     readonly createCache: UnwrapRef<typeof import('../utils/cache')['createCache']>
     readonly createPinia: UnwrapRef<typeof import('pinia')['createPinia']>
     readonly createRequest: UnwrapRef<typeof import('../hooks/requests')['createRequest']>
+    readonly createValidateResult: UnwrapRef<typeof import('../utils/validate')['createValidateResult']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
     readonly defineAsyncComponent: UnwrapRef<typeof import('vue')['defineAsyncComponent']>
     readonly defineComponent: UnwrapRef<typeof import('vue')['defineComponent']>
@@ -216,19 +246,27 @@ declare module 'vue' {
     readonly exampleScenarios: UnwrapRef<typeof import('../utils/exampleScenarios')['exampleScenarios']>
     readonly feedCategories: UnwrapRef<typeof import('../utils/waterfallFeeds')['feedCategories']>
     readonly findComponent: UnwrapRef<typeof import('../utils/wotComponents')['findComponent']>
+    readonly formatAddress: UnwrapRef<typeof import('../utils/format')['formatAddress']>
     readonly formatBankCard: UnwrapRef<typeof import('../utils/format')['formatBankCard']>
+    readonly formatBoolean: UnwrapRef<typeof import('../utils/format')['formatBoolean']>
     readonly formatCompactNumber: UnwrapRef<typeof import('../utils/format')['formatCompactNumber']>
     readonly formatCount: UnwrapRef<typeof import('../utils/waterfallFeeds')['formatCount']>
+    readonly formatCountdown: UnwrapRef<typeof import('../utils/format')['formatCountdown']>
     readonly formatCurrency: UnwrapRef<typeof import('../utils/format')['formatCurrency']>
     readonly formatDate: UnwrapRef<typeof import('../utils/format')['formatDate']>
+    readonly formatDateRange: UnwrapRef<typeof import('../utils/format')['formatDateRange']>
     readonly formatDateTime: UnwrapRef<typeof import('../utils/format')['formatDateTime']>
     readonly formatDuration: UnwrapRef<typeof import('../utils/format')['formatDuration']>
     readonly formatEmpty: UnwrapRef<typeof import('../utils/format')['formatEmpty']>
     readonly formatFileSize: UnwrapRef<typeof import('../utils/format')['formatFileSize']>
+    readonly formatListText: UnwrapRef<typeof import('../utils/format')['formatListText']>
     readonly formatNumber: UnwrapRef<typeof import('../utils/format')['formatNumber']>
     readonly formatPercent: UnwrapRef<typeof import('../utils/format')['formatPercent']>
+    readonly formatQuery: UnwrapRef<typeof import('../utils/format')['formatQuery']>
     readonly formatRelativeTime: UnwrapRef<typeof import('../utils/format')['formatRelativeTime']>
+    readonly formatSignedNumber: UnwrapRef<typeof import('../utils/format')['formatSignedNumber']>
     readonly formatTime: UnwrapRef<typeof import('../utils/format')['formatTime']>
+    readonly formatWeekday: UnwrapRef<typeof import('../utils/format')['formatWeekday']>
     readonly getActivePinia: UnwrapRef<typeof import('pinia')['getActivePinia']>
     readonly getActiveTabName: UnwrapRef<typeof import('../utils/tabbar')['getActiveTabName']>
     readonly getComponentApi: UnwrapRef<typeof import('../utils/wotComponents')['getComponentApi']>
@@ -242,11 +280,21 @@ declare module 'vue' {
     readonly getWaterfallFeed: UnwrapRef<typeof import('../utils/waterfallFeeds')['getWaterfallFeed']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
+    readonly isBankCard: UnwrapRef<typeof import('../utils/validate')['isBankCard']>
+    readonly isChineseName: UnwrapRef<typeof import('../utils/validate')['isChineseName']>
+    readonly isEmail: UnwrapRef<typeof import('../utils/validate')['isEmail']>
+    readonly isEmpty: UnwrapRef<typeof import('../utils/validate')['isEmpty']>
+    readonly isIdCard: UnwrapRef<typeof import('../utils/validate')['isIdCard']>
+    readonly isNumberLike: UnwrapRef<typeof import('../utils/validate')['isNumberLike']>
+    readonly isPhone: UnwrapRef<typeof import('../utils/validate')['isPhone']>
+    readonly isPlateNumber: UnwrapRef<typeof import('../utils/validate')['isPlateNumber']>
     readonly isProxy: UnwrapRef<typeof import('vue')['isProxy']>
     readonly isReactive: UnwrapRef<typeof import('vue')['isReactive']>
     readonly isReadonly: UnwrapRef<typeof import('vue')['isReadonly']>
     readonly isRef: UnwrapRef<typeof import('vue')['isRef']>
     readonly isShallow: UnwrapRef<typeof import('vue')['isShallow']>
+    readonly isStrongPassword: UnwrapRef<typeof import('../utils/validate')['isStrongPassword']>
+    readonly isUrl: UnwrapRef<typeof import('../utils/validate')['isUrl']>
     readonly lifeFeeds: UnwrapRef<typeof import('../utils/waterfallFeeds')['lifeFeeds']>
     readonly mapActions: UnwrapRef<typeof import('pinia')['mapActions']>
     readonly mapGetters: UnwrapRef<typeof import('pinia')['mapGetters']>
@@ -258,6 +306,8 @@ declare module 'vue' {
     readonly maskIdCard: UnwrapRef<typeof import('../utils/format')['maskIdCard']>
     readonly maskPhone: UnwrapRef<typeof import('../utils/format')['maskPhone']>
     readonly maskText: UnwrapRef<typeof import('../utils/format')['maskText']>
+    readonly maxLength: UnwrapRef<typeof import('../utils/validate')['maxLength']>
+    readonly minLength: UnwrapRef<typeof import('../utils/validate')['minLength']>
     readonly momentFeeds: UnwrapRef<typeof import('../utils/waterfallFeeds')['momentFeeds']>
     readonly navigateBack: UnwrapRef<typeof import('../utils/router')['navigateBack']>
     readonly navigateTo: UnwrapRef<typeof import('../utils/router')['navigateTo']>
@@ -289,12 +339,15 @@ declare module 'vue' {
     readonly onUnmounted: UnwrapRef<typeof import('vue')['onUnmounted']>
     readonly onUpdated: UnwrapRef<typeof import('vue')['onUpdated']>
     readonly onWatcherCleanup: UnwrapRef<typeof import('vue')['onWatcherCleanup']>
+    readonly parseQuery: UnwrapRef<typeof import('../utils/format')['parseQuery']>
+    readonly pattern: UnwrapRef<typeof import('../utils/validate')['pattern']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
     readonly reactive: UnwrapRef<typeof import('vue')['reactive']>
     readonly readonly: UnwrapRef<typeof import('vue')['readonly']>
     readonly redirectTo: UnwrapRef<typeof import('../utils/router')['redirectTo']>
     readonly ref: UnwrapRef<typeof import('vue')['ref']>
     readonly request: UnwrapRef<typeof import('../hooks/requests')['request']>
+    readonly required: UnwrapRef<typeof import('../utils/validate')['required']>
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
     readonly sceneTabs: UnwrapRef<typeof import('../utils/waterfallFeeds')['sceneTabs']>
     readonly setActivePinia: UnwrapRef<typeof import('pinia')['setActivePinia']>

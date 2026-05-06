@@ -8,19 +8,28 @@ import { useAppStore } from '@/store'
 import { appCache } from '@/utils/cache'
 import { navigateToExample } from '@/utils/exampleScenarios'
 import {
+  formatAddress,
+  formatBoolean,
   formatCompactNumber,
+  formatCountdown,
   formatCurrency,
+  formatDateRange,
   formatDateTime,
   formatDuration,
   formatFileSize,
+  formatListText,
   formatPercent,
+  formatQuery,
   formatRelativeTime,
+  formatSignedNumber,
+  formatWeekday,
   getSpecialLength,
   maskBankCard,
   maskPhone,
   numberToChinese,
   truncateBySpecialLength
 } from '@/utils/format'
+import { isBankCard, isEmail, isIdCard, isPhone, isStrongPassword } from '@/utils/validate'
 
 const appStore = useAppStore()
 const { appEnv } = useAppEnv()
@@ -60,6 +69,7 @@ const sampleText = 'UniApp模板🚀#H5小程序'
 const cacheDemoKey = 'home:tools'
 
 appCache.set(cacheDemoKey, { page: 'home', module: 'tools' }, 5 * 60 * 1000)
+appCache.update(cacheDemoKey, { touched: true }, 5 * 60 * 1000)
 
 const utilityItems = computed(() => [
   {
@@ -121,6 +131,46 @@ const utilityItems = computed(() => [
     label: '时长格式化',
     value: formatDuration(3725),
     desc: 'formatDuration(3725)'
+  },
+  {
+    label: '日期范围',
+    value: formatDateRange(Date.now(), Date.now() + 86400000),
+    desc: 'formatDateRange(start, end)'
+  },
+  {
+    label: '星期格式',
+    value: formatWeekday(Date.now(), '今天'),
+    desc: 'formatWeekday(Date.now())'
+  },
+  {
+    label: '倒计时',
+    value: formatCountdown(26 * 60 * 60 * 1000),
+    desc: 'formatCountdown(ms)'
+  },
+  {
+    label: '列表文本',
+    value: formatListText(['H5', '小程序', '鸿蒙']),
+    desc: 'formatListText(list)'
+  },
+  {
+    label: '正负数',
+    value: formatSignedNumber(18),
+    desc: 'formatSignedNumber(18)'
+  },
+  {
+    label: '布尔文案',
+    value: formatBoolean(true, '已启用', '已停用'),
+    desc: 'formatBoolean(value)'
+  },
+  {
+    label: '地址拼接',
+    value: formatAddress(['上海市', '浦东新区', '张江']),
+    desc: 'formatAddress(parts)'
+  },
+  {
+    label: 'Query 生成',
+    value: formatQuery({ page: 1, keyword: '模板' }),
+    desc: 'formatQuery(params)'
   }
 ])
 
@@ -147,8 +197,18 @@ const hookItems = computed(() => [
   },
   {
     label: '缓存封装',
-    value: appCache.has(cacheDemoKey) ? 'TTL 已写入' : '未命中',
-    desc: 'appCache.set/get/getOrSet/clearExpired'
+    value: appCache.has(cacheDemoKey) ? `${Math.ceil(appCache.getTtl(cacheDemoKey) / 1000)}s` : '未命中',
+    desc: 'appCache.set/get/update/getOrSet'
+  },
+  {
+    label: '校验方法',
+    value: isPhone('13800138000') && isEmail('demo@uni.app') ? '通过' : '失败',
+    desc: 'isPhone / isEmail / isIdCard'
+  },
+  {
+    label: '安全校验',
+    value: isStrongPassword('Uniapp2026') ? '强密码' : '弱密码',
+    desc: `身份证:${isIdCard('11010519491231002X') ? '对' : '错'} 银行卡:${isBankCard('6225881414207430') ? '对' : '错'}`
   }
 ])
 
