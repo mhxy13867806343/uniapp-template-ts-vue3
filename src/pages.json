@@ -91,6 +91,12 @@
       }
     },
     {
+      "path": "pages/examples/subscription",
+      "style": {
+        "navigationBarTitleText": "订阅支付"
+      }
+    },
+    {
       "path": "pages/other/index",
       "style": {
         "navigationBarTitleText": "其他"

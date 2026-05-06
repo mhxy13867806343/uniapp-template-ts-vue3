@@ -48,6 +48,13 @@ export const exampleScenarios: ExampleScenario[] = [
     path: 'waterfall',
     description: '短视频/本地生活风格内容流，支持分类、动态加载和详情页。',
     tags: ['Waterfall', 'Feed', 'Detail']
+  },
+  {
+    level: '支付',
+    title: '订阅支付',
+    path: 'subscription',
+    description: '会员套餐选择、月年切换和微信、支付宝、银行卡支付方式。',
+    tags: ['Premium', 'Payment', 'Subscription']
   }
 ]
 

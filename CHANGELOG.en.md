@@ -13,4 +13,5 @@
 - Added five switchable registration templates: phone, invite code, company onboarding, creator onboarding and App quick registration.
 - Added pages for plugin setup, style guidelines, i18n and HBX template usage.
 - Added a waterfall feed example and detail page with life, ecommerce, news and moments styles, including ecommerce product details.
+- Added a subscription payment template with plan selection, monthly/yearly billing, WeChat Pay, Alipay and bank card methods.
 - Added Chinese README, English README, License and Git ignore rules.
