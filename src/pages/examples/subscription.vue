@@ -201,7 +201,7 @@ async function submitPayment() {
         订阅即表示你同意购买者服务条款。除非提前取消，否则订阅将自动续订。你可以在支付平台或应用订阅管理中取消。
       </view>
 
-      <view class="bottom-bar">
+      <view v-if="!bankPopupVisible" class="bottom-bar">
         <view>
           <view class="bar-plan">{{ currentPlan.name }}</view>
           <view class="bar-price">
@@ -213,7 +213,14 @@ async function submitPayment() {
         <wd-button type="primary" custom-class="pay-button" @click="submitPayment">订阅并支付</wd-button>
       </view>
 
-      <wd-popup v-model="bankPopupVisible" position="bottom" safe-area-inset-bottom root-portal custom-class="bank-popup">
+      <wd-popup
+        v-model="bankPopupVisible"
+        position="bottom"
+        safe-area-inset-bottom
+        root-portal
+        custom-class="bank-popup"
+        :z-index="1200"
+      >
         <view class="bank-panel">
           <view class="section-title">银行卡信息</view>
           <wd-cell-group border>
@@ -534,7 +541,7 @@ async function submitPayment() {
   display: grid;
   gap: 24rpx;
   background: #fff;
-  padding: 32rpx;
+  padding: 32rpx 32rpx calc(48rpx + env(safe-area-inset-bottom));
 }
 
 .bank-panel .section-title {
