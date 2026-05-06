@@ -1,13 +1,26 @@
 <script setup lang="ts">
 import PageShell from '@/components/PageShell.vue'
-import { feedCategories, formatCount, waterfallFeeds, type WaterfallFeed } from '@/utils/waterfallFeeds'
+import {
+  feedCategories,
+  formatCount,
+  getFeedsByScene,
+  sceneTabs,
+  type WaterfallFeed,
+  type WaterfallScene
+} from '@/utils/waterfallFeeds'
 
+const activeScene = ref<WaterfallScene>('life')
 const activeCategory = ref('推荐')
 const visibleCount = ref(6)
 
+const sceneDesc = computed(() => sceneTabs.find((item) => item.value === activeScene.value)?.desc || '')
+
+const sceneFeeds = computed(() => getFeedsByScene(activeScene.value))
+
 const filteredFeeds = computed(() => {
-  if (activeCategory.value === '推荐') return waterfallFeeds
-  return waterfallFeeds.filter((item) => item.category === activeCategory.value)
+  if (activeScene.value !== 'life') return sceneFeeds.value
+  if (activeCategory.value === '推荐') return sceneFeeds.value
+  return sceneFeeds.value.filter((item) => item.category === activeCategory.value)
 })
 
 const visibleFeeds = computed(() => filteredFeeds.value.slice(0, visibleCount.value))
@@ -33,13 +46,18 @@ const columns = computed(() => {
 
 const hasMore = computed(() => visibleCount.value < filteredFeeds.value.length)
 
-watch(activeCategory, () => {
-  visibleCount.value = 6
+watch([activeScene, activeCategory], () => {
+  visibleCount.value = activeScene.value === 'news' || activeScene.value === 'moments' ? 10 : 6
 })
 
 onReachBottom(() => {
   loadMore()
 })
+
+function switchScene(scene: WaterfallScene) {
+  activeScene.value = scene
+  activeCategory.value = '推荐'
+}
 
 function loadMore() {
   if (!hasMore.value) return
@@ -48,15 +66,26 @@ function loadMore() {
 
 function openDetail(item: WaterfallFeed) {
   uni.navigateTo({
-    url: `/pages/examples/waterfall-detail?id=${item.id}`
+    url: `/pages/examples/waterfall-detail?id=${item.id}&type=${item.scene}`
   })
 }
 </script>
 
 <template>
-  <PageShell title="瀑布流示例" description="短视频/本地生活内容流，支持分类筛选、动态加载和点击进入详情。">
+  <PageShell title="瀑布流示例" :description="sceneDesc">
     <view class="waterfall-page">
-      <view class="category-scroll">
+      <view class="scene-tabs">
+        <view
+          v-for="item in sceneTabs"
+          :key="item.value"
+          :class="['scene-tab', { active: activeScene === item.value }]"
+          @click="switchScene(item.value)"
+        >
+          {{ item.label }}
+        </view>
+      </view>
+
+      <view v-if="activeScene === 'life'" class="category-scroll">
         <scroll-view scroll-x>
           <view class="category-list">
             <view
@@ -71,7 +100,7 @@ function openDetail(item: WaterfallFeed) {
         </scroll-view>
       </view>
 
-      <view class="waterfall-grid">
+      <view v-if="activeScene === 'life'" class="waterfall-grid">
         <view
           v-for="(column, columnIndex) in columns"
           :key="columnIndex"
@@ -80,7 +109,7 @@ function openDetail(item: WaterfallFeed) {
           <view
             v-for="item in column"
             :key="item.id"
-            class="feed-card"
+            class="life-card"
             @click="openDetail(item)"
           >
             <view class="cover-wrap">
@@ -108,6 +137,73 @@ function openDetail(item: WaterfallFeed) {
         </view>
       </view>
 
+      <view v-if="activeScene === 'shop'" class="shop-grid">
+        <view
+          v-for="item in visibleFeeds"
+          :key="item.id"
+          class="shop-card"
+          @click="openDetail(item)"
+        >
+          <image class="shop-cover" :src="item.cover" mode="aspectFill" />
+          <view class="shop-body">
+            <view class="feed-title">{{ item.title }}</view>
+            <view class="shop-desc">{{ item.desc }}</view>
+            <view class="price-row">
+              <view class="price">¥{{ item.price }}</view>
+              <view class="origin-price">¥{{ item.originPrice }}</view>
+            </view>
+            <view class="sales-line">已售 {{ formatCount(item.sales || 0) }} · {{ item.author }}</view>
+          </view>
+        </view>
+      </view>
+
+      <view v-if="activeScene === 'news'" class="news-list">
+        <view
+          v-for="item in visibleFeeds"
+          :key="item.id"
+          class="news-card"
+          @click="openDetail(item)"
+        >
+          <view class="news-main">
+            <view class="news-title">{{ item.title }}</view>
+            <view class="news-desc">{{ item.desc }}</view>
+            <view class="news-meta">{{ item.source }} · {{ item.time }} · {{ formatCount(item.comments) }} 评论</view>
+          </view>
+          <image class="news-cover" :src="item.cover" mode="aspectFill" />
+        </view>
+      </view>
+
+      <view v-if="activeScene === 'moments'" class="moments-list">
+        <view
+          v-for="item in visibleFeeds"
+          :key="item.id"
+          class="moment-card"
+          @click="openDetail(item)"
+        >
+          <view class="avatar">{{ item.author.slice(0, 1) }}</view>
+          <view class="moment-main">
+            <view class="moment-head">
+              <view class="font-700">{{ item.author }}</view>
+              <view class="muted-text">{{ item.time }}</view>
+            </view>
+            <view class="moment-text">{{ item.desc }}</view>
+            <view class="moment-images" :class="{ single: (item.images?.length || 0) === 1 }">
+              <image
+                v-for="image in item.images"
+                :key="image"
+                class="moment-image"
+                :src="image"
+                mode="aspectFill"
+              />
+            </view>
+            <view class="moment-actions">
+              <text>{{ formatCount(item.likes) }} 赞</text>
+              <text>{{ formatCount(item.comments) }} 评论</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
       <view class="load-more">
         <wd-button v-if="hasMore" plain block @click="loadMore">加载更多</wd-button>
         <view v-else class="end-line">已经到底了</view>
@@ -122,13 +218,43 @@ function openDetail(item: WaterfallFeed) {
   gap: 22rpx;
 }
 
+.scene-tabs,
 .category-scroll {
   position: sticky;
-  top: 0;
-  z-index: 2;
+  z-index: 3;
   margin-inline: -32rpx;
   background: var(--app-canvas);
-  padding: 4rpx 32rpx 12rpx;
+  padding-inline: 32rpx;
+}
+
+.scene-tabs {
+  top: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14rpx;
+  padding-block: 4rpx 12rpx;
+}
+
+.scene-tab {
+  border: 1rpx solid var(--app-line);
+  border-radius: 999rpx;
+  background: #fff;
+  color: var(--app-muted);
+  font-size: 27rpx;
+  font-weight: 700;
+  padding: 16rpx 8rpx;
+  text-align: center;
+}
+
+.scene-tab.active {
+  border-color: var(--app-brand);
+  background: #eef6ff;
+  color: var(--app-brand);
+}
+
+.category-scroll {
+  top: 86rpx;
+  padding-block: 0 12rpx;
 }
 
 .category-list {
@@ -153,7 +279,8 @@ function openDetail(item: WaterfallFeed) {
   font-weight: 700;
 }
 
-.waterfall-grid {
+.waterfall-grid,
+.shop-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18rpx;
@@ -166,11 +293,18 @@ function openDetail(item: WaterfallFeed) {
   min-width: 0;
 }
 
-.feed-card {
-  overflow: hidden;
+.life-card,
+.shop-card,
+.news-card,
+.moment-card {
   border: 1rpx solid var(--app-line);
-  border-radius: 14rpx;
   background: #fff;
+}
+
+.life-card,
+.shop-card {
+  overflow: hidden;
+  border-radius: 14rpx;
 }
 
 .cover-wrap {
@@ -195,11 +329,13 @@ function openDetail(item: WaterfallFeed) {
   padding: 6rpx 12rpx;
 }
 
-.feed-body {
+.feed-body,
+.shop-body {
   padding: 18rpx;
 }
 
-.feed-title {
+.feed-title,
+.news-title {
   display: -webkit-box;
   overflow: hidden;
   color: var(--app-ink);
@@ -210,27 +346,179 @@ function openDetail(item: WaterfallFeed) {
   -webkit-line-clamp: 2;
 }
 
+.feed-meta,
+.feed-actions,
+.shop-desc,
+.sales-line,
+.news-desc,
+.news-meta,
+.moment-text,
+.moment-actions {
+  color: var(--app-muted);
+  font-size: 23rpx;
+}
+
 .feed-meta {
   display: flex;
   justify-content: space-between;
   gap: 12rpx;
   margin-top: 14rpx;
-  color: var(--app-muted);
-  font-size: 23rpx;
 }
 
 .feed-actions {
   display: flex;
   gap: 18rpx;
   margin-top: 14rpx;
-  color: var(--app-muted);
-  font-size: 23rpx;
 }
 
 .feed-actions > view {
   display: flex;
   align-items: center;
   gap: 6rpx;
+}
+
+.shop-cover {
+  display: block;
+  width: 100%;
+  height: 260rpx;
+  background: #eef2f6;
+}
+
+.shop-desc {
+  display: -webkit-box;
+  overflow: hidden;
+  margin-top: 10rpx;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10rpx;
+  margin-top: 14rpx;
+}
+
+.price {
+  color: #f04438;
+  font-size: 34rpx;
+  font-weight: 800;
+}
+
+.origin-price {
+  color: #98a2b3;
+  font-size: 22rpx;
+  text-decoration: line-through;
+}
+
+.sales-line {
+  margin-top: 8rpx;
+}
+
+.news-list,
+.moments-list {
+  display: grid;
+  gap: 18rpx;
+}
+
+.news-card {
+  display: flex;
+  gap: 20rpx;
+  border-radius: 12rpx;
+  padding: 22rpx;
+}
+
+.news-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.news-desc {
+  display: -webkit-box;
+  overflow: hidden;
+  margin-top: 10rpx;
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.news-meta {
+  margin-top: 14rpx;
+}
+
+.news-cover {
+  flex: 0 0 176rpx;
+  width: 176rpx;
+  height: 132rpx;
+  border-radius: 10rpx;
+  background: #eef2f6;
+}
+
+.moment-card {
+  display: flex;
+  gap: 18rpx;
+  border-radius: 12rpx;
+  padding: 24rpx;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 72rpx;
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: #eef6ff;
+  color: var(--app-brand);
+  font-weight: 800;
+}
+
+.moment-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.moment-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.moment-text {
+  margin-top: 12rpx;
+  color: var(--app-ink);
+  line-height: 1.6;
+}
+
+.moment-images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8rpx;
+  margin-top: 16rpx;
+}
+
+.moment-images.single {
+  grid-template-columns: 280rpx;
+}
+
+.moment-image {
+  width: 100%;
+  height: 150rpx;
+  border-radius: 8rpx;
+  background: #eef2f6;
+}
+
+.moment-images.single .moment-image {
+  height: 220rpx;
+}
+
+.moment-actions {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 16rpx;
 }
 
 .load-more {

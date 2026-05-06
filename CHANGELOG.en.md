@@ -12,5 +12,5 @@
 - Added five switchable login templates: password, SMS code, enterprise tenant, admin security and quick authorization login.
 - Added five switchable registration templates: phone, invite code, company onboarding, creator onboarding and App quick registration.
 - Added pages for plugin setup, style guidelines, i18n and HBX template usage.
-- Added a waterfall feed example and detail page with short-video/local-life style mock data, category filters and dynamic loading.
+- Added a waterfall feed example and detail page with life, ecommerce, news and moments styles, including ecommerce product details.
 - Added Chinese README, English README, License and Git ignore rules.

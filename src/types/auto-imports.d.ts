@@ -30,6 +30,7 @@ declare global {
   const getCurrentInstance: typeof import('vue').getCurrentInstance
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
+  const getFeedsByScene: typeof import('../utils/waterfallFeeds').getFeedsByScene
   const getPlatformInfo: typeof import('../utils/platform').getPlatformInfo
   const getWaterfallFeed: typeof import('../utils/waterfallFeeds').getWaterfallFeed
   const h: typeof import('vue').h
@@ -39,15 +40,18 @@ declare global {
   const isReadonly: typeof import('vue').isReadonly
   const isRef: typeof import('vue').isRef
   const isShallow: typeof import('vue').isShallow
+  const lifeFeeds: typeof import('../utils/waterfallFeeds').lifeFeeds
   const mapActions: typeof import('pinia').mapActions
   const mapGetters: typeof import('pinia').mapGetters
   const mapState: typeof import('pinia').mapState
   const mapStores: typeof import('pinia').mapStores
   const mapWritableState: typeof import('pinia').mapWritableState
   const markRaw: typeof import('vue').markRaw
+  const momentFeeds: typeof import('../utils/waterfallFeeds').momentFeeds
   const navigateBack: typeof import('../utils/router').navigateBack
   const navigateTo: typeof import('../utils/router').navigateTo
   const navigateToExample: typeof import('../utils/exampleScenarios').navigateToExample
+  const newsFeeds: typeof import('../utils/waterfallFeeds').newsFeeds
   const nextTick: typeof import('vue').nextTick
   const onActivated: typeof import('vue').onActivated
   const onBeforeMount: typeof import('vue').onBeforeMount
@@ -79,11 +83,13 @@ declare global {
   const redirectTo: typeof import('../utils/router').redirectTo
   const ref: typeof import('vue').ref
   const resolveComponent: typeof import('vue').resolveComponent
+  const sceneTabs: typeof import('../utils/waterfallFeeds').sceneTabs
   const setActivePinia: typeof import('pinia').setActivePinia
   const setMapStoreSuffix: typeof import('pinia').setMapStoreSuffix
   const shallowReactive: typeof import('vue').shallowReactive
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef
+  const shopFeeds: typeof import('../utils/waterfallFeeds').shopFeeds
   const storeToRefs: typeof import('pinia').storeToRefs
   const switchTabByName: typeof import('../utils/tabbar').switchTabByName
   const tabbarItems: typeof import('../utils/tabbar').tabbarItems
@@ -138,7 +144,7 @@ declare global {
   export type { TabbarName, TabbarItem } from '../utils/tabbar'
   import('../utils/tabbar')
   // @ts-ignore
-  export type { WaterfallFeed } from '../utils/waterfallFeeds'
+  export type { WaterfallScene, WaterfallFeed } from '../utils/waterfallFeeds'
   import('../utils/waterfallFeeds')
   // @ts-ignore
   export type { ComponentItem, ComponentGroup, ApiRow } from '../utils/wotComponents'
@@ -174,6 +180,7 @@ declare module 'vue' {
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getCurrentWatcher: UnwrapRef<typeof import('vue')['getCurrentWatcher']>
+    readonly getFeedsByScene: UnwrapRef<typeof import('../utils/waterfallFeeds')['getFeedsByScene']>
     readonly getPlatformInfo: UnwrapRef<typeof import('../utils/platform')['getPlatformInfo']>
     readonly getWaterfallFeed: UnwrapRef<typeof import('../utils/waterfallFeeds')['getWaterfallFeed']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
@@ -183,15 +190,18 @@ declare module 'vue' {
     readonly isReadonly: UnwrapRef<typeof import('vue')['isReadonly']>
     readonly isRef: UnwrapRef<typeof import('vue')['isRef']>
     readonly isShallow: UnwrapRef<typeof import('vue')['isShallow']>
+    readonly lifeFeeds: UnwrapRef<typeof import('../utils/waterfallFeeds')['lifeFeeds']>
     readonly mapActions: UnwrapRef<typeof import('pinia')['mapActions']>
     readonly mapGetters: UnwrapRef<typeof import('pinia')['mapGetters']>
     readonly mapState: UnwrapRef<typeof import('pinia')['mapState']>
     readonly mapStores: UnwrapRef<typeof import('pinia')['mapStores']>
     readonly mapWritableState: UnwrapRef<typeof import('pinia')['mapWritableState']>
     readonly markRaw: UnwrapRef<typeof import('vue')['markRaw']>
+    readonly momentFeeds: UnwrapRef<typeof import('../utils/waterfallFeeds')['momentFeeds']>
     readonly navigateBack: UnwrapRef<typeof import('../utils/router')['navigateBack']>
     readonly navigateTo: UnwrapRef<typeof import('../utils/router')['navigateTo']>
     readonly navigateToExample: UnwrapRef<typeof import('../utils/exampleScenarios')['navigateToExample']>
+    readonly newsFeeds: UnwrapRef<typeof import('../utils/waterfallFeeds')['newsFeeds']>
     readonly nextTick: UnwrapRef<typeof import('vue')['nextTick']>
     readonly onActivated: UnwrapRef<typeof import('vue')['onActivated']>
     readonly onBeforeMount: UnwrapRef<typeof import('vue')['onBeforeMount']>
@@ -223,11 +233,13 @@ declare module 'vue' {
     readonly redirectTo: UnwrapRef<typeof import('../utils/router')['redirectTo']>
     readonly ref: UnwrapRef<typeof import('vue')['ref']>
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
+    readonly sceneTabs: UnwrapRef<typeof import('../utils/waterfallFeeds')['sceneTabs']>
     readonly setActivePinia: UnwrapRef<typeof import('pinia')['setActivePinia']>
     readonly setMapStoreSuffix: UnwrapRef<typeof import('pinia')['setMapStoreSuffix']>
     readonly shallowReactive: UnwrapRef<typeof import('vue')['shallowReactive']>
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>
+    readonly shopFeeds: UnwrapRef<typeof import('../utils/waterfallFeeds')['shopFeeds']>
     readonly storeToRefs: UnwrapRef<typeof import('pinia')['storeToRefs']>
     readonly switchTabByName: UnwrapRef<typeof import('../utils/tabbar')['switchTabByName']>
     readonly tabbarItems: UnwrapRef<typeof import('../utils/tabbar')['tabbarItems']>
