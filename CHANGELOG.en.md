@@ -16,5 +16,5 @@
 - Added a subscription payment template with plan selection, monthly/yearly billing, WeChat Pay, Alipay and bank card methods.
 - Added indexed contacts, system messages and comment interaction examples.
 - Enhanced the comment example with first-level comments, nested replies, replying to nested comments, review handling, and fixed the mobile reply popup overlap with the bottom tabbar.
-- Added switchable dynamic form, music player, playlist list and folder tree examples, and enhanced the dynamic form with pickers, radios, textarea notes and editable detail rows.
+- Added switchable dynamic form, music player, playlist list, media search, app update and folder tree examples; media search supports swipeable channels, more categories, search history and hot searches, and the dynamic form was enhanced with pickers, radios, textarea notes and editable detail rows.
 - Added Chinese README, English README, License and Git ignore rules.

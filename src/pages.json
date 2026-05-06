@@ -73,6 +73,18 @@
       }
     },
     {
+      "path": "pages/examples/media-search",
+      "style": {
+        "navigationBarTitleText": "影视检索"
+      }
+    },
+    {
+      "path": "pages/examples/app-update",
+      "style": {
+        "navigationBarTitleText": "应用更新"
+      }
+    },
+    {
       "path": "pages/examples/folders",
       "style": {
         "navigationBarTitleText": "文件夹树形"

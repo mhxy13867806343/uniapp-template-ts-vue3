@@ -36,6 +36,20 @@ export const exampleScenarios: ExampleScenario[] = [
     tags: ['Playlist', 'Song', 'List']
   },
   {
+    level: '媒体',
+    title: '影视检索',
+    path: 'media-search',
+    description: '视频频道左右滑动、更多分类、搜索历史、热搜榜和结果预览。',
+    tags: ['Swiper', 'Search', 'Hot']
+  },
+  {
+    level: '更新',
+    title: '应用更新',
+    path: 'app-update',
+    description: '按 App、小程序、H5、鸿蒙四端展示版本检测、灰度、强更和回滚策略。',
+    tags: ['Version', 'Update', 'Gray']
+  },
+  {
     level: '文件',
     title: '文件夹树形',
     path: 'folders',
