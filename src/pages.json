@@ -19,6 +19,18 @@
       }
     },
     {
+      "path": "pages/auth/login",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
+    },
+    {
+      "path": "pages/auth/register",
+      "style": {
+        "navigationBarTitleText": "注册"
+      }
+    },
+    {
       "path": "pages/components/index",
       "style": {
         "navigationBarTitleText": "组件"
@@ -70,6 +82,30 @@
       "path": "pages/other/index",
       "style": {
         "navigationBarTitleText": "其他"
+      }
+    },
+    {
+      "path": "pages/framework/plugins",
+      "style": {
+        "navigationBarTitleText": "插件体系"
+      }
+    },
+    {
+      "path": "pages/framework/styles",
+      "style": {
+        "navigationBarTitleText": "样式规范"
+      }
+    },
+    {
+      "path": "pages/framework/i18n",
+      "style": {
+        "navigationBarTitleText": "多语言"
+      }
+    },
+    {
+      "path": "pages/framework/hbx",
+      "style": {
+        "navigationBarTitleText": "HBX 模板"
       }
     }
   ],

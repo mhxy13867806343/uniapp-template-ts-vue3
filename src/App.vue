@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { useAppStore, useUserStore } from '@/store'
+
+const appStore = useAppStore()
+const userStore = useUserStore()
+
 function hideNativeTabBar() {
   uni.hideTabBar?.({
     animation: false,
@@ -8,6 +13,8 @@ function hideNativeTabBar() {
 
 onLaunch(() => {
   console.log('App Launch')
+  appStore.initLocale()
+  userStore.hydrate()
   hideNativeTabBar()
 })
 

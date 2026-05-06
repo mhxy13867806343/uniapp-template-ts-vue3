@@ -42,6 +42,8 @@ declare global {
   const mapStores: typeof import('pinia').mapStores
   const mapWritableState: typeof import('pinia').mapWritableState
   const markRaw: typeof import('vue').markRaw
+  const navigateBack: typeof import('../utils/router').navigateBack
+  const navigateTo: typeof import('../utils/router').navigateTo
   const navigateToExample: typeof import('../utils/exampleScenarios').navigateToExample
   const nextTick: typeof import('vue').nextTick
   const onActivated: typeof import('vue').onActivated
@@ -71,6 +73,7 @@ declare global {
   const provide: typeof import('vue').provide
   const reactive: typeof import('vue').reactive
   const readonly: typeof import('vue').readonly
+  const redirectTo: typeof import('../utils/router').redirectTo
   const ref: typeof import('vue').ref
   const resolveComponent: typeof import('vue').resolveComponent
   const setActivePinia: typeof import('pinia').setActivePinia
@@ -94,6 +97,7 @@ declare global {
   const useCountDown: typeof import('wot-design-uni').useCountDown
   const useCssModule: typeof import('vue').useCssModule
   const useCssVars: typeof import('vue').useCssVars
+  const useI18n: typeof import('../hooks/useI18n').useI18n
   const useId: typeof import('vue').useId
   const useMessage: typeof import('wot-design-uni').useMessage
   const useModel: typeof import('vue').useModel
@@ -103,6 +107,7 @@ declare global {
   const useTemplateRef: typeof import('vue').useTemplateRef
   const useToast: typeof import('wot-design-uni').useToast
   const useUpload: typeof import('wot-design-uni').useUpload
+  const useUserStore: typeof import('../store/user').useUserStore
   const watch: typeof import('vue').watch
   const watchEffect: typeof import('vue').watchEffect
   const watchPostEffect: typeof import('vue').watchPostEffect
@@ -113,6 +118,9 @@ declare global {
   // @ts-ignore
   export type { Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
+  // @ts-ignore
+  export type { UserProfile } from '../store/user'
+  import('../store/user')
   // @ts-ignore
   export type { AppEnvMode } from '../utils/env'
   import('../utils/env')
@@ -171,6 +179,8 @@ declare module 'vue' {
     readonly mapStores: UnwrapRef<typeof import('pinia')['mapStores']>
     readonly mapWritableState: UnwrapRef<typeof import('pinia')['mapWritableState']>
     readonly markRaw: UnwrapRef<typeof import('vue')['markRaw']>
+    readonly navigateBack: UnwrapRef<typeof import('../utils/router')['navigateBack']>
+    readonly navigateTo: UnwrapRef<typeof import('../utils/router')['navigateTo']>
     readonly navigateToExample: UnwrapRef<typeof import('../utils/exampleScenarios')['navigateToExample']>
     readonly nextTick: UnwrapRef<typeof import('vue')['nextTick']>
     readonly onActivated: UnwrapRef<typeof import('vue')['onActivated']>
@@ -200,6 +210,7 @@ declare module 'vue' {
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
     readonly reactive: UnwrapRef<typeof import('vue')['reactive']>
     readonly readonly: UnwrapRef<typeof import('vue')['readonly']>
+    readonly redirectTo: UnwrapRef<typeof import('../utils/router')['redirectTo']>
     readonly ref: UnwrapRef<typeof import('vue')['ref']>
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
     readonly setActivePinia: UnwrapRef<typeof import('pinia')['setActivePinia']>
@@ -223,6 +234,7 @@ declare module 'vue' {
     readonly useCountDown: UnwrapRef<typeof import('wot-design-uni')['useCountDown']>
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
+    readonly useI18n: UnwrapRef<typeof import('../hooks/useI18n')['useI18n']>
     readonly useId: UnwrapRef<typeof import('vue')['useId']>
     readonly useMessage: UnwrapRef<typeof import('wot-design-uni')['useMessage']>
     readonly useModel: UnwrapRef<typeof import('vue')['useModel']>
@@ -232,6 +244,7 @@ declare module 'vue' {
     readonly useTemplateRef: UnwrapRef<typeof import('vue')['useTemplateRef']>
     readonly useToast: UnwrapRef<typeof import('wot-design-uni')['useToast']>
     readonly useUpload: UnwrapRef<typeof import('wot-design-uni')['useUpload']>
+    readonly useUserStore: UnwrapRef<typeof import('../store/user')['useUserStore']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>
     readonly watchPostEffect: UnwrapRef<typeof import('vue')['watchPostEffect']>

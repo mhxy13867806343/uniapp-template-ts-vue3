@@ -9,4 +9,7 @@
 - Added a Wot Design Uni component center grouped by official categories, with clickable detail examples.
 - Added a business example center covering basic, junior, intermediate, advanced and complex scenarios.
 - Added dynamic form validation, input linkage, Toast, Popup, Calendar, DatetimePicker, DropMenu, NoticeBar and Dialog to the basic example.
+- Added five switchable login templates: password, SMS code, enterprise tenant, admin security and quick authorization login.
+- Added five switchable registration templates: phone, invite code, company onboarding, creator onboarding and App quick registration.
+- Added pages for plugin setup, style guidelines, i18n and HBX template usage.
 - Added Chinese README, English README, License and Git ignore rules.

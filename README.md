@@ -14,6 +14,8 @@
 - 组件中心按 Wot Design Uni 分类展示，支持点击进入组件示例详情
 - 示例中心按复杂度拆分：基础、初级、中级、高级、复杂
 - 基础示例覆盖动态表单验证、输入联动、Toast、Popup、Calendar、DatetimePicker、DropMenu、NoticeBar、Dialog
+- 内置登录/注册模板，各 5 套可切换方案
+- 增加插件体系、样式规范、多语言和 HBX 模板说明页面
 
 ## 目录结构
 
@@ -21,7 +23,9 @@
 src
 ├── components        # 通用组件，例如 PageShell、自定义 Tabbar
 ├── hooks             # 组合式业务 Hook
+├── locales           # 多语言文案
 ├── pages             # 页面与业务示例
+├── plugins           # 应用插件安装入口
 ├── static            # 静态资源
 ├── store             # Pinia 状态
 ├── styles            # 全局样式
