@@ -22,4 +22,5 @@
 - 扩展 `src/utils/cache.ts`，封装 uni storage，支持命名空间、TTL 过期、读取 payload、剩余 TTL、update 合并、同步/异步读写、getOrSet、清理过期缓存和清空当前命名空间缓存。
 - 新增 `src/hooks/requests.ts`、`src/hooks/pagination.ts`、`src/hooks/useBackRefresh.ts`，覆盖请求封装、页码分页、步长分页和返回上一页不刷新。
 - 首页“今日待办”下方新增工具方法展示区，直接展示格式化结果、缓存状态和 hooks 参数示例。
+- 新增 GitHub Pages 专用构建配置 `.env.github` 和 `pnpm build:github`，支持部署到 `/uniapp-template-ts-vue3/` 子路径。
 - 增加中文 README、英文 README、License 和 Git 忽略规则。

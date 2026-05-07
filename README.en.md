@@ -70,12 +70,15 @@ pnpm dev:app-harmony
 
 ```bash
 pnpm build:h5
+pnpm build:github
 pnpm build:mp-weixin
 pnpm build:mp-alipay
 pnpm build:mp-toutiao
 pnpm build:app
 pnpm build:app-harmony
 ```
+
+`pnpm build:github` uses `VITE_PUBLIC_PATH=/uniapp-template-ts-vue3/` from `.env.github` for deployment under the GitHub Pages repository subpath.
 
 ## Check
 

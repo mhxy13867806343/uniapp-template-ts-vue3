@@ -70,12 +70,15 @@ pnpm dev:app-harmony
 
 ```bash
 pnpm build:h5
+pnpm build:github
 pnpm build:mp-weixin
 pnpm build:mp-alipay
 pnpm build:mp-toutiao
 pnpm build:app
 pnpm build:app-harmony
 ```
+
+`pnpm build:github` 会使用 `.env.github` 中的 `VITE_PUBLIC_PATH=/uniapp-template-ts-vue3/`，用于部署到 GitHub Pages 仓库子路径。
 
 ## 校验
 
