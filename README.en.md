@@ -78,7 +78,9 @@ pnpm build:app
 pnpm build:app-harmony
 ```
 
-`pnpm build:github` uses `VITE_PUBLIC_PATH=/uniapp-template-ts-vue3/` from `.env.github` for deployment under the GitHub Pages repository subpath.
+`pnpm build:github` uses `VITE_PUBLIC_PATH=/uniapp-template-ts-vue3-blog/` from `.env.github` for deployment under the GitHub Pages repository subpath.
+
+Online preview: [https://mhxy13867806343.github.io/uniapp-template-ts-vue3-blog/](https://mhxy13867806343.github.io/uniapp-template-ts-vue3-blog/)
 
 ## Check
 

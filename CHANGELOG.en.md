@@ -22,5 +22,5 @@
 - Extended `src/utils/cache.ts`, a uni storage wrapper with namespace support, TTL expiration, payload reads, remaining TTL, update merging, sync/async reads and writes, getOrSet, expired-cache cleanup and namespace clearing.
 - Added `src/hooks/requests.ts`, `src/hooks/pagination.ts` and `src/hooks/useBackRefresh.ts` for request wrappers, page pagination, step pagination and back navigation without refresh.
 - Added a utility methods section below Today Tasks on the home dashboard with live formatter output, cache status and hook parameter examples.
-- Added GitHub Pages build settings with `.env.github` and `pnpm build:github`, targeting the `/uniapp-template-ts-vue3/` repository subpath.
+- Added GitHub Pages build settings with `.env.github` and `pnpm build:github`, targeting the `/uniapp-template-ts-vue3-blog/` repository subpath, and documented the online preview URL in the README.
 - Added Chinese README, English README, License and Git ignore rules.

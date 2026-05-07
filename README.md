@@ -78,7 +78,9 @@ pnpm build:app
 pnpm build:app-harmony
 ```
 
-`pnpm build:github` 会使用 `.env.github` 中的 `VITE_PUBLIC_PATH=/uniapp-template-ts-vue3/`，用于部署到 GitHub Pages 仓库子路径。
+`pnpm build:github` 会使用 `.env.github` 中的 `VITE_PUBLIC_PATH=/uniapp-template-ts-vue3-blog/`，用于部署到 GitHub Pages 仓库子路径。
+
+线上预览：[https://mhxy13867806343.github.io/uniapp-template-ts-vue3-blog/](https://mhxy13867806343.github.io/uniapp-template-ts-vue3-blog/)
 
 ## 校验
 
