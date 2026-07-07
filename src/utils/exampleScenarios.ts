@@ -118,6 +118,55 @@ export const exampleScenarios: ExampleScenario[] = [
     path: 'comments',
     description: '评论筛选、点赞、二级回复和底部回复弹层。',
     tags: ['Comment', 'Reply', 'Like']
+  },
+  {
+    level: '高级',
+    title: '高级筛选抽屉',
+    path: 'filter-drawer',
+    description: '侧边抽屉筛选面板，支持分类网格、价格区间大小校验及日期范围选择。',
+    tags: ['Popup', 'Drawer', 'Calendar']
+  },
+  {
+    level: '高级',
+    title: '海报分享面板',
+    path: 'share-poster',
+    description: '底部弹出分享社交渠道，并可一键生成精美营销海报并下载保存。',
+    tags: ['Share', 'Poster', 'Download']
+  },
+  {
+    level: '高级',
+    title: '分步售后退款',
+    path: 'multi-step-refund',
+    description: '模态对话框内实现分步式流程，涵盖退款表单输入、凭证图片上传和提交转场。',
+    tags: ['Dialog', 'Steps', 'Upload']
+  },
+  {
+    level: '高级',
+    title: '可搜索地址选择',
+    path: 'address-selector',
+    description: '底部选择面板自带搜索过滤、左滑删除，并支持就地新增与编辑地址表单切换。',
+    tags: ['Search', 'SwipeCell', 'Form']
+  },
+  {
+    level: '高级',
+    title: '阅读偏好设置',
+    path: 'reading-settings',
+    description: '底部偏好设置面板，调节字号、切换主题及夜间模式，背景内容实时渲染响应。',
+    tags: ['Slider', 'Theme', 'Realtime']
+  },
+  {
+    level: '高级',
+    title: '电影选场选座',
+    path: 'movie-tickets',
+    description: '模拟移动端影院购票，支持横向日期场次选择、防重交互式座位网格及底栏支付结算闭环。',
+    tags: ['Grid', 'Popup', 'Movie']
+  },
+  {
+    level: '高级',
+    title: '交互动效中心',
+    path: 'animations',
+    description: '包含电商走楼梯、抛物线购物车、探探卡片、3D翻转等 12 种跨端高流畅动画特效。',
+    tags: ['Animation', 'ScrollSpy', 'CSS3']
   }
 ]
 

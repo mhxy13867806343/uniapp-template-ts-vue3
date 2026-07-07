@@ -151,6 +151,48 @@
       }
     },
     {
+      "path": "pages/examples/filter-drawer",
+      "style": {
+        "navigationBarTitleText": "高级筛选抽屉"
+      }
+    },
+    {
+      "path": "pages/examples/share-poster",
+      "style": {
+        "navigationBarTitleText": "分享海报与面板"
+      }
+    },
+    {
+      "path": "pages/examples/multi-step-refund",
+      "style": {
+        "navigationBarTitleText": "分步售后退款"
+      }
+    },
+    {
+      "path": "pages/examples/address-selector",
+      "style": {
+        "navigationBarTitleText": "可搜索地址选择"
+      }
+    },
+    {
+      "path": "pages/examples/reading-settings",
+      "style": {
+        "navigationBarTitleText": "阅读偏好设置"
+      }
+    },
+    {
+      "path": "pages/examples/movie-tickets",
+      "style": {
+        "navigationBarTitleText": "电影选场选座"
+      }
+    },
+    {
+      "path": "pages/examples/animations",
+      "style": {
+        "navigationBarTitleText": "交互动效中心"
+      }
+    },
+    {
       "path": "pages/other/index",
       "style": {
         "navigationBarTitleText": "其他"
