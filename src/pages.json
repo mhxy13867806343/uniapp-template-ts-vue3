@@ -193,6 +193,12 @@
       }
     },
     {
+      "path": "pages/examples/playground",
+      "style": {
+        "navigationBarTitleText": "万能动态演练场"
+      }
+    },
+    {
       "path": "pages/other/index",
       "style": {
         "navigationBarTitleText": "其他"
