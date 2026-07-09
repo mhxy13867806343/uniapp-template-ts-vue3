@@ -726,6 +726,13 @@ export const exampleScenarios: ExampleScenario[] = [
     path: 'utilities',
     description: '展示并调试包含高阶时间、脱敏、货币格式化，及 Python/Rust 风格开发辅助工具函数。',
     tags: ['Format', 'Python', 'Rust']
+  },
+  {
+    level: '展示',
+    title: '25种签到打卡中心',
+    path: 'signin',
+    description: '集成连续签到、补签卡、砸金蛋、运势及步数打卡等 25 种不同设计与逻辑样式。',
+    tags: ['Streak', 'Gaming', 'Task']
   }
 ]
 

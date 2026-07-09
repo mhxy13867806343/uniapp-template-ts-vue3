@@ -205,6 +205,12 @@
       }
     },
     {
+      "path": "pages/examples/signin",
+      "style": {
+        "navigationBarTitleText": "签到打卡中心"
+      }
+    },
+    {
       "path": "pages/other/index",
       "style": {
         "navigationBarTitleText": "其他"

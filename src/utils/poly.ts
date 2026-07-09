@@ -133,3 +133,233 @@ export function compact<T>(arr: Array<T | null | undefined | false | 0 | ''>): T
 export function flatten<T>(arr: any[]): T[] {
   return arr.reduce((acc, val) => acc.concat(Array.isArray(val) ? flatten(val) : val), []) as T[]
 }
+
+/**
+ * 11. 数组差集 (difference)
+ * @example difference([1, 2, 3], [2, 3, 4]) => [1]
+ */
+export function difference<T>(arr1: T[], arr2: T[]): T[] {
+  const set2 = new Set(arr2)
+  return arr1.filter((item) => !set2.has(item))
+}
+
+/**
+ * 12. 数组交集 (intersection)
+ * @example intersection([1, 2, 3], [2, 3, 4]) => [2, 3]
+ */
+export function intersection<T>(arr1: T[], arr2: T[]): T[] {
+  const set2 = new Set(arr2)
+  return arr1.filter((item) => set2.has(item))
+}
+
+/**
+ * 13. 数组并集 (union)
+ * @example union([1, 2], [2, 3], [3, 4]) => [1, 2, 3, 4]
+ */
+export function union<T>(...arrs: T[][]): T[] {
+  const set = new Set<T>()
+  arrs.forEach((arr) => arr.forEach((item) => set.add(item)))
+  return Array.from(set)
+}
+
+/**
+ * 14. 判定划分 (partition)
+ * @example partition([1, 2, 3, 4], x => x % 2 === 0) => [[2, 4], [1, 3]]
+ */
+export function partition<T>(arr: T[], predicate: (item: T) => boolean): [T[], T[]] {
+  const pass: T[] = []
+  const fail: T[] = []
+  arr.forEach((item) => {
+    if (predicate(item)) pass.push(item)
+    else fail.push(item)
+  })
+  return [pass, fail]
+}
+
+/**
+ * 15. 循环重复数组 (cycle)
+ * @example cycle([1, 2], 3) => [1, 2, 1, 2, 1, 2]
+ */
+export function cycle<T>(arr: T[], count: number): T[] {
+  if (arr.length === 0 || count <= 0) return []
+  const result: T[] = []
+  for (let i = 0; i < count; i++) {
+    result.push(...arr)
+  }
+  return result
+}
+
+/**
+ * 16. 截取前 N 项 (take)
+ * @example take([1, 2, 3], 2) => [1, 2]
+ */
+export function take<T>(arr: T[], n: number): T[] {
+  return arr.slice(0, Math.max(0, n))
+}
+
+/**
+ * 17. 丢弃前 N 项 (drop)
+ * @example drop([1, 2, 3], 1) => [2, 3]
+ */
+export function drop<T>(arr: T[], n: number): T[] {
+  return arr.slice(Math.max(0, n))
+}
+
+/**
+ * 18. 数值钳夹限制 (clamp)
+ * @example clamp(10, 0, 5) => 5
+ */
+export function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max)
+}
+
+/**
+ * 19. 随机选取一项 (sample)
+ * @example sample([1, 2, 3]) => 随机 1 | 2 | 3
+ */
+export function sample<T>(arr: T[]): T | undefined {
+  if (arr.length === 0) return undefined
+  const index = Math.floor(Math.random() * arr.length)
+  return arr[index]
+}
+
+/**
+ * 20. 随机洗牌 (shuffle)
+ * @example shuffle([1, 2, 3, 4, 5]) => 随机乱序数组
+ */
+export function shuffle<T>(arr: T[]): T[] {
+  const result = [...arr]
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    const temp = result[i]
+    result[i] = result[j]
+    result[j] = temp
+  }
+  return result
+}
+
+/**
+ * 21. 对象键值反转 (invert)
+ * @example invert({a: '1', b: '2'}) => { '1': 'a', '2': 'b' }
+ */
+export function invert(obj: Record<string, string>): Record<string, string> {
+  const result: Record<string, string> = {}
+  Object.entries(obj).forEach(([key, value]) => {
+    result[value] = key
+  })
+  return result
+}
+
+/**
+ * 22. 链式路径取值 (get)
+ * @example get({a: {b: {c: 1}}}, 'a.b.c') => 1
+ */
+export function get(obj: any, path: string, defaultValue: any = undefined): any {
+  const keys = path.split('.')
+  let current = obj
+  for (const key of keys) {
+    if (current === null || current === undefined) return defaultValue
+    current = current[key]
+  }
+  return current === undefined ? defaultValue : current
+}
+
+/**
+ * 23. 元素计数分类 (countBy)
+ * @example countBy(['a', 'b', 'a'], x => x) => { a: 2, b: 1 }
+ */
+export function countBy<T>(arr: T[], fn: (item: T) => string | number): Record<string | number, number> {
+  return arr.reduce<Record<string | number, number>>((acc, item) => {
+    const key = fn(item)
+    acc[key] = (acc[key] || 0) + 1
+    return acc
+  }, {})
+}
+
+/**
+ * 24. 数值求和 (sum)
+ * @example sum([1, 2, 3]) => 6
+ */
+export function sum(arr: number[]): number {
+  return arr.reduce((acc, val) => acc + val, 0)
+}
+
+/**
+ * 25. 平均值计算 (mean)
+ * @example mean([1, 2, 3]) => 2
+ */
+export function mean(arr: number[]): number {
+  return arr.length === 0 ? 0 : sum(arr) / arr.length
+}
+
+/**
+ * 26. 异步操作重试 (retry)
+ */
+export async function retry<T>(fn: () => Promise<T>, retries = 3, delayMs = 500): Promise<T> {
+  try {
+    return await fn()
+  } catch (error) {
+    if (retries <= 0) throw error
+    await new Promise((resolve) => setTimeout(resolve, delayMs))
+    return retry(fn, retries - 1, delayMs)
+  }
+}
+
+/**
+ * 27. 只执行一次包装 (once)
+ */
+export function once<T extends (...args: any[]) => any>(fn: T): T {
+  let called = false
+  let result: any
+  return function (this: any, ...args: any[]) {
+    if (!called) {
+      called = true
+      result = fn.apply(this, args)
+    }
+    return result
+  } as any
+}
+
+/**
+ * 28. 驼峰命名转换 (camelCase)
+ * @example camelCase('hello-world') => 'helloWorld'
+ */
+export function camelCase(str: string): string {
+  return str
+    .replace(/[-\s_]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''))
+    .replace(/^(.)/, (c) => c.toLowerCase())
+}
+
+/**
+ * 29. 短横线命名转换 (kebabCase)
+ * @example kebabCase('helloWorld') => 'hello-world'
+ */
+export function kebabCase(str: string): string {
+  return str
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/[\s_]+/g, '-')
+    .toLowerCase()
+}
+
+/**
+ * 30. 函数节流防抖控制 (throttle)
+ */
+export function throttle<T extends (...args: any[]) => any>(fn: T, limit: number): T {
+  let lastFunc: any
+  let lastRan: any
+  return function (this: any, ...args: any[]) {
+    const context = this
+    if (!lastRan) {
+      fn.apply(context, args)
+      lastRan = Date.now()
+    } else {
+      clearTimeout(lastFunc)
+      lastFunc = setTimeout(() => {
+        if (Date.now() - lastRan >= limit) {
+          fn.apply(context, args)
+          lastRan = Date.now()
+        }
+      }, limit - (Date.now() - lastRan))
+    }
+  } as any
+}

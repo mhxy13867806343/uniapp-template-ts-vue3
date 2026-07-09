@@ -10,21 +10,27 @@ declare global {
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
   const appCache: typeof import('../utils/cache').appCache
   const appEnv: typeof import('../utils/env').appEnv
+  const camelCase: typeof import('../utils/poly').camelCase
   const chunk: typeof import('../utils/poly').chunk
+  const clamp: typeof import('../utils/poly').clamp
   const compact: typeof import('../utils/poly').compact
   const componentGroups: typeof import('../utils/wotComponents').componentGroups
   const componentList: typeof import('../utils/wotComponents').componentList
   const composeValidators: typeof import('../utils/validate').composeValidators
   const computed: typeof import('vue').computed
+  const countBy: typeof import('../utils/poly').countBy
   const createApp: typeof import('vue').createApp
   const createCache: typeof import('../utils/cache').createCache
   const createPinia: typeof import('pinia').createPinia
   const createRequest: typeof import('../hooks/requests').createRequest
   const createValidateResult: typeof import('../utils/validate').createValidateResult
   const customRef: typeof import('vue').customRef
+  const cycle: typeof import('../utils/poly').cycle
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
   const defineComponent: typeof import('vue').defineComponent
   const defineStore: typeof import('pinia').defineStore
+  const difference: typeof import('../utils/poly').difference
+  const drop: typeof import('../utils/poly').drop
   const effectScope: typeof import('vue').effectScope
   const exampleScenarios: typeof import('../utils/exampleScenarios').exampleScenarios
   const feedCategories: typeof import('../utils/waterfallFeeds').feedCategories
@@ -51,6 +57,7 @@ declare global {
   const formatSignedNumber: typeof import('../utils/format').formatSignedNumber
   const formatTime: typeof import('../utils/format').formatTime
   const formatWeekday: typeof import('../utils/format').formatWeekday
+  const get: typeof import('../utils/poly').get
   const getActivePinia: typeof import('pinia').getActivePinia
   const getActiveTabName: typeof import('../utils/tabbar').getActiveTabName
   const getComponentApi: typeof import('../utils/wotComponents').getComponentApi
@@ -65,6 +72,8 @@ declare global {
   const groupBy: typeof import('../utils/poly').groupBy
   const h: typeof import('vue').h
   const inject: typeof import('vue').inject
+  const intersection: typeof import('../utils/poly').intersection
+  const invert: typeof import('../utils/poly').invert
   const isBankCard: typeof import('../utils/validate').isBankCard
   const isChineseName: typeof import('../utils/validate').isChineseName
   const isEmail: typeof import('../utils/validate').isEmail
@@ -80,6 +89,7 @@ declare global {
   const isShallow: typeof import('vue').isShallow
   const isStrongPassword: typeof import('../utils/validate').isStrongPassword
   const isUrl: typeof import('../utils/validate').isUrl
+  const kebabCase: typeof import('../utils/poly').kebabCase
   const lifeFeeds: typeof import('../utils/waterfallFeeds').lifeFeeds
   const mapActions: typeof import('pinia').mapActions
   const mapGetters: typeof import('pinia').mapGetters
@@ -92,6 +102,7 @@ declare global {
   const maskPhone: typeof import('../utils/format').maskPhone
   const maskText: typeof import('../utils/format').maskText
   const maxLength: typeof import('../utils/validate').maxLength
+  const mean: typeof import('../utils/poly').mean
   const minLength: typeof import('../utils/validate').minLength
   const momentFeeds: typeof import('../utils/waterfallFeeds').momentFeeds
   const navigateBack: typeof import('../utils/router').navigateBack
@@ -124,7 +135,9 @@ declare global {
   const onUnmounted: typeof import('vue').onUnmounted
   const onUpdated: typeof import('vue').onUpdated
   const onWatcherCleanup: typeof import('vue').onWatcherCleanup
+  const once: typeof import('../utils/poly').once
   const parseQuery: typeof import('../utils/format').parseQuery
+  const partition: typeof import('../utils/poly').partition
   const pattern: typeof import('../utils/validate').pattern
   const provide: typeof import('vue').provide
   const range: typeof import('../utils/poly').range
@@ -135,7 +148,9 @@ declare global {
   const request: typeof import('../hooks/requests').request
   const required: typeof import('../utils/validate').required
   const resolveComponent: typeof import('vue').resolveComponent
+  const retry: typeof import('../utils/poly').retry
   const safeRun: typeof import('../utils/poly').safeRun
+  const sample: typeof import('../utils/poly').sample
   const sceneTabs: typeof import('../utils/waterfallFeeds').sceneTabs
   const setActivePinia: typeof import('pinia').setActivePinia
   const setMapStoreSuffix: typeof import('pinia').setMapStoreSuffix
@@ -143,10 +158,14 @@ declare global {
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef
   const shopFeeds: typeof import('../utils/waterfallFeeds').shopFeeds
+  const shuffle: typeof import('../utils/poly').shuffle
   const slugify: typeof import('../utils/poly').slugify
   const storeToRefs: typeof import('pinia').storeToRefs
+  const sum: typeof import('../utils/poly').sum
   const switchTabByName: typeof import('../utils/tabbar').switchTabByName
   const tabbarItems: typeof import('../utils/tabbar').tabbarItems
+  const take: typeof import('../utils/poly').take
+  const throttle: typeof import('../utils/poly').throttle
   const titleCase: typeof import('../utils/poly').titleCase
   const toRaw: typeof import('vue').toRaw
   const toRef: typeof import('vue').toRef
@@ -154,6 +173,7 @@ declare global {
   const toValue: typeof import('vue').toValue
   const triggerRef: typeof import('vue').triggerRef
   const truncateBySpecialLength: typeof import('../utils/format').truncateBySpecialLength
+  const union: typeof import('../utils/poly').union
   const uniqBy: typeof import('../utils/poly').uniqBy
   const unref: typeof import('vue').unref
   const useAppEnv: typeof import('../hooks/useAppEnv').useAppEnv
@@ -242,21 +262,27 @@ declare module 'vue' {
     readonly acceptHMRUpdate: UnwrapRef<typeof import('pinia')['acceptHMRUpdate']>
     readonly appCache: UnwrapRef<typeof import('../utils/cache')['appCache']>
     readonly appEnv: UnwrapRef<typeof import('../utils/env')['appEnv']>
+    readonly camelCase: UnwrapRef<typeof import('../utils/poly')['camelCase']>
     readonly chunk: UnwrapRef<typeof import('../utils/poly')['chunk']>
+    readonly clamp: UnwrapRef<typeof import('../utils/poly')['clamp']>
     readonly compact: UnwrapRef<typeof import('../utils/poly')['compact']>
     readonly componentGroups: UnwrapRef<typeof import('../utils/wotComponents')['componentGroups']>
     readonly componentList: UnwrapRef<typeof import('../utils/wotComponents')['componentList']>
     readonly composeValidators: UnwrapRef<typeof import('../utils/validate')['composeValidators']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
+    readonly countBy: UnwrapRef<typeof import('../utils/poly')['countBy']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
     readonly createCache: UnwrapRef<typeof import('../utils/cache')['createCache']>
     readonly createPinia: UnwrapRef<typeof import('pinia')['createPinia']>
     readonly createRequest: UnwrapRef<typeof import('../hooks/requests')['createRequest']>
     readonly createValidateResult: UnwrapRef<typeof import('../utils/validate')['createValidateResult']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
+    readonly cycle: UnwrapRef<typeof import('../utils/poly')['cycle']>
     readonly defineAsyncComponent: UnwrapRef<typeof import('vue')['defineAsyncComponent']>
     readonly defineComponent: UnwrapRef<typeof import('vue')['defineComponent']>
     readonly defineStore: UnwrapRef<typeof import('pinia')['defineStore']>
+    readonly difference: UnwrapRef<typeof import('../utils/poly')['difference']>
+    readonly drop: UnwrapRef<typeof import('../utils/poly')['drop']>
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
     readonly exampleScenarios: UnwrapRef<typeof import('../utils/exampleScenarios')['exampleScenarios']>
     readonly feedCategories: UnwrapRef<typeof import('../utils/waterfallFeeds')['feedCategories']>
@@ -283,6 +309,7 @@ declare module 'vue' {
     readonly formatSignedNumber: UnwrapRef<typeof import('../utils/format')['formatSignedNumber']>
     readonly formatTime: UnwrapRef<typeof import('../utils/format')['formatTime']>
     readonly formatWeekday: UnwrapRef<typeof import('../utils/format')['formatWeekday']>
+    readonly get: UnwrapRef<typeof import('../utils/poly')['get']>
     readonly getActivePinia: UnwrapRef<typeof import('pinia')['getActivePinia']>
     readonly getActiveTabName: UnwrapRef<typeof import('../utils/tabbar')['getActiveTabName']>
     readonly getComponentApi: UnwrapRef<typeof import('../utils/wotComponents')['getComponentApi']>
@@ -297,6 +324,8 @@ declare module 'vue' {
     readonly groupBy: UnwrapRef<typeof import('../utils/poly')['groupBy']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
+    readonly intersection: UnwrapRef<typeof import('../utils/poly')['intersection']>
+    readonly invert: UnwrapRef<typeof import('../utils/poly')['invert']>
     readonly isBankCard: UnwrapRef<typeof import('../utils/validate')['isBankCard']>
     readonly isChineseName: UnwrapRef<typeof import('../utils/validate')['isChineseName']>
     readonly isEmail: UnwrapRef<typeof import('../utils/validate')['isEmail']>
@@ -312,6 +341,7 @@ declare module 'vue' {
     readonly isShallow: UnwrapRef<typeof import('vue')['isShallow']>
     readonly isStrongPassword: UnwrapRef<typeof import('../utils/validate')['isStrongPassword']>
     readonly isUrl: UnwrapRef<typeof import('../utils/validate')['isUrl']>
+    readonly kebabCase: UnwrapRef<typeof import('../utils/poly')['kebabCase']>
     readonly lifeFeeds: UnwrapRef<typeof import('../utils/waterfallFeeds')['lifeFeeds']>
     readonly mapActions: UnwrapRef<typeof import('pinia')['mapActions']>
     readonly mapGetters: UnwrapRef<typeof import('pinia')['mapGetters']>
@@ -324,6 +354,7 @@ declare module 'vue' {
     readonly maskPhone: UnwrapRef<typeof import('../utils/format')['maskPhone']>
     readonly maskText: UnwrapRef<typeof import('../utils/format')['maskText']>
     readonly maxLength: UnwrapRef<typeof import('../utils/validate')['maxLength']>
+    readonly mean: UnwrapRef<typeof import('../utils/poly')['mean']>
     readonly minLength: UnwrapRef<typeof import('../utils/validate')['minLength']>
     readonly momentFeeds: UnwrapRef<typeof import('../utils/waterfallFeeds')['momentFeeds']>
     readonly navigateBack: UnwrapRef<typeof import('../utils/router')['navigateBack']>
@@ -356,7 +387,9 @@ declare module 'vue' {
     readonly onUnmounted: UnwrapRef<typeof import('vue')['onUnmounted']>
     readonly onUpdated: UnwrapRef<typeof import('vue')['onUpdated']>
     readonly onWatcherCleanup: UnwrapRef<typeof import('vue')['onWatcherCleanup']>
+    readonly once: UnwrapRef<typeof import('../utils/poly')['once']>
     readonly parseQuery: UnwrapRef<typeof import('../utils/format')['parseQuery']>
+    readonly partition: UnwrapRef<typeof import('../utils/poly')['partition']>
     readonly pattern: UnwrapRef<typeof import('../utils/validate')['pattern']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
     readonly range: UnwrapRef<typeof import('../utils/poly')['range']>
@@ -367,7 +400,9 @@ declare module 'vue' {
     readonly request: UnwrapRef<typeof import('../hooks/requests')['request']>
     readonly required: UnwrapRef<typeof import('../utils/validate')['required']>
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
+    readonly retry: UnwrapRef<typeof import('../utils/poly')['retry']>
     readonly safeRun: UnwrapRef<typeof import('../utils/poly')['safeRun']>
+    readonly sample: UnwrapRef<typeof import('../utils/poly')['sample']>
     readonly sceneTabs: UnwrapRef<typeof import('../utils/waterfallFeeds')['sceneTabs']>
     readonly setActivePinia: UnwrapRef<typeof import('pinia')['setActivePinia']>
     readonly setMapStoreSuffix: UnwrapRef<typeof import('pinia')['setMapStoreSuffix']>
@@ -375,10 +410,14 @@ declare module 'vue' {
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>
     readonly shopFeeds: UnwrapRef<typeof import('../utils/waterfallFeeds')['shopFeeds']>
+    readonly shuffle: UnwrapRef<typeof import('../utils/poly')['shuffle']>
     readonly slugify: UnwrapRef<typeof import('../utils/poly')['slugify']>
     readonly storeToRefs: UnwrapRef<typeof import('pinia')['storeToRefs']>
+    readonly sum: UnwrapRef<typeof import('../utils/poly')['sum']>
     readonly switchTabByName: UnwrapRef<typeof import('../utils/tabbar')['switchTabByName']>
     readonly tabbarItems: UnwrapRef<typeof import('../utils/tabbar')['tabbarItems']>
+    readonly take: UnwrapRef<typeof import('../utils/poly')['take']>
+    readonly throttle: UnwrapRef<typeof import('../utils/poly')['throttle']>
     readonly titleCase: UnwrapRef<typeof import('../utils/poly')['titleCase']>
     readonly toRaw: UnwrapRef<typeof import('vue')['toRaw']>
     readonly toRef: UnwrapRef<typeof import('vue')['toRef']>
@@ -386,6 +425,7 @@ declare module 'vue' {
     readonly toValue: UnwrapRef<typeof import('vue')['toValue']>
     readonly triggerRef: UnwrapRef<typeof import('vue')['triggerRef']>
     readonly truncateBySpecialLength: UnwrapRef<typeof import('../utils/format')['truncateBySpecialLength']>
+    readonly union: UnwrapRef<typeof import('../utils/poly')['union']>
     readonly uniqBy: UnwrapRef<typeof import('../utils/poly')['uniqBy']>
     readonly unref: UnwrapRef<typeof import('vue')['unref']>
     readonly useAppEnv: UnwrapRef<typeof import('../hooks/useAppEnv')['useAppEnv']>
