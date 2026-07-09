@@ -733,6 +733,13 @@ export const exampleScenarios: ExampleScenario[] = [
     path: 'signin',
     description: '集成连续签到、补签卡、砸金蛋、运势及步数打卡等 25 种不同设计与逻辑样式。',
     tags: ['Streak', 'Gaming', 'Task']
+  },
+  {
+    level: '展示',
+    title: '15种视频组件创意合集',
+    path: 'video-gallery',
+    description: '包含抖音短视频流、手势控制、弹幕、多机位、画中画、互动剧情选择等 15 种特定场景。',
+    tags: ['Video', 'Feed', 'PIP']
   }
 ]
 

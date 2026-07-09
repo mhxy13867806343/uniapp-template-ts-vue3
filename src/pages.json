@@ -211,6 +211,12 @@
       }
     },
     {
+      "path": "pages/examples/video-gallery",
+      "style": {
+        "navigationBarTitleText": "视频创意展示中心"
+      }
+    },
+    {
       "path": "pages/other/index",
       "style": {
         "navigationBarTitleText": "其他"
