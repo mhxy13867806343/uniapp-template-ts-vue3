@@ -13,6 +13,15 @@ const activeScene = ref<WaterfallScene>('life')
 const activeCategory = ref('推荐')
 const visibleCount = ref(6)
 
+// Dynamic column count state
+const colCount = ref(3) // 2 | 3 | 4 | 5
+const columnOptions = [
+  { label: '2列', value: 2 },
+  { label: '3列(默认)', value: 3 },
+  { label: '4列', value: 4 },
+  { label: '5列', value: 5 }
+]
+
 const sceneDesc = computed(() => sceneTabs.find((item) => item.value === activeScene.value)?.desc || '')
 
 const sceneFeeds = computed(() => getFeedsByScene(activeScene.value))
@@ -25,23 +34,28 @@ const filteredFeeds = computed(() => {
 
 const visibleFeeds = computed(() => filteredFeeds.value.slice(0, visibleCount.value))
 
+// Generalized N-Column Height Balancing Algorithm
 const columns = computed(() => {
-  const left: WaterfallFeed[] = []
-  const right: WaterfallFeed[] = []
-  let leftHeight = 0
-  let rightHeight = 0
+  // Initialize dynamic arrays of columns and heights
+  const cols: WaterfallFeed[][] = Array.from({ length: colCount.value }, () => [])
+  const heights = Array(colCount.value).fill(0)
 
   visibleFeeds.value.forEach((item) => {
-    if (leftHeight <= rightHeight) {
-      left.push(item)
-      leftHeight += item.ratio
-    } else {
-      right.push(item)
-      rightHeight += item.ratio
+    // Find the column index with the minimum accumulated height
+    let minIndex = 0
+    let minHeight = heights[0]
+    for (let i = 1; i < colCount.value; i++) {
+      if (heights[i] < minHeight) {
+        minHeight = heights[i]
+        minIndex = i
+      }
     }
+    // Push the item to that column and update its height
+    cols[minIndex].push(item)
+    heights[minIndex] += item.ratio
   })
 
-  return [left, right]
+  return cols
 })
 
 const hasMore = computed(() => visibleCount.value < filteredFeeds.value.length)
@@ -61,7 +75,7 @@ function switchScene(scene: WaterfallScene) {
 
 function loadMore() {
   if (!hasMore.value) return
-  visibleCount.value = Math.min(visibleCount.value + 4, filteredFeeds.value.length)
+  visibleCount.value = Math.min(visibleCount.value + 6, filteredFeeds.value.length)
 }
 
 function openDetail(item: WaterfallFeed) {
@@ -72,8 +86,10 @@ function openDetail(item: WaterfallFeed) {
 </script>
 
 <template>
-  <PageShell title="瀑布流示例" :description="sceneDesc">
-    <view class="waterfall-page">
+  <PageShell title="自适应瀑布流" :description="sceneDesc">
+    <view :class="['waterfall-page', 'col-size-' + colCount]">
+      
+      <!-- Scene Selection tabs -->
       <view class="scene-tabs">
         <view
           v-for="item in sceneTabs"
@@ -85,6 +101,7 @@ function openDetail(item: WaterfallFeed) {
         </view>
       </view>
 
+      <!-- Life category pills -->
       <view v-if="activeScene === 'life'" class="category-scroll">
         <scroll-view scroll-x>
           <view class="category-list">
@@ -100,7 +117,29 @@ function openDetail(item: WaterfallFeed) {
         </scroll-view>
       </view>
 
-      <view v-if="activeScene === 'life'" class="waterfall-grid">
+      <!-- COLUMN COUNT SELECTOR BAR (2, 3, 4, 5) -->
+      <view class="column-count-selector flex items-center justify-between mt-1">
+        <text class="col-lbl font-bold">排列视图调整：</text>
+        <view class="col-btn-group flex">
+          <view
+            v-for="opt in columnOptions"
+            :key="opt.value"
+            :class="['col-btn', { active: colCount === opt.value }]"
+            @click="colCount = opt.value"
+          >
+            {{ opt.label }}
+          </view>
+        </view>
+      </view>
+
+      <!-- ==========================================
+           1. LIFE SHARING WATERFALL GRID (Dynamic N Columns)
+           ========================================== -->
+      <view
+        v-if="activeScene === 'life'"
+        class="waterfall-grid"
+        :style="{ gridTemplateColumns: 'repeat(' + colCount + ', 1fr)' }"
+      >
         <view
           v-for="(column, columnIndex) in columns"
           :key="columnIndex"
@@ -118,18 +157,18 @@ function openDetail(item: WaterfallFeed) {
             </view>
             <view class="feed-body">
               <view class="feed-title">{{ item.title }}</view>
-              <view class="feed-meta">
-                <text>{{ item.author }}</text>
-                <text>{{ item.city }}</text>
+              <view class="feed-meta mt-1">
+                <text class="author-name">{{ item.author }}</text>
+                <text class="city-name">{{ item.city }}</text>
               </view>
-              <view class="feed-actions">
-                <view>
-                  <wd-icon name="heart" size="14px" />
-                  <text>{{ formatCount(item.likes) }}</text>
+              <view class="feed-actions mt-1">
+                <view class="action-item">
+                  <wd-icon name="heart" size="12px" />
+                  <text class="action-val">{{ formatCount(item.likes) }}</text>
                 </view>
-                <view>
-                  <wd-icon name="chat" size="14px" />
-                  <text>{{ formatCount(item.comments) }}</text>
+                <view class="action-item">
+                  <wd-icon name="chat" size="12px" />
+                  <text class="action-val">{{ formatCount(item.comments) }}</text>
                 </view>
               </view>
             </view>
@@ -137,7 +176,14 @@ function openDetail(item: WaterfallFeed) {
         </view>
       </view>
 
-      <view v-if="activeScene === 'shop'" class="shop-grid">
+      <!-- ==========================================
+           2. SHOPPING GRID (Dynamic N Grid columns)
+           ========================================== -->
+      <view
+        v-if="activeScene === 'shop'"
+        class="shop-grid"
+        :style="{ gridTemplateColumns: 'repeat(' + colCount + ', 1fr)' }"
+      >
         <view
           v-for="item in visibleFeeds"
           :key="item.id"
@@ -147,16 +193,17 @@ function openDetail(item: WaterfallFeed) {
           <image class="shop-cover" :src="item.cover" mode="aspectFill" />
           <view class="shop-body">
             <view class="feed-title">{{ item.title }}</view>
-            <view class="shop-desc">{{ item.desc }}</view>
-            <view class="price-row">
+            <view class="shop-desc mt-1">{{ item.desc }}</view>
+            <view class="price-row mt-1">
               <view class="price">¥{{ item.price }}</view>
               <view class="origin-price">¥{{ item.originPrice }}</view>
             </view>
-            <view class="sales-line">已售 {{ formatCount(item.sales || 0) }} · {{ item.author }}</view>
+            <view class="sales-line mt-1">已售 {{ formatCount(item.sales || 0) }}</view>
           </view>
         </view>
       </view>
 
+      <!-- 3. NEWS FEED LIST -->
       <view v-if="activeScene === 'news'" class="news-list">
         <view
           v-for="item in visibleFeeds"
@@ -173,6 +220,7 @@ function openDetail(item: WaterfallFeed) {
         </view>
       </view>
 
+      <!-- 4. MOMENTS SOCIAL TIMELINE -->
       <view v-if="activeScene === 'moments'" class="moments-list">
         <view
           v-for="item in visibleFeeds"
@@ -204,6 +252,7 @@ function openDetail(item: WaterfallFeed) {
         </view>
       </view>
 
+      <!-- Load more button -->
       <view class="load-more">
         <wd-button v-if="hasMore" plain block @click="loadMore">加载更多</wd-button>
         <view v-else class="end-line">已经到底了</view>
@@ -279,17 +328,51 @@ function openDetail(item: WaterfallFeed) {
   font-weight: 700;
 }
 
+/* Column adjustment selector bar */
+.column-count-selector {
+  background: #fff;
+  border: 1rpx solid var(--app-line);
+  border-radius: 12rpx;
+  padding: 16rpx 24rpx;
+}
+
+.col-lbl {
+  font-size: 20rpx;
+  color: var(--app-ink);
+}
+
+.col-btn-group {
+  gap: 8rpx;
+}
+
+.col-btn {
+  background: #f1f5f9;
+  border-radius: 8rpx;
+  font-size: 18rpx;
+  color: var(--app-muted);
+  padding: 8rpx 16rpx;
+  border: 1rpx solid var(--app-line);
+  cursor: pointer;
+  
+  &.active {
+    background: var(--app-brand);
+    color: #fff;
+    border-color: var(--app-brand);
+    font-weight: 800;
+  }
+}
+
+/* Waterfall and Shop Grid structures */
 .waterfall-grid,
 .shop-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18rpx;
+  gap: 12rpx;
   align-items: start;
 }
 
 .waterfall-column {
   display: grid;
-  gap: 18rpx;
+  gap: 12rpx;
   min-width: 0;
 }
 
@@ -299,17 +382,13 @@ function openDetail(item: WaterfallFeed) {
 .moment-card {
   border: 1rpx solid var(--app-line);
   background: #fff;
-}
-
-.life-card,
-.shop-card {
   overflow: hidden;
   border-radius: 14rpx;
 }
 
 .cover-wrap {
   position: relative;
-  min-height: 220rpx;
+  min-height: 100rpx;
   background: #eef2f6;
 }
 
@@ -325,70 +404,52 @@ function openDetail(item: WaterfallFeed) {
   border-radius: 999rpx;
   background: rgba(16, 24, 40, 0.72);
   color: #fff;
-  font-size: 22rpx;
-  padding: 6rpx 12rpx;
+  font-size: 16rpx;
+  padding: 4rpx 10rpx;
 }
 
 .feed-body,
 .shop-body {
-  padding: 18rpx;
+  padding: 12rpx;
 }
 
-.feed-title,
-.news-title {
+.feed-title {
   display: -webkit-box;
   overflow: hidden;
   color: var(--app-ink);
-  font-size: 28rpx;
   font-weight: 700;
-  line-height: 1.45;
+  line-height: 1.4;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
-}
-
-.feed-meta,
-.feed-actions,
-.shop-desc,
-.sales-line,
-.news-desc,
-.news-meta,
-.moment-text,
-.moment-actions {
-  color: var(--app-muted);
-  font-size: 23rpx;
 }
 
 .feed-meta {
   display: flex;
   justify-content: space-between;
-  gap: 12rpx;
-  margin-top: 14rpx;
+  gap: 8rpx;
 }
 
 .feed-actions {
   display: flex;
-  gap: 18rpx;
-  margin-top: 14rpx;
 }
 
-.feed-actions > view {
+.action-item {
   display: flex;
   align-items: center;
-  gap: 6rpx;
+  gap: 4rpx;
 }
 
 .shop-cover {
   display: block;
   width: 100%;
-  height: 260rpx;
+  height: 180rpx;
   background: #eef2f6;
 }
 
 .shop-desc {
   display: -webkit-box;
   overflow: hidden;
-  margin-top: 10rpx;
-  line-height: 1.45;
+  line-height: 1.4;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
@@ -396,26 +457,66 @@ function openDetail(item: WaterfallFeed) {
 .price-row {
   display: flex;
   align-items: baseline;
-  gap: 10rpx;
-  margin-top: 14rpx;
+  gap: 6rpx;
 }
 
 .price {
   color: #f04438;
-  font-size: 34rpx;
   font-weight: 800;
 }
 
 .origin-price {
   color: #98a2b3;
-  font-size: 22rpx;
   text-decoration: line-through;
 }
 
-.sales-line {
-  margin-top: 8rpx;
+/* ==========================================
+   DYNAMIC RESPONSIVE CARD STYLES FOR N COLUMNS
+   ========================================== */
+
+/* 2 Columns sizes */
+.col-size-2 {
+  .feed-title { font-size: 24rpx; }
+  .author-name, .city-name, .action-val, .shop-desc, .sales-line, .origin-price { font-size: 18rpx; }
+  .feed-actions { gap: 16rpx; }
+  .price { font-size: 28rpx; }
+  .shop-cover { height: 260rpx; }
 }
 
+/* 3 Columns sizes */
+.col-size-3 {
+  .feed-title { font-size: 20rpx; }
+  .author-name, .city-name, .action-val, .shop-desc, .sales-line, .origin-price { font-size: 16rpx; }
+  .feed-actions { gap: 12rpx; }
+  .price { font-size: 24rpx; }
+  .shop-cover { height: 180rpx; }
+}
+
+/* 4 Columns sizes */
+.col-size-4 {
+  .feed-title { font-size: 18rpx; -webkit-line-clamp: 1; height: 25rpx; }
+  .author-name, .city-name, .action-val, .shop-desc, .sales-line, .origin-price { font-size: 14rpx; }
+  .feed-actions { gap: 8rpx; }
+  .price { font-size: 21rpx; }
+  .shop-cover { height: 130rpx; }
+  .duration { font-size: 12rpx; padding: 2rpx 6rpx; }
+  .feed-meta { flex-direction: column; gap: 2rpx; }
+  .shop-desc { -webkit-line-clamp: 1; }
+}
+
+/* 5 Columns sizes */
+.col-size-5 {
+  .feed-title { font-size: 16rpx; -webkit-line-clamp: 1; height: 22rpx; }
+  .author-name, .city-name, .action-val, .shop-desc, .sales-line, .origin-price { font-size: 12rpx; }
+  .feed-actions { gap: 4rpx; }
+  .price { font-size: 18rpx; }
+  .shop-cover { height: 100rpx; }
+  .duration { display: none; }
+  .feed-meta { flex-direction: column; gap: 2rpx; }
+  .shop-desc { -webkit-line-clamp: 1; }
+}
+
+/* Fallback lists */
 .news-list,
 .moments-list {
   display: grid;
@@ -432,6 +533,22 @@ function openDetail(item: WaterfallFeed) {
 .news-main {
   min-width: 0;
   flex: 1;
+}
+
+.news-title {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--app-ink);
+  font-size: 28rpx;
+  font-weight: 700;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.news-desc, .news-meta, .moment-text, .moment-actions {
+  color: var(--app-muted);
+  font-size: 23rpx;
 }
 
 .news-desc {
@@ -531,4 +648,11 @@ function openDetail(item: WaterfallFeed) {
   text-align: center;
   padding: 18rpx 0;
 }
+
+.flex { display: flex; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.font-bold { font-weight: 800; }
+.mt-1 { margin-top: 8rpx; }
+.mt-2 { margin-top: 16rpx; }
 </style>
