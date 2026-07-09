@@ -42,7 +42,8 @@ const templatesList = [
   { id: 12, title: '中英双语字幕同步', desc: '歌词字幕逐字逐句点亮渲染，保持高同步率。', tag: '字幕' },
   { id: 13, title: '防盗录移动水印蒙层', desc: '对角线漂移倾斜文本，保障原创版权安全。', tag: '版权' },
   { id: 14, title: '直播带货互动弹幕流', desc: '带货界面，左侧滚动弹幕气泡加右侧飘红心。', tag: '直播' },
-  { id: 15, title: '倍速与音调控制器', desc: '提供 0.5x 到 2.0x 倍速调节，支持滑动变更。', tag: '控制' }
+  { id: 15, title: '倍速与音调控制器', desc: '提供 0.5x 到 2.0x 倍速调节，支持滑动变更。', tag: '控制' },
+  { id: 16, title: '高保真全功能控制台', desc: '合集标签、章节切换、弹幕发射、清屏连播及画中画小图标的终极控制台。', tag: '精选' }
 ]
 
 // ==========================================
@@ -226,6 +227,48 @@ function triggerHeart() {
 
 // 15. Speed
 const videoSpeed = ref(1.0)
+
+// 16. Premium Bilibili/Douyin Player Console states
+const t16Danmakus = ref<string[]>([
+  '这是公元前238年的秦国版图',
+  '前方高能预警！！！',
+  '李牧死，赵国亡，令人唏嘘',
+  '历史大片，打卡打卡！',
+  '科普牛逼！三连支持'
+])
+const t16Input = ref('')
+const t16DanmakuToggle = ref(true)
+const t16Autoplay = ref(true)
+const t16ClearScreen = ref(false)
+const t16VolumeMute = ref(false)
+const t16TheaterMode = ref(false)
+const t16Fullscreen = ref(false)
+const t16ActiveChapterIdx = ref(0)
+const t16ChaptersList = [
+  '第1章：秦国的东出战争',
+  '第2章：长平之战余波',
+  '第3章：合纵攻秦的终结',
+  '第4章：李牧重整旗鼓'
+]
+const t16CurrentTimeSec = ref(2)
+const t16FormattedTime = computed(() => {
+  const min = Math.floor(t16CurrentTimeSec.value / 60).toString().padStart(2, '0')
+  const sec = (t16CurrentTimeSec.value % 60).toString().padStart(2, '0')
+  return `${min}:${sec} / 05:20`
+})
+
+function t16SendDanmaku() {
+  if (!t16Input.value.trim()) return
+  t16Danmakus.value.push(t16Input.value)
+  t16Input.value = ''
+  toast.success('弹幕已发射')
+}
+
+function t16NextChapter() {
+  t16ActiveChapterIdx.value = (t16ActiveChapterIdx.value + 1) % t16ChaptersList.length
+  t16CurrentTimeSec.value = 0
+  toast.success(`已切换至: ${t16ChaptersList[t16ActiveChapterIdx.value]}`)
+}
 </script>
 
 <template>
@@ -600,6 +643,116 @@ const videoSpeed = ref(1.0)
               >
                 {{ sp }}x
               </wd-button>
+            </view>
+          </view>
+
+          <!-- ID 16: Premium Full Featured Player Console -->
+          <view v-else-if="activeId === 16" class="premium-player-wrapper">
+            <view class="premium-video-box relative-context overflow-hidden">
+              <view class="video-main-frame">
+                <!-- Danmaku stream overlay -->
+                <view v-slot:default v-if="t16DanmakuToggle && !t16ClearScreen" class="danmaku-overlay-t16">
+                  <view
+                    v-for="(dm, dmIdx) in t16Danmakus"
+                    :key="dmIdx"
+                    class="t16-danmaku-item"
+                    :style="{
+                      top: (15 + (dmIdx * 20) % 65) + '%',
+                      animationDelay: (dmIdx * 1.5) + 's'
+                    }"
+                  >
+                    {{ dm }}
+                  </view>
+                </view>
+
+                <!-- Subtitle centered overlay -->
+                <view class="subtitle-text-overlay font-bold text-center">
+                  这是公元前238年的秦国版图
+                </view>
+
+                <!-- Custom capsules on top of video -->
+                <view class="capsules-overlay flex mt-2">
+                  <view class="capsule-badge">合集 · 春秋战国</view>
+                  <view class="capsule-badge orange-capsule ml-2">当前提及：李牧为何能成为赵国的守护神</view>
+                </view>
+
+                <!-- Creator Overlay (Right interaction bar) -->
+                <view class="creator-interaction-bar flex-column items-center">
+                  <view class="avatar-box font-bold">拾光</view>
+                  <view class="interact-item mt-3">
+                    <text class="emoji-icon">❤️</text>
+                    <text class="lbl-txt">1.6万</text>
+                  </view>
+                  <view class="interact-item mt-2">
+                    <text class="emoji-icon">💬</text>
+                    <text class="lbl-txt">313</text>
+                  </view>
+                  <view class="interact-item mt-2">
+                    <text class="emoji-icon">⭐</text>
+                    <text class="lbl-txt">2042</text>
+                  </view>
+                  <!-- Mascot -->
+                  <view class="mascot-douyin mt-3 flex-column items-center">
+                    <text class="bee-emoji">🐝</text>
+                    <text class="mascot-lbl">听抖音</text>
+                  </view>
+                </view>
+              </view>
+
+              <!-- BOTTOM CONTROL CONSOLE BAR -->
+              <view class="bottom-control-console-bar flex items-center justify-between">
+                <!-- Left Playback & chapter info -->
+                <view class="console-left flex items-center">
+                  <text class="play-pause-icon-btn mr-2" @click="t16Autoplay = !t16Autoplay">
+                    {{ t16Autoplay ? '⏸' : '▶' }}
+                  </text>
+                  <text class="time-meta-txt">{{ t16FormattedTime }}</text>
+                  <text class="chapter-meta-name font-bold ml-2">{{ t16ChaptersList[t16ActiveChapterIdx] }}</text>
+                  <text class="next-chapter-action-btn ml-2" @click="t16NextChapter">下一章 ></text>
+                </view>
+
+                <!-- Center Danmaku Input & Toggle -->
+                <view class="console-center flex items-center">
+                  <view class="danmaku-switch-btn flex items-center mr-2" @click="t16DanmakuToggle = !t16DanmakuToggle">
+                    <text class="bullet-symbol-icon">弹</text>
+                    <text :class="['toggle-dot', { active: t16DanmakuToggle }]"></text>
+                  </view>
+                  <input
+                    v-model="t16Input"
+                    placeholder="发一条友好的弹幕吧"
+                    class="danmaku-input-console"
+                    confirm-type="send"
+                    @confirm="t16SendDanmaku"
+                  />
+                  <view class="danmaku-send-btn font-bold text-center ml-2" @click="t16SendDanmaku">
+                    发送
+                  </view>
+                </view>
+
+                <!-- Right Quick controls & window modes -->
+                <view class="console-right flex items-center">
+                  <view class="console-switch-item flex items-center mr-2" @click="t16Autoplay = !t16Autoplay">
+                    <text class="sw-lbl">连播</text>
+                    <text :class="['sw-dot', { active: t16Autoplay }]"></text>
+                  </view>
+
+                  <view class="console-switch-item flex items-center mr-2" @click="t16ClearScreen = !t16ClearScreen">
+                    <text class="sw-lbl">清屏</text>
+                    <text :class="['sw-dot', { active: t16ClearScreen }]"></text>
+                  </view>
+
+                  <text class="speed-toggle-badge font-bold mr-2" @click="toast.success('已切换为智能变速模式')">智能</text>
+                  <text class="speed-toggle-badge font-bold mr-2" @click="toast.success('当前倍速: 1.0x')">倍速</text>
+
+                  <text class="small-ctrl-icon-btn mr-1" @click="toast.success('展示分段大纲')">🎛️</text>
+                  <text class="small-ctrl-icon-btn mr-1" @click="toast.success('已开启小窗模式')">📺</text>
+                  <text class="small-ctrl-icon-btn mr-1" @click="t16VolumeMute = !t16VolumeMute; toast.success(t16VolumeMute ? '静音' : '开启声音')">
+                    {{ t16VolumeMute ? '🔇' : '🔊' }}
+                  </text>
+                  <text class="small-ctrl-icon-btn mr-1" @click="t16TheaterMode = !t16TheaterMode; toast.success('切换为宽屏模式')">🔲</text>
+                  <text class="small-ctrl-icon-btn" @click="t16Fullscreen = !t16Fullscreen; toast.success('已切换全屏视效')">🔳</text>
+                </view>
+              </view>
             </view>
           </view>
         </view>
@@ -1517,5 +1670,274 @@ const videoSpeed = ref(1.0)
 .speed-selector-row {
   display: flex;
   justify-content: space-around;
+}
+
+/* ==========================================
+   16. BILIBILI/DOUYIN PREMIUM PLAYER CONSOLE STYLES
+   ========================================== */
+.premium-player-wrapper {
+  width: 100%;
+}
+
+.premium-video-box {
+  width: 100%;
+  height: 520rpx;
+  background: #000;
+  border-radius: 16rpx;
+  display: flex;
+  flex-direction: column;
+  border: 1rpx solid #333;
+}
+
+.video-main-frame {
+  flex: 1;
+  position: relative;
+  background: radial-gradient(circle, #1e1b4b 0%, #03000a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Danmaku rolling styles for template 16 */
+.danmaku-overlay-t16 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.t16-danmaku-item {
+  position: absolute;
+  right: -300px;
+  color: #fff;
+  font-size: 20rpx;
+  font-weight: 800;
+  text-shadow: 2rpx 2rpx 4rpx rgba(0,0,0,0.9);
+  white-space: nowrap;
+  animation: floatDanmakuT16 12s linear infinite;
+}
+
+@keyframes floatDanmakuT16 {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-950px); }
+}
+
+.subtitle-text-overlay {
+  position: absolute;
+  bottom: 24rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fef08a;
+  font-size: 26rpx;
+  text-shadow: 3rpx 3rpx 6rpx rgba(0,0,0,0.95);
+  background: rgba(0,0,0,0.5);
+  padding: 8rpx 24rpx;
+  border-radius: 12rpx;
+  pointer-events: none;
+  width: max-content;
+}
+
+.capsules-overlay {
+  position: absolute;
+  top: 20rpx;
+  left: 20rpx;
+  gap: 12rpx;
+  pointer-events: none;
+}
+
+.capsule-badge {
+  font-size: 16rpx;
+  color: #fff;
+  padding: 6rpx 16rpx;
+  border-radius: 99rpx;
+  background: rgba(255,255,255,0.15);
+  border: 1rpx solid rgba(255,255,255,0.25);
+  
+  &.orange-capsule {
+    color: #fdba74;
+    border-color: rgba(251,146,60,0.4);
+    background: rgba(251,146,60,0.2);
+  }
+}
+
+/* Creator profile & reaction bar on the right side */
+.creator-interaction-bar {
+  position: absolute;
+  right: 20rpx;
+  top: 40rpx;
+  z-index: 10;
+  background: rgba(0,0,0,0.3);
+  padding: 16rpx 10rpx;
+  border-radius: 20rpx;
+}
+
+.avatar-box {
+  width: 50rpx;
+  height: 50rpx;
+  background: #f43f5e;
+  border: 2rpx solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 14rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.interact-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rpx;
+}
+
+.emoji-icon {
+  font-size: 26rpx;
+  cursor: pointer;
+}
+
+.lbl-txt {
+  font-size: 13rpx;
+  color: rgba(255,255,255,0.85);
+}
+
+.mascot-douyin {
+  cursor: pointer;
+}
+
+.bee-emoji {
+  font-size: 32rpx;
+}
+
+.mascot-lbl {
+  font-size: 12rpx;
+  color: #fde047;
+  white-space: nowrap;
+}
+
+/* ==========================================
+   BOTTOM CONSOLE CONTROL BAR
+   ========================================== */
+.bottom-control-console-bar {
+  background: #111;
+  border-top: 1rpx solid #222;
+  padding: 16rpx 20rpx;
+  height: 80rpx;
+  box-sizing: border-box;
+}
+
+.console-left, .console-center, .console-right {
+  display: flex;
+  align-items: center;
+}
+
+.play-pause-icon-btn {
+  font-size: 26rpx;
+  color: #fff;
+  cursor: pointer;
+}
+
+.time-meta-txt {
+  font-size: 16rpx;
+  color: #888;
+}
+
+.chapter-meta-name {
+  font-size: 16rpx;
+  color: #ddd;
+}
+
+.next-chapter-action-btn {
+  font-size: 16rpx;
+  color: #a855f7;
+  cursor: pointer;
+}
+
+/* Danmaku Input group inside console */
+.danmaku-switch-btn {
+  background: #222;
+  border: 1rpx solid #444;
+  border-radius: 99rpx;
+  padding: 4rpx 10rpx;
+  cursor: pointer;
+}
+
+.bullet-symbol-icon {
+  font-size: 14rpx;
+  color: #888;
+  margin-right: 6rpx;
+}
+
+.toggle-dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: #666;
+  
+  &.active {
+    background: #22c55e;
+  }
+}
+
+.danmaku-input-console {
+  background: #222;
+  border: 1rpx solid #333;
+  color: #fff;
+  border-radius: 99rpx;
+  padding: 4rpx 20rpx;
+  font-size: 16rpx;
+  width: 150rpx;
+}
+
+.danmaku-send-btn {
+  background: #3b82f6;
+  color: #fff;
+  border-radius: 99rpx;
+  font-size: 16rpx;
+  padding: 6rpx 20rpx;
+  cursor: pointer;
+}
+
+.console-switch-item {
+  cursor: pointer;
+}
+
+.sw-lbl {
+  font-size: 14rpx;
+  color: #888;
+  margin-right: 6rpx;
+}
+
+.sw-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: #666;
+  
+  &.active {
+    background: #3b82f6;
+  }
+}
+
+.speed-toggle-badge {
+  font-size: 15rpx;
+  color: #888;
+  cursor: pointer;
+  
+  &:hover {
+    color: #fff;
+  }
+}
+
+.small-ctrl-icon-btn {
+  font-size: 20rpx;
+  color: #888;
+  cursor: pointer;
+  
+  &:hover {
+    color: #fff;
+  }
 }
 </style>
