@@ -1,1 +1,0 @@
-import{P as s,r as t,t as e,i as r}from"./PageShell.vue_vue_type_script_setup_true_lang.DnT_-_y1.js";import{L as a}from"./index.BfJ9CfaO.js";const n=n=>{const o=n?s(n)+".":"";return{translate:(s,...n)=>{const u=a.messages(),p=t(u,o+s);return e(p)?p(...n):r(p)?p:`${o}${s}`}}};export{n as u};
