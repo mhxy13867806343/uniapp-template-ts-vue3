@@ -721,11 +721,11 @@ export const exampleScenarios: ExampleScenario[] = [
     tags: ['Streamer', 'Button', 'Border']
   },
   {
-    level: '动效',
-    title: '水波纹扩散点击',
-    path: 'playground?id=ripple-click',
-    description: '手势点击处动态生成向外扩张的透明波浪圈。',
-    tags: ['Ripple', 'Click', 'Touch']
+    level: '展示',
+    title: '工具方法百宝箱',
+    path: 'utilities',
+    description: '展示并调试包含高阶时间、脱敏、货币格式化，及 Python/Rust 风格开发辅助工具函数。',
+    tags: ['Format', 'Python', 'Rust']
   }
 ]
 

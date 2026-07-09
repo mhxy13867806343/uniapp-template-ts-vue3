@@ -212,12 +212,9 @@ const hookItems = computed(() => [
   }
 ])
 
-function previewBackRefresh() {
-  backRefresh.markBackSilent({ from: 'home' })
-  const result = backRefresh.consumeBackRefresh()
-  uni.showToast({
-    title: result.shouldRefresh ? '返回后刷新' : '返回不刷新',
-    icon: 'none'
+function viewMoreUtilities() {
+  uni.navigateTo({
+    url: '/pages/examples/utilities'
   })
 }
 
@@ -306,7 +303,7 @@ appStore.markReady()
       <view class="panel-section">
         <view class="section-head">
           <text>工具方法</text>
-          <wd-button size="small" type="primary" plain @click="previewBackRefresh">返回示例</wd-button>
+          <wd-button size="small" type="primary" plain @click="viewMoreUtilities">查看更多</wd-button>
         </view>
 
         <view class="utility-grid">

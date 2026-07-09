@@ -199,6 +199,12 @@
       }
     },
     {
+      "path": "pages/examples/utilities",
+      "style": {
+        "navigationBarTitleText": "工具方法百宝箱"
+      }
+    },
+    {
       "path": "pages/other/index",
       "style": {
         "navigationBarTitleText": "其他"

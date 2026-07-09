@@ -10,6 +10,8 @@ declare global {
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
   const appCache: typeof import('../utils/cache').appCache
   const appEnv: typeof import('../utils/env').appEnv
+  const chunk: typeof import('../utils/poly').chunk
+  const compact: typeof import('../utils/poly').compact
   const componentGroups: typeof import('../utils/wotComponents').componentGroups
   const componentList: typeof import('../utils/wotComponents').componentList
   const composeValidators: typeof import('../utils/validate').composeValidators
@@ -27,6 +29,7 @@ declare global {
   const exampleScenarios: typeof import('../utils/exampleScenarios').exampleScenarios
   const feedCategories: typeof import('../utils/waterfallFeeds').feedCategories
   const findComponent: typeof import('../utils/wotComponents').findComponent
+  const flatten: typeof import('../utils/poly').flatten
   const formatAddress: typeof import('../utils/format').formatAddress
   const formatBankCard: typeof import('../utils/format').formatBankCard
   const formatBoolean: typeof import('../utils/format').formatBoolean
@@ -59,6 +62,7 @@ declare global {
   const getPlatformInfo: typeof import('../utils/platform').getPlatformInfo
   const getSpecialLength: typeof import('../utils/format').getSpecialLength
   const getWaterfallFeed: typeof import('../utils/waterfallFeeds').getWaterfallFeed
+  const groupBy: typeof import('../utils/poly').groupBy
   const h: typeof import('vue').h
   const inject: typeof import('vue').inject
   const isBankCard: typeof import('../utils/validate').isBankCard
@@ -123,6 +127,7 @@ declare global {
   const parseQuery: typeof import('../utils/format').parseQuery
   const pattern: typeof import('../utils/validate').pattern
   const provide: typeof import('vue').provide
+  const range: typeof import('../utils/poly').range
   const reactive: typeof import('vue').reactive
   const readonly: typeof import('vue').readonly
   const redirectTo: typeof import('../utils/router').redirectTo
@@ -130,6 +135,7 @@ declare global {
   const request: typeof import('../hooks/requests').request
   const required: typeof import('../utils/validate').required
   const resolveComponent: typeof import('vue').resolveComponent
+  const safeRun: typeof import('../utils/poly').safeRun
   const sceneTabs: typeof import('../utils/waterfallFeeds').sceneTabs
   const setActivePinia: typeof import('pinia').setActivePinia
   const setMapStoreSuffix: typeof import('pinia').setMapStoreSuffix
@@ -137,15 +143,18 @@ declare global {
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef
   const shopFeeds: typeof import('../utils/waterfallFeeds').shopFeeds
+  const slugify: typeof import('../utils/poly').slugify
   const storeToRefs: typeof import('pinia').storeToRefs
   const switchTabByName: typeof import('../utils/tabbar').switchTabByName
   const tabbarItems: typeof import('../utils/tabbar').tabbarItems
+  const titleCase: typeof import('../utils/poly').titleCase
   const toRaw: typeof import('vue').toRaw
   const toRef: typeof import('vue').toRef
   const toRefs: typeof import('vue').toRefs
   const toValue: typeof import('vue').toValue
   const triggerRef: typeof import('vue').triggerRef
   const truncateBySpecialLength: typeof import('../utils/format').truncateBySpecialLength
+  const uniqBy: typeof import('../utils/poly').uniqBy
   const unref: typeof import('vue').unref
   const useAppEnv: typeof import('../hooks/useAppEnv').useAppEnv
   const useAppStore: typeof import('../store/app').useAppStore
@@ -173,6 +182,7 @@ declare global {
   const watchPostEffect: typeof import('vue').watchPostEffect
   const watchSyncEffect: typeof import('vue').watchSyncEffect
   const waterfallFeeds: typeof import('../utils/waterfallFeeds').waterfallFeeds
+  const zip: typeof import('../utils/poly').zip
 }
 // for type re-export
 declare global {
@@ -207,6 +217,9 @@ declare global {
   export type { PlatformTarget, PlatformInfo } from '../utils/platform'
   import('../utils/platform')
   // @ts-ignore
+  export type { SafeRunResult } from '../utils/poly'
+  import('../utils/poly')
+  // @ts-ignore
   export type { TabbarName, TabbarItem } from '../utils/tabbar'
   import('../utils/tabbar')
   // @ts-ignore
@@ -229,6 +242,8 @@ declare module 'vue' {
     readonly acceptHMRUpdate: UnwrapRef<typeof import('pinia')['acceptHMRUpdate']>
     readonly appCache: UnwrapRef<typeof import('../utils/cache')['appCache']>
     readonly appEnv: UnwrapRef<typeof import('../utils/env')['appEnv']>
+    readonly chunk: UnwrapRef<typeof import('../utils/poly')['chunk']>
+    readonly compact: UnwrapRef<typeof import('../utils/poly')['compact']>
     readonly componentGroups: UnwrapRef<typeof import('../utils/wotComponents')['componentGroups']>
     readonly componentList: UnwrapRef<typeof import('../utils/wotComponents')['componentList']>
     readonly composeValidators: UnwrapRef<typeof import('../utils/validate')['composeValidators']>
@@ -246,6 +261,7 @@ declare module 'vue' {
     readonly exampleScenarios: UnwrapRef<typeof import('../utils/exampleScenarios')['exampleScenarios']>
     readonly feedCategories: UnwrapRef<typeof import('../utils/waterfallFeeds')['feedCategories']>
     readonly findComponent: UnwrapRef<typeof import('../utils/wotComponents')['findComponent']>
+    readonly flatten: UnwrapRef<typeof import('../utils/poly')['flatten']>
     readonly formatAddress: UnwrapRef<typeof import('../utils/format')['formatAddress']>
     readonly formatBankCard: UnwrapRef<typeof import('../utils/format')['formatBankCard']>
     readonly formatBoolean: UnwrapRef<typeof import('../utils/format')['formatBoolean']>
@@ -278,6 +294,7 @@ declare module 'vue' {
     readonly getPlatformInfo: UnwrapRef<typeof import('../utils/platform')['getPlatformInfo']>
     readonly getSpecialLength: UnwrapRef<typeof import('../utils/format')['getSpecialLength']>
     readonly getWaterfallFeed: UnwrapRef<typeof import('../utils/waterfallFeeds')['getWaterfallFeed']>
+    readonly groupBy: UnwrapRef<typeof import('../utils/poly')['groupBy']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
     readonly isBankCard: UnwrapRef<typeof import('../utils/validate')['isBankCard']>
@@ -342,6 +359,7 @@ declare module 'vue' {
     readonly parseQuery: UnwrapRef<typeof import('../utils/format')['parseQuery']>
     readonly pattern: UnwrapRef<typeof import('../utils/validate')['pattern']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
+    readonly range: UnwrapRef<typeof import('../utils/poly')['range']>
     readonly reactive: UnwrapRef<typeof import('vue')['reactive']>
     readonly readonly: UnwrapRef<typeof import('vue')['readonly']>
     readonly redirectTo: UnwrapRef<typeof import('../utils/router')['redirectTo']>
@@ -349,6 +367,7 @@ declare module 'vue' {
     readonly request: UnwrapRef<typeof import('../hooks/requests')['request']>
     readonly required: UnwrapRef<typeof import('../utils/validate')['required']>
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
+    readonly safeRun: UnwrapRef<typeof import('../utils/poly')['safeRun']>
     readonly sceneTabs: UnwrapRef<typeof import('../utils/waterfallFeeds')['sceneTabs']>
     readonly setActivePinia: UnwrapRef<typeof import('pinia')['setActivePinia']>
     readonly setMapStoreSuffix: UnwrapRef<typeof import('pinia')['setMapStoreSuffix']>
@@ -356,15 +375,18 @@ declare module 'vue' {
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>
     readonly shopFeeds: UnwrapRef<typeof import('../utils/waterfallFeeds')['shopFeeds']>
+    readonly slugify: UnwrapRef<typeof import('../utils/poly')['slugify']>
     readonly storeToRefs: UnwrapRef<typeof import('pinia')['storeToRefs']>
     readonly switchTabByName: UnwrapRef<typeof import('../utils/tabbar')['switchTabByName']>
     readonly tabbarItems: UnwrapRef<typeof import('../utils/tabbar')['tabbarItems']>
+    readonly titleCase: UnwrapRef<typeof import('../utils/poly')['titleCase']>
     readonly toRaw: UnwrapRef<typeof import('vue')['toRaw']>
     readonly toRef: UnwrapRef<typeof import('vue')['toRef']>
     readonly toRefs: UnwrapRef<typeof import('vue')['toRefs']>
     readonly toValue: UnwrapRef<typeof import('vue')['toValue']>
     readonly triggerRef: UnwrapRef<typeof import('vue')['triggerRef']>
     readonly truncateBySpecialLength: UnwrapRef<typeof import('../utils/format')['truncateBySpecialLength']>
+    readonly uniqBy: UnwrapRef<typeof import('../utils/poly')['uniqBy']>
     readonly unref: UnwrapRef<typeof import('vue')['unref']>
     readonly useAppEnv: UnwrapRef<typeof import('../hooks/useAppEnv')['useAppEnv']>
     readonly useAppStore: UnwrapRef<typeof import('../store/app')['useAppStore']>
@@ -392,5 +414,6 @@ declare module 'vue' {
     readonly watchPostEffect: UnwrapRef<typeof import('vue')['watchPostEffect']>
     readonly watchSyncEffect: UnwrapRef<typeof import('vue')['watchSyncEffect']>
     readonly waterfallFeeds: UnwrapRef<typeof import('../utils/waterfallFeeds')['waterfallFeeds']>
+    readonly zip: UnwrapRef<typeof import('../utils/poly')['zip']>
   }
 }
