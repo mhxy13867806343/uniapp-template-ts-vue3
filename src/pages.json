@@ -229,6 +229,18 @@
       }
     },
     {
+      "path": "pages/examples/advanced-search",
+      "style": {
+        "navigationBarTitleText": "字母索引联想搜索"
+      }
+    },
+    {
+      "path": "pages/examples/leaderboards",
+      "style": {
+        "navigationBarTitleText": "20种特色排行榜"
+      }
+    },
+    {
       "path": "pages/other/index",
       "style": {
         "navigationBarTitleText": "其他"

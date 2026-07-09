@@ -747,6 +747,20 @@ export const exampleScenarios: ExampleScenario[] = [
     path: 'os-features',
     description: '集成 iOS 物理阻尼与果冻边缘回弹、灵动岛扩展、Android 触顶溢出发光等 12 种系统底层特写。',
     tags: ['Damping', 'Gesture', 'Physics']
+  },
+  {
+    level: '展示',
+    title: '字母索引联想搜索',
+    path: 'advanced-search',
+    description: '右侧悬浮 A-Z 索引滑条 + 拼音跳锚定位，前置历史搜索及热门推荐看板。',
+    tags: ['IndexBar', 'Search', 'Anchor']
+  },
+  {
+    level: '展示',
+    title: '20种特色排行榜',
+    path: 'leaderboards',
+    description: '采用左侧侧边栏导航 + 右侧各异卡片布局，完整展现 20 种主题特色的数据排行榜。',
+    tags: ['Leaderboard', 'Split', 'Rank']
   }
 ]
 
