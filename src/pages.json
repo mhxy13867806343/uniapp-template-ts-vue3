@@ -223,6 +223,12 @@
       }
     },
     {
+      "path": "pages/examples/quick-logins",
+      "style": {
+        "navigationBarTitleText": "快捷与第三方登录展示"
+      }
+    },
+    {
       "path": "pages/other/index",
       "style": {
         "navigationBarTitleText": "其他"

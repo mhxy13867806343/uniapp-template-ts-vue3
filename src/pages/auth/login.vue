@@ -220,6 +220,9 @@ function finishLogin(msg: string) {
 
         <view class="login-footer">
           <wd-button type="text" @click="navigateTo('/pages/auth/register')">没有账号？去注册</wd-button>
+          <wd-button type="text" @click="navigateTo('/pages/examples/quick-logins')">
+            <text class="text-brand ml-2">一键登录与第三方授权 🔗</text>
+          </wd-button>
         </view>
       </view>
     </view>

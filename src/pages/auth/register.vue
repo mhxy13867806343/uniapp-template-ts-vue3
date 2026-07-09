@@ -245,6 +245,9 @@ function finishRegister(msg: string) {
 
         <view class="register-footer">
           <wd-button type="text" @click="navigateTo('/pages/auth/login')">已有账号？去登录</wd-button>
+          <wd-button type="text" @click="navigateTo('/pages/examples/quick-logins')">
+            <text class="text-brand ml-2">一键登录与第三方授权 🔗</text>
+          </wd-button>
         </view>
       </view>
     </view>
