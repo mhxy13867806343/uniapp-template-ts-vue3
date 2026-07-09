@@ -229,6 +229,18 @@
       }
     },
     {
+      "path": "pages/other/help",
+      "style": {
+        "navigationBarTitleText": "帮助中心"
+      }
+    },
+    {
+      "path": "pages/other/privacy",
+      "style": {
+        "navigationBarTitleText": "隐私协议"
+      }
+    },
+    {
       "path": "pages/framework/plugins",
       "style": {
         "navigationBarTitleText": "插件体系"
