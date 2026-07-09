@@ -50,9 +50,65 @@ const templatesList = [
 // 15种视频交互各自的状态与模拟逻辑
 // ==========================================
 
-// 1. TikTok: swipe mockup
-const tiktokLike = ref(false)
-const tiktokLikesCount = ref(1280)
+// 1. TikTok Vertical Swiper states
+const currentTiktokIdx = ref(0)
+const tiktokVideos = ref([
+  {
+    id: 1,
+    author: '@拾光历史记录',
+    desc: '第34集：李牧抗秦，中国古代历史上著名的肥之战，秦军精锐在此悉数受创！ #历史 #李牧 #肥之战',
+    likes: '1.6w',
+    comments: '313',
+    shares: '2042',
+    bgGrad: 'linear-gradient(to bottom, #111827 0%, #030712 100%)',
+    mascot: '🐝',
+    avatar: '👨‍🏫'
+  },
+  {
+    id: 2,
+    author: '@舌尖上的中国美食',
+    desc: '地道四川川菜大厨制作麻婆豆腐！麻辣鲜香入味，教你豆腐滑嫩不碎的小技巧！ #美食 #川菜 #麻婆豆腐',
+    likes: '8.4w',
+    comments: '1205',
+    shares: '3410',
+    bgGrad: 'linear-gradient(to bottom, #3b0764 0%, #0f051d 100%)',
+    mascot: '🥑',
+    avatar: '👨‍🍳'
+  },
+  {
+    id: 3,
+    author: '@数码极客先锋',
+    desc: '一加13 旗舰评测！首发搭载第二代骁龙8旗舰芯与顶级哈苏镜头！ #新机首发 #一加13',
+    likes: '3.2w',
+    comments: '984',
+    shares: '1050',
+    bgGrad: 'linear-gradient(to bottom, #064e3b 0%, #022c22 100%)',
+    mascot: '📱',
+    avatar: '🤖'
+  },
+  {
+    id: 4,
+    author: '@减脂健身大本营',
+    desc: '每天5个核心训练动作！带你高效减脂体型雕刻，燃烧你的卡路里！ #核心训练 #健身打卡 #减脂',
+    likes: '11.2w',
+    comments: '2350',
+    shares: '9420',
+    bgGrad: 'linear-gradient(to bottom, #701a75 0%, #300234 100%)',
+    mascot: '🏃',
+    avatar: '🧘'
+  },
+  {
+    id: 5,
+    author: '@环球旅游观光记',
+    desc: '这里是纯净的阿尔卑斯雪山，感受大自然最震撼人心的高山雪景与大片既视感！ #旅游日记 #阿尔卑斯山',
+    likes: '25.6w',
+    comments: '4390',
+    shares: '12.4w',
+    bgGrad: 'linear-gradient(to bottom, #1e3a8a 0%, #0f172a 100%)',
+    mascot: '✈️',
+    avatar: '🎒'
+  }
+])
 
 // 2. Gesture Controls: Touch tracking
 const gestureText = ref('手势待机中，在视频框上划动试试')
@@ -1670,6 +1726,135 @@ function t16NextChapter() {
 .speed-selector-row {
   display: flex;
   justify-content: space-around;
+}
+
+/* ==========================================
+   1. TIKTOK VERTICAL SWIPER LAYOUT STYLES
+   ========================================== */
+.tiktok-swiper-container {
+  width: 100%;
+  height: 620rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+  border: 1rpx solid #333;
+}
+
+.tiktok-swiper-item {
+  width: 100%;
+  height: 100%;
+}
+
+.tiktok-video-box-full {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tiktok-center-play-icon {
+  font-size: 80rpx;
+  color: rgba(255,255,255,0.15);
+  pointer-events: none;
+}
+
+.tiktok-info-overlay {
+  position: absolute;
+  left: 20rpx;
+  bottom: 20rpx;
+  z-index: 10;
+  width: 440rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.tiktok-author-name {
+  font-size: 21rpx;
+  color: #fff;
+}
+
+.tiktok-desc-detail-txt {
+  font-size: 17rpx;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.45;
+}
+
+.tiktok-actions-overlay {
+  position: absolute;
+  right: 20rpx;
+  bottom: 40rpx;
+  z-index: 10;
+}
+
+.tiktok-avatar-frame {
+  position: relative;
+  margin-bottom: 8rpx;
+  cursor: pointer;
+}
+
+.tk-avatar {
+  width: 54rpx;
+  height: 54rpx;
+  border-radius: 50%;
+  background: #eef2f6;
+  border: 2rpx solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+}
+
+.plus-badge {
+  position: absolute;
+  bottom: -6rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ef4444;
+  color: #fff;
+  font-size: 16rpx;
+  font-weight: 900;
+  width: 22rpx;
+  height: 22rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid #fff;
+}
+
+.action-item-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rpx;
+  cursor: pointer;
+}
+
+.action-btn-icon {
+  font-size: 32rpx;
+}
+
+.action-btn-val {
+  font-size: 13rpx;
+  color: rgba(255,255,255,0.9);
+}
+
+.tiktok-mascot-cd {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50%;
+  background: #1e293b;
+  border: 6rpx solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: spinCD 5s linear infinite;
+}
+
+.mascot-avatar {
+  font-size: 26rpx;
 }
 
 /* ==========================================
