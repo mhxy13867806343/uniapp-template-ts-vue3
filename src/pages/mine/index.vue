@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onShow } from '@dcloudio/uni-app'
 import PageShell from '@/components/PageShell.vue'
 import { useUserStore } from '@/store'
 import { navigateTo } from '@/utils/router'
@@ -23,6 +24,13 @@ function goLogin() {
 function goRegister() {
   navigateTo('/pages/auth/register')
 }
+
+const unreadMsgCount = ref('3')
+
+onShow(() => {
+  const cached = uni.getStorageSync('unread_msg_count')
+  unreadMsgCount.value = cached !== '' ? cached : '3'
+})
 
 function logout() {
   userStore.logout()
@@ -54,8 +62,8 @@ function logout() {
         <wd-cell title="账号登录" :value="userStore.isLogin ? '已登录' : '未登录'" is-link clickable @click="goLogin" />
         <wd-cell title="注册账号" value="新用户入口" is-link clickable @click="goRegister" />
         <wd-cell title="个人资料" :value="userStore.profile?.phone || '完善'" is-link />
-        <wd-cell title="消息通知" value="0" is-link />
-        <wd-cell title="应用设置" is-link />
+        <wd-cell title="消息通知" :value="unreadMsgCount" is-link clickable @click="navigateTo('/pages/other/messages')" />
+        <wd-cell title="应用设置" is-link clickable @click="navigateTo('/pages/other/settings')" />
       </wd-cell-group>
 
       <!-- Advanced examples toolbox (100 Examples) -->

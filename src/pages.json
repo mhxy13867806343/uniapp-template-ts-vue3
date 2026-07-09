@@ -247,6 +247,18 @@
       }
     },
     {
+      "path": "pages/other/messages",
+      "style": {
+        "navigationBarTitleText": "消息通知"
+      }
+    },
+    {
+      "path": "pages/other/settings",
+      "style": {
+        "navigationBarTitleText": "应用设置"
+      }
+    },
+    {
       "path": "pages/framework/plugins",
       "style": {
         "navigationBarTitleText": "插件体系"
