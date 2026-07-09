@@ -3,293 +3,401 @@ import PageShell from '@/components/PageShell.vue'
 
 const toast = useToast('advanced-search-toast')
 
-// Search state
+// Search & UI States
 const searchKeyword = ref('')
-const searchHistory = ref<string[]>(['Baidu', 'Docker', 'ChatGPT', '360'])
-const showLetterIndicator = ref(false)
-const activeLetter = ref('A')
-const scrollTargetId = ref('')
+const selectedCategory = ref('宝贝') // 宝贝 | 店铺 | 商品
+const showCategorySelect = ref(false)
+const showResults = ref(false)
+const activeSort = ref('综合') // 综合 | 销量 | 价格 | 品牌
+const priceSortOrder = ref('desc') // desc | asc
+const showFilterDrawer = ref(false)
+const activeFilterCategory = ref('价格区间')
 
+// Category Options
+const categoryOptions = ['宝贝', '店铺', '商品']
+
+// Search History
+const searchHistory = ref<string[]>(['袜子', '电池', '15pro', 'Docker'])
+
+// Hot recommendation tags
 const hotRecommendations = [
-  { rank: 1, name: 'ChatGPT', tag: '热' },
-  { rank: 2, name: 'TypeScript 5.0' },
-  { rank: 3, name: 'UniApp HBuilderX' },
-  { rank: 4, name: 'Docker Container', tag: '新' },
-  { rank: 5, name: 'Bilibili SDK' },
-  { rank: 6, name: 'Vue 3.3 Composition' }
+  { rank: 1, name: '纯棉抗菌防臭袜', tag: '热' },
+  { rank: 2, name: '1号南孚电池' },
+  { rank: 3, name: '12v锂电池充电器' },
+  { rank: 4, name: '一加13 旗舰', tag: '新' },
+  { rank: 5, name: '1t高速固态硬盘' },
+  { rank: 6, name: '超弹运动防臭短袜' }
 ]
 
-// Directory data grouped by letter A-Z and #
-interface IndexItem {
-  id: string
-  name: string
-  desc: string
-}
-interface GroupedDirectory {
-  letter: string
-  items: IndexItem[]
-}
-
-const directoryData: GroupedDirectory[] = [
-  {
-    letter: 'A',
-    items: [
-      { id: 'a1', name: 'Alipay 支付宝', desc: '蚂蚁集团旗下的移动支付平台。' },
-      { id: 'a2', name: 'Android 安卓系统', desc: '由 Google 维护开发的移动操作系统平台。' },
-      { id: 'a3', name: 'Adobe Design Suite', desc: '包含 Photoshop, Illustrator 等创作套件。' }
-    ]
-  },
-  {
-    letter: 'B',
-    items: [
-      { id: 'b1', name: 'Baidu 百度搜索', desc: '中国最大的中文搜索引擎。' },
-      { id: 'b2', name: 'Bilibili 哔哩哔哩', desc: '年轻人喜爱的弹幕视频和弹幕文化社区。' },
-      { id: 'b3', name: 'ByteDance 字节跳动', desc: '今日头条及抖音的母公司。' }
-    ]
-  },
-  {
-    letter: 'C',
-    items: [
-      { id: 'c1', name: 'ChatGPT', desc: '由 OpenAI 研发的划时代大语言模型。' },
-      { id: 'c2', name: 'Chrome 浏览器', desc: '由 Google 推出的极速网页浏览器。' },
-      { id: 'c3', name: 'CSS 样式表', desc: '层叠样式表，控制网页排版和视觉艺术。' }
-    ]
-  },
-  {
-    letter: 'D',
-    items: [
-      { id: 'd1', name: 'Docker 容器', desc: '应用容器化平台，实现一键打包部署。' },
-      { id: 'd2', name: 'Django 框架', desc: '基于 Python 的高生产力 Web 后端框架。' },
-      { id: 'd3', name: 'Dart 编程语言', desc: 'Flutter 开发首选的强类型客户端语言。' }
-    ]
-  },
-  {
-    letter: 'E',
-    items: [
-      { id: 'e1', name: 'ESLint 校验器', desc: 'JavaScript 静态代码分析与格式检验工具。' },
-      { id: 'e2', name: 'Express.js', desc: '基于 Node.js 平台的极简 Web 开发框架。' }
-    ]
-  },
-  {
-    letter: 'F',
-    items: [
-      { id: 'f1', name: 'Figma 设计工具', desc: '基于浏览器的在线协同 UI/UX 设计平台。' },
-      { id: 'f2', name: 'Flutter 开发包', desc: '谷歌推出的多端跨平台原生渲染框架。' }
-    ]
-  },
-  {
-    letter: 'G',
-    items: [
-      { id: 'g1', name: 'GitHub 代码库', desc: '全球最大的开源软件托管和代码分享中心。' },
-      { id: 'g2', name: 'Google 谷歌公司', desc: '全球领先的搜索引擎及互联网科技巨头。' }
-    ]
-  },
-  {
-    letter: 'H',
-    items: [
-      { id: 'h1', name: 'HBuilderX 编辑器', desc: 'DCloud 推出的一流 UniApp 开发利器。' },
-      { id: 'h2', name: 'HTML5 标准', desc: '构建下一代现代网页与流媒体的骨架协议。' }
-    ]
-  },
-  {
-    letter: 'N',
-    items: [
-      { id: 'n1', name: 'Next.js 框架', desc: '基于 React 性能优越的服务端渲染脚手架。' },
-      { id: 'n2', name: 'Node.js 运行时', desc: '让 JavaScript 在服务器端运行的高效平台。' }
-    ]
-  },
-  {
-    letter: 'P',
-    items: [
-      { id: 'p1', name: 'Python 语言', desc: '适合人工智能与数据分析的极简脚本语言。' },
-      { id: 'p2', name: 'Pinia 状态管理', desc: 'Vue 3 生态推荐的轻量直观全局数据仓库。' }
-    ]
-  },
-  {
-    letter: 'R',
-    items: [
-      { id: 'r1', name: 'React.js 视图库', desc: '由 Meta 维护的声明式组件化前端底层库。' },
-      { id: 'r2', name: 'Rust 编程语言', desc: '兼顾极致运行速度和内存安全的底层语言。' }
-    ]
-  },
-  {
-    letter: 'T',
-    items: [
-      { id: 't1', name: 'TypeScript', desc: '给 JavaScript 附带强类型约束的超集语言。' },
-      { id: 't2', name: 'TailwindCSS', desc: '实用主义的原子化 CSS 布局样式库。' }
-    ]
-  },
-  {
-    letter: 'V',
-    items: [
-      { id: 'v1', name: 'Vue.js 渐进式框架', desc: '基于数据双向绑定的主流前端声明式框架。' },
-      { id: 'v2', name: 'Vite 构建工具', desc: '基于原生 ESM 的极速冷启动前端构建系统。' }
-    ]
-  },
-  {
-    letter: 'Z',
-    items: [
-      { id: 'z1', name: 'Zoom 视频会议', desc: '全球广泛使用的在线云视讯交流平台。' },
-      { id: 'z2', name: 'ZTE 中兴通讯', desc: '全球领先的综合通信与信息技术解决方案提供商。' }
-    ]
-  },
-  {
-    letter: '#',
-    items: [
-      { id: 'num1', name: '360 安全卫士', desc: '国内知名安全防毒与系统清理辅助工具。' },
-      { id: 'num2', name: '58同城分类网', desc: '提供租房、招聘及本地生活服务的生活网。' }
+// Autosuggestions mock list based on typing "1" or similar
+const autosuggestions = computed(() => {
+  const kw = searchKeyword.value.trim().toLowerCase()
+  if (!kw) return []
+  
+  if (kw === '1') {
+    return [
+      '1号电池',
+      '12v电池',
+      '1元e卡',
+      '100zz 羽毛球拍',
+      '一加13 手机',
+      '15pro 手机壳',
+      '一加13t Pro',
+      '14pro Max 钢化膜',
+      '1t固态硬盘 极速',
+      '13手机壳 防摔'
     ]
   }
-]
-
-// Index sidebar letters list
-const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'N', 'P', 'R', 'T', 'V', 'Z', '#']
-
-// Filter directory by search keyword
-const filteredDirectory = computed(() => {
-  const query = searchKeyword.value.trim().toLowerCase()
-  if (!query) return directoryData
-
-  return directoryData
-    .map(group => {
-      const items = group.items.filter(
-        item => item.name.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query)
-      )
-      return { letter: group.letter, items }
-    })
-    .filter(group => group.items.length > 0)
+  
+  // Generic autocomplete
+  return [
+    `${kw} 抗菌防臭款`,
+    `${kw} 旗舰新品`,
+    `${kw} 性价比推荐`,
+    `${kw} 同款特惠`,
+    `正品包邮 ${kw}`
+  ]
 })
 
-function triggerSearch(kw: string) {
+// Filter data lists
+const filterCategories = [
+  { name: '价格区间' },
+  { name: '精选服务' },
+  { name: '商品发货地' },
+  { name: '热门品牌' },
+  { name: '面料俗称' }
+]
+
+const filterOptionsMap = reactive<Record<string, { label: string; selected: boolean }[]>>({
+  '价格区间': [
+    { label: '0-3 元', selected: false },
+    { label: '3-6 元', selected: false },
+    { label: '6-11 元', selected: false },
+    { label: '11 元以上', selected: false }
+  ],
+  '精选服务': [
+    { label: '退货包运费', selected: false },
+    { label: '正品险保障', selected: false },
+    { label: '24小时发货', selected: false },
+    { label: '假一赔十', selected: false },
+    { label: '极速退款', selected: false }
+  ],
+  '商品发货地': [
+    { label: '浙江', selected: false },
+    { label: '河南', selected: false },
+    { label: '江西', selected: false },
+    { label: '陕西', selected: false },
+    { label: '吉林', selected: false },
+    { label: '上海', selected: false },
+    { label: '北京', selected: false },
+    { label: '福建', selected: false }
+  ],
+  '热门品牌': [
+    { label: 'Nike 耐克', selected: false },
+    { label: 'Adidas 阿迪达斯', selected: false },
+    { label: '南极人', selected: false },
+    { label: '恒源祥', selected: false }
+  ],
+  '面料俗称': [
+    { label: '纯棉', selected: false },
+    { label: '精梳棉', selected: false },
+    { label: '聚酯纤维', selected: false }
+  ]
+})
+
+// Mock Search Results Product list
+const mockProducts = [
+  { id: 1, name: '7A抗菌防臭袜子男士款夏季吸汗透气短袜', price: '1.98', sales: '已拼13.9万+', tag: '先用后付', cover: '🧦' },
+  { id: 2, name: '一次性纯棉袜子男款日抛免洗免邮出差旅行袜', price: '4.89', sales: '已拼93.5万+', tag: '免费送货上门', cover: '🧦' },
+  { id: 3, name: '超能量5号电池家用高容量玩具遥控器电池', price: '9.90', sales: '已拼45.2万+', tag: '正品保障', cover: '🔋' },
+  { id: 4, name: '1号大容量高能电池燃气灶热水器专用电池', price: '12.80', sales: '已拼18.4万+', tag: '破损包退', cover: '🔋' }
+]
+
+function selectCategoryOption(cat: string) {
+  selectedCategory.value = cat
+  showCategorySelect.value = false
+  toast.success(`切换搜索类型为: ${cat}`)
+}
+
+function handleSearch(kw: string) {
+  if (!kw.trim()) {
+    toast.warning('请输入搜索词')
+    return
+  }
   searchKeyword.value = kw
+  showResults.value = true
   if (!searchHistory.value.includes(kw)) {
     searchHistory.value = [kw, ...searchHistory.value].slice(0, 10)
   }
-  toast.success(`正在过滤：“${kw}”`)
+  toast.success(`搜素：${kw}`)
 }
 
 function clearHistory() {
   searchHistory.value = []
-  toast.success('历史已清空')
+  toast.success('历史记录已清除')
 }
 
-function scrollToLetter(letter: string) {
-  activeLetter.value = letter
-  scrollTargetId.value = `letter-group-${letter === '#' ? 'num' : letter}`
-  
-  // Show center temporary badge
-  showLetterIndicator.value = true
-  setTimeout(() => {
-    showLetterIndicator.value = false
-  }, 800)
+// Sorting logic
+function changeSort(sortType: string) {
+  activeSort.value = sortType
+  if (sortType === '价格') {
+    priceSortOrder.value = priceSortOrder.value === 'desc' ? 'asc' : 'desc'
+    toast.success(`按价格 ${priceSortOrder.value === 'desc' ? '从高到低' : '从低到高'} 排序`)
+  } else {
+    toast.success(`按 ${sortType} 排序`)
+  }
+}
+
+// Filter drawer item selection
+function toggleFilterOption(option: { label: string; selected: boolean }) {
+  option.selected = !option.selected
+}
+
+function resetFilters() {
+  Object.keys(filterOptionsMap).forEach(key => {
+    filterOptionsMap[key].forEach(opt => opt.selected = false)
+  })
+  toast.success('筛选已重置')
+}
+
+function confirmFilters() {
+  showFilterDrawer.value = false
+  const activeCount = Object.values(filterOptionsMap)
+    .flatMap(arr => arr)
+    .filter(opt => opt.selected).length
+  toast.success(`筛选成功：已选择 ${activeCount} 项过滤参数`)
+}
+
+// Reset view back to search homepage
+function resetSearchPage() {
+  showResults.value = false
+  searchKeyword.value = ''
 }
 </script>
 
 <template>
-  <PageShell title="字母索引搜索" description="顶部集成历史、热推面板，下方主体提供 A-Z + # 索引侧栏，支持流畅的拼音锚点滑动定位。">
+  <PageShell title="电商智能搜索" description="完美实现输入框分类下拉联想词列表，以及精细化分类侧滑筛选抽屉。">
     <view class="advanced-search-page">
       <wd-toast selector="advanced-search-toast" />
 
-      <!-- Top Search Bar -->
-      <view class="search-head-box">
-        <wd-search
-          v-model="searchKeyword"
-          placeholder="搜索品牌、技术框架或应用"
-          @search="(val) => triggerSearch(val)"
-          @clear="searchKeyword = ''"
-        />
+      <!-- ==========================================
+           1. E-COMMERCE SEARCH BAR HEADER
+           ========================================== -->
+      <view class="search-bar-header flex items-center">
+        <!-- Category selector dropdown trigger -->
+        <view class="category-dropdown-trigger flex items-center" @click="showCategorySelect = !showCategorySelect">
+          <text class="cat-label font-bold">{{ selectedCategory }}</text>
+          <text class="arrow-down-icon ml-1">▼</text>
+        </view>
+
+        <!-- Main text input field -->
+        <view class="search-input-field-wrap flex-1 ml-2 relative-context">
+          <input
+            v-model="searchKeyword"
+            placeholder="请输入您的商品需求"
+            class="main-search-input"
+            confirm-type="search"
+            @confirm="handleSearch(searchKeyword)"
+          />
+          <text v-if="searchKeyword" class="clear-icon" @click="searchKeyword = ''">×</text>
+        </view>
+
+        <!-- Action Search Button (Orange theme) -->
+        <view class="search-submit-btn font-bold text-center ml-2" @click="handleSearch(searchKeyword)">
+          搜索
+        </view>
+
+        <!-- Category Dropdown floating pane -->
+        <view v-if="showCategorySelect" class="floating-category-select-pane">
+          <view
+            v-for="opt in categoryOptions"
+            :key="opt"
+            class="category-option-row text-center font-bold"
+            @click="selectCategoryOption(opt)"
+          >
+            {{ opt }}
+          </view>
+        </view>
       </view>
 
-      <!-- Search Previews (Only shows when searchKeyword is empty) -->
-      <view v-if="!searchKeyword" class="search-suggestions-container mt-3">
-        <!-- 1. Search History -->
-        <view class="suggest-section" v-if="searchHistory.length > 0">
-          <view class="section-title flex justify-between items-center">
+      <!-- ==========================================
+           2. TYPING AUTOSUGGEST DROPDOWN OVERLAY (Screenshot 1)
+           ========================================== -->
+      <view v-if="searchKeyword && !showResults" class="autosuggest-dropdown-panel mt-2">
+        <view
+          v-for="suggest in autosuggestions"
+          :key="suggest"
+          class="suggest-row flex items-center justify-between"
+          @click="handleSearch(suggest)"
+        >
+          <text class="suggest-txt">{{ suggest }}</text>
+          <text class="arrow-north-west">↗</text>
+        </view>
+      </view>
+
+      <!-- ==========================================
+           3. SEARCH PRE-STATE HOMEPAGE (History & Hot recommend)
+           ========================================== -->
+      <scroll-view v-if="!searchKeyword && !showResults" scroll-y class="search-prep-body mt-3">
+        <!-- History Tags -->
+        <view v-if="searchHistory.length > 0" class="history-section-box">
+          <view class="section-title-row flex justify-between items-center">
             <text class="font-bold text-ink">历史搜索</text>
-            <text class="clear-txt" @click="clearHistory">🗑️ 清空</text>
+            <text class="delete-history-btn" @click="clearHistory">🗑️ 清空</text>
           </view>
-          <view class="tags-row mt-2">
+          <view class="history-tags-grid mt-2">
             <view
               v-for="h in searchHistory"
               :key="h"
-              class="tag-chip"
-              @click="triggerSearch(h)"
+              class="history-tag-chip"
+              @click="handleSearch(h)"
             >
               {{ h }}
             </view>
           </view>
         </view>
 
-        <!-- 2. Hot Recommendations -->
-        <view class="suggest-section mt-4">
+        <!-- Hot Recommendations -->
+        <view class="hot-section-box mt-4">
           <view class="section-title font-bold text-ink mb-2">热门推荐</view>
-          <view class="hot-grid">
+          <view class="hot-cards-list">
             <view
               v-for="hot in hotRecommendations"
               :key="hot.rank"
-              class="hot-grid-item flex items-center"
-              @click="triggerSearch(hot.name)"
+              class="hot-item-row flex items-center"
+              @click="handleSearch(hot.name)"
             >
-              <text :class="['rank-no', { 'top': hot.rank <= 3 }]">{{ hot.rank }}</text>
-              <text class="rank-name text-ink ml-2 flex-1">{{ hot.name }}</text>
+              <text :class="['hot-rank-no', { 'top': hot.rank <= 3 }]">{{ hot.rank }}</text>
+              <text class="hot-name flex-1 ml-2 text-ink">{{ hot.name }}</text>
               <wd-tag v-if="hot.tag" :type="hot.tag === '热' ? 'danger' : 'warning'" size="small">{{ hot.tag }}</wd-tag>
             </view>
           </view>
         </view>
-      </view>
+      </scroll-view>
 
-      <!-- Grouped Indexed Directory Scroll view -->
-      <view class="directory-list-box mt-3 relative-context">
-        <scroll-view
-          scroll-y
-          class="directory-scroll"
-          :scroll-into-view="scrollTargetId"
-          scroll-with-animation
-        >
-          <view
-            v-for="group in filteredDirectory"
-            :key="group.letter"
-            :id="`letter-group-${group.letter === '#' ? 'num' : group.letter}`"
-            class="group-section"
-          >
-            <!-- Letter Header -->
-            <view class="group-header-tag font-bold">{{ group.letter }}</view>
+      <!-- ==========================================
+           4. SEARCH RESULTS VIEW (Screenshot 2)
+           ========================================== -->
+      <view v-if="showResults" class="search-results-viewport mt-2">
+        <!-- Active search keyword chip -->
+        <view class="active-keyword-banner flex items-center justify-between">
+          <view class="keyword-chip flex items-center">
+            <text class="chip-text font-bold">{{ searchKeyword }}</text>
+            <text class="chip-close-btn ml-1" @click="resetSearchPage">×</text>
+          </view>
+          <text class="results-meta-txt">为您找到相关好物</text>
+        </view>
 
-            <!-- Group items -->
-            <view class="group-items-list">
-              <view
-                v-for="item in group.items"
-                :key="item.id"
-                class="directory-item-card"
-                @click="toast.success(`点击了: ${item.name}`)"
-              >
-                <view class="item-name font-bold text-ink">{{ item.name }}</view>
-                <view class="item-desc mt-1">{{ item.desc }}</view>
+        <!-- Sub Sorting & Filter Bar -->
+        <view class="sorting-filter-sub-bar mt-2 flex justify-between">
+          <view :class="['sort-tab', { active: activeSort === '综合' }]" @click="changeSort('综合')">
+            综合 ▼
+          </view>
+          <view :class="['sort-tab', { active: activeSort === '销量' }]" @click="changeSort('销量')">
+            销量
+          </view>
+          <view :class="['sort-tab', { active: activeSort === '价格' }]" @click="changeSort('价格')">
+            价格 <text class="price-arrow-icon">{{ priceSortOrder === 'desc' ? '↓' : '↑' }}</text>
+          </view>
+          <view :class="['sort-tab', { active: activeSort === '品牌' }]" @click="changeSort('品牌')">
+            品牌
+          </view>
+          <view class="sort-tab filter-trigger font-bold text-red" @click="showFilterDrawer = true">
+            筛选 ☰
+          </view>
+        </view>
+
+        <!-- Product Cards Grid list -->
+        <scroll-view scroll-y class="products-grid-scroll mt-2">
+          <view class="products-grid-layout">
+            <view
+              v-for="p in mockProducts"
+              :key="p.id"
+              class="product-card-cell flex-column"
+              @click="toast.success(`查看商品：${p.name}`)"
+            >
+              <view class="product-cover-box text-center">{{ p.cover }}</view>
+              <view class="product-info-box mt-2">
+                <view class="product-name font-bold text-ink">{{ p.name }}</view>
+                <view class="product-tag-row mt-1">
+                  <wd-tag size="small" type="danger" plain>{{ p.tag }}</wd-tag>
+                </view>
+                <view class="product-price-sales-row mt-2 flex items-center justify-between">
+                  <text class="price-val font-bold text-red">¥{{ p.price }}</text>
+                  <text class="sales-val">{{ p.sales }}</text>
+                </view>
               </view>
             </view>
           </view>
-
-          <!-- Padding to allow scrolling last letters to top -->
-          <view class="scroll-footer-padding"></view>
         </scroll-view>
+      </view>
 
-        <!-- Right float A-Z index sidebar -->
-        <view class="alphabet-index-sidebar">
-          <view
-            v-for="l in letters"
-            :key="l"
-            :class="['index-letter', { active: activeLetter === l }]"
-            @click="scrollToLetter(l)"
-          >
-            {{ l }}
+      <!-- ==========================================
+           5. MULTI-LEVEL FILTER DRAWER (Screenshot 2 right side)
+           ========================================== -->
+      <wd-popup
+        v-model="showFilterDrawer"
+        position="right"
+        :z-index="2050"
+        custom-style="z-index: 2050 !important; width: 85vw; height: 100vh;"
+      >
+        <view class="filter-drawer-container flex-column">
+          <!-- Drawer Header -->
+          <view class="filter-drawer-head font-bold">高级筛选</view>
+
+          <!-- Middle Split layout: Left scroll vertical menu, Right grid options -->
+          <view class="filter-body-split flex-1 flex">
+            <!-- Left scroll category menu -->
+            <scroll-view scroll-y class="filter-left-menu">
+              <view
+                v-for="cat in filterCategories"
+                :key="cat.name"
+                :class="['filter-menu-item', { active: activeFilterCategory === cat.name }]"
+                @click="activeFilterCategory = cat.name"
+              >
+                {{ cat.name }}
+              </view>
+            </scroll-view>
+
+            <!-- Right scroll grid content options -->
+            <scroll-view scroll-y class="filter-right-grid-pane">
+              <view class="active-category-headline font-bold mb-3">
+                {{ activeFilterCategory }} 选择
+              </view>
+
+              <!-- Optional Min-Max price inputs (only for price ranges) -->
+              <view v-if="activeFilterCategory === '价格区间'" class="price-range-inputs flex items-center mb-3">
+                <input type="number" placeholder="最低价" class="min-max-input" />
+                <text class="hyphen mx-2">-</text>
+                <input type="number" placeholder="最高价" class="min-max-input" />
+              </view>
+
+              <!-- Tag select grid -->
+              <view class="filter-tags-grid">
+                <view
+                  v-for="opt in filterOptionsMap[activeFilterCategory]"
+                  :key="opt.label"
+                  :class="['filter-select-chip', { selected: opt.selected }]"
+                  @click="toggleFilterOption(opt)"
+                >
+                  {{ opt.label }}
+                </view>
+              </view>
+            </scroll-view>
+          </view>
+
+          <!-- Bottom Fixed Action bar -->
+          <view class="filter-footer-actions flex">
+            <view class="footer-btn btn-reset font-bold text-center flex-1" @click="resetFilters">
+              重置
+            </view>
+            <view class="footer-btn btn-confirm font-bold text-center flex-1" @click="confirmFilters">
+              确定 (1万+件商品)
+            </view>
           </view>
         </view>
-      </view>
+      </wd-popup>
 
-      <!-- Center pop big letter indicator (Shows when scrolling/clicking sidebar) -->
-      <view v-if="showLetterIndicator" class="center-letter-badge font-bold">
-        {{ activeLetter }}
-      </view>
     </view>
   </PageShell>
 </template>
@@ -300,119 +408,107 @@ function scrollToLetter(letter: string) {
   height: calc(100vh - 120rpx);
   display: flex;
   flex-direction: column;
+  padding-bottom: 30rpx;
 }
 
-.search-head-box {
-  background: #fff;
-  border-radius: 16rpx;
-  border: 1rpx solid var(--app-line);
-  padding: 8rpx;
-}
-
-/* History and recommendation styles */
-.search-suggestions-container {
+/* ==========================================
+   E-COMMERCE SEARCH BAR HEADER STYLE
+   ========================================== */
+.search-bar-header {
   background: #fff;
   border: 1rpx solid var(--app-line);
-  border-radius: 16rpx;
-  padding: 24rpx;
+  border-radius: 99rpx;
+  padding: 10rpx 16rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.02);
+  position: relative;
 }
 
-.section-title {
-  font-size: 20rpx;
-}
-
-.clear-txt {
-  font-size: 18rpx;
-  color: var(--app-muted);
+.category-dropdown-trigger {
+  padding: 8rpx 16rpx;
+  border-right: 1rpx solid var(--app-line);
   cursor: pointer;
 }
 
-.tags-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12rpx;
+.cat-label {
+  font-size: 21rpx;
+  color: var(--app-ink);
 }
 
-.tag-chip {
-  background: #f1f5f9;
-  border-radius: 10rpx;
-  font-size: 18rpx;
+.arrow-down-icon {
+  font-size: 14rpx;
+  color: var(--app-muted);
+}
+
+.main-search-input {
+  border: none;
+  background: transparent;
+  font-size: 21rpx;
   color: var(--app-ink);
-  padding: 8rpx 20rpx;
-  border: 1rpx solid var(--app-line);
+  width: 100%;
+}
+
+.clear-icon {
+  position: absolute;
+  right: 12rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 28rpx;
+  color: var(--app-muted);
+  padding: 8rpx;
+  z-index: 3;
+}
+
+.search-submit-btn {
+  background: linear-gradient(135deg, #ff5000 0%, #ff2000 100%);
+  color: #fff;
+  border-radius: 99rpx;
+  font-size: 21rpx;
+  padding: 12rpx 36rpx;
   cursor: pointer;
   
   &:active {
-    filter: brightness(0.9);
+    opacity: 0.9;
   }
 }
 
-/* Hot Grid */
-.hot-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20rpx;
+.floating-category-select-pane {
+  position: absolute;
+  left: 20rpx;
+  top: 90rpx;
+  background: #fff;
+  border: 1rpx solid var(--app-line);
+  border-radius: 12rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.15);
+  width: 140rpx;
+  z-index: 10;
 }
 
-.hot-grid-item {
+.category-option-row {
+  padding: 18rpx 0;
+  font-size: 20rpx;
+  color: var(--app-ink);
   border-bottom: 1rpx solid var(--app-line);
-  padding-bottom: 12rpx;
-  cursor: pointer;
-}
-
-.rank-no {
-  font-size: 22rpx;
-  color: var(--app-muted);
-  font-weight: 800;
-  width: 32rpx;
-  text-align: center;
   
-  &.top {
-    color: #ef4444;
+  &:last-child {
+    border-bottom: none;
   }
 }
 
-.rank-name {
-  font-size: 19rpx;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Directory Index Box */
-.directory-list-box {
-  flex: 1;
-  min-height: 0;
-  display: flex;
+/* ==========================================
+   AUTOSUGGEST DROPDOWN PANEL (Screenshot 1)
+   ========================================== */
+.autosuggest-dropdown-panel {
   background: #fff;
   border: 1rpx solid var(--app-line);
   border-radius: 16rpx;
-  overflow: hidden;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.03);
+  max-height: 60vh;
+  overflow-y: auto;
+  z-index: 8;
 }
 
-.directory-scroll {
-  height: 100%;
-  padding-right: 48rpx; /* Leave space for the floating index bar */
-}
-
-.group-section {
-  display: grid;
-}
-
-.group-header-tag {
-  background: #f1f5f9;
-  font-size: 20rpx;
-  color: var(--app-brand);
-  padding: 8rpx 24rpx;
-  border-bottom: 1rpx solid var(--app-line);
-}
-
-.group-items-list {
-  display: grid;
-}
-
-.directory-item-card {
-  padding: 24rpx;
+.suggest-row {
+  padding: 24rpx 32rpx;
   border-bottom: 1rpx solid var(--app-line);
   cursor: pointer;
   
@@ -421,85 +517,329 @@ function scrollToLetter(letter: string) {
   }
 }
 
-.item-name {
+.suggest-txt {
   font-size: 21rpx;
+  color: var(--app-ink);
 }
 
-.item-desc {
-  font-size: 17rpx;
+.arrow-north-west {
+  font-size: 22rpx;
   color: var(--app-muted);
-  line-height: 1.4;
 }
 
-.scroll-footer-padding {
-  height: 400rpx; /* Extra spacing at bottom so Z and # groups can scroll to top */
-}
-
-/* Sidebar Index */
-.alphabet-index-sidebar {
-  position: absolute;
-  right: 8rpx;
-  top: 24rpx;
-  bottom: 24rpx;
-  width: 40rpx;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 5;
-  background: rgba(241, 245, 249, 0.85);
-  border-radius: 20rpx;
-  padding: 16rpx 0;
+/* Search Prep screen */
+.search-prep-body {
+  flex: 1;
+  min-height: 0;
+  background: #fff;
   border: 1rpx solid var(--app-line);
+  border-radius: 16rpx;
+  padding: 24rpx;
 }
 
-.index-letter {
-  font-size: 16rpx;
+.delete-history-btn {
+  font-size: 18rpx;
+  color: var(--app-muted);
+  cursor: pointer;
+}
+
+.history-tags-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.history-tag-chip {
+  background: #f1f5f9;
+  border-radius: 8rpx;
+  font-size: 19rpx;
+  color: var(--app-ink);
+  padding: 8rpx 20rpx;
+  border: 1rpx solid var(--app-line);
+  cursor: pointer;
+}
+
+.hot-cards-list {
+  display: grid;
+  gap: 16rpx;
+}
+
+.hot-item-row {
+  border-bottom: 1rpx solid var(--app-line);
+  padding-bottom: 14rpx;
+  cursor: pointer;
+}
+
+.hot-rank-no {
+  font-size: 22rpx;
   font-weight: 800;
   color: var(--app-muted);
   width: 32rpx;
-  height: 32rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  cursor: pointer;
+  text-align: center;
   
-  &.active, &:active {
-    background: var(--app-brand);
-    color: #fff;
+  &.top {
+    color: #ff5000;
   }
 }
 
-/* Center pop indicator */
-.center-letter-badge {
-  position: absolute;
-  left: 50%;
-  top: 40%;
-  transform: translate(-50%, -50%);
-  width: 140rpx;
-  height: 140rpx;
-  background: rgba(15, 23, 42, 0.86);
-  color: #fff;
-  border-radius: 24rpx;
+.hot-name {
+  font-size: 20rpx;
+}
+
+/* ==========================================
+   SEARCH RESULTS VIEWPORT STYLE
+   ========================================== */
+.search-results-viewport {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.active-keyword-banner {
+  background: #fff;
+  border: 1rpx solid var(--app-line);
+  border-radius: 16rpx;
+  padding: 16rpx 24rpx;
+}
+
+.keyword-chip {
+  background: #fee2e2;
+  border: 1rpx solid #fecaca;
+  color: #ef4444;
+  border-radius: 99rpx;
+  padding: 4rpx 20rpx;
+}
+
+.chip-text {
+  font-size: 20rpx;
+}
+
+.chip-close-btn {
+  font-size: 24rpx;
+  cursor: pointer;
+}
+
+.results-meta-txt {
+  font-size: 17rpx;
+  color: var(--app-muted);
+}
+
+/* Sub-sorting and filtering strip */
+.sorting-filter-sub-bar {
+  background: #fff;
+  border-bottom: 2rpx solid var(--app-line);
+  padding: 18rpx 16rpx;
+}
+
+.sort-tab {
+  font-size: 20rpx;
+  color: var(--app-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+  
+  &.active {
+    color: #ff5000;
+    font-weight: 800;
+  }
+}
+
+.price-arrow-icon {
+  font-size: 16rpx;
+}
+
+.products-grid-scroll {
+  flex: 1;
+  min-height: 0;
+}
+
+.products-grid-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16rpx;
+  padding-bottom: 60rpx;
+}
+
+.product-card-cell {
+  background: #fff;
+  border: 1rpx solid var(--app-line);
+  border-radius: 16rpx;
+  padding: 20rpx;
+  cursor: pointer;
+  
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.product-cover-box {
+  height: 180rpx;
+  background: #f8fafc;
+  border-radius: 12rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 64rpx;
-  z-index: 20;
-  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.15);
+  font-size: 80rpx;
+}
+
+.product-name {
+  font-size: 19rpx;
+  line-height: 1.4;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  height: 52rpx;
+}
+
+.price-val {
+  font-size: 23rpx;
+}
+
+.sales-val {
+  font-size: 16rpx;
+  color: var(--app-muted);
+}
+
+/* ==========================================
+   MULTI-LEVEL FILTER DRAWER STYLING
+   ========================================== */
+.filter-drawer-container {
+  height: 100vh;
+  background: #f8fafc;
+}
+
+.filter-drawer-head {
+  padding: 32rpx;
+  background: #fff;
+  border-bottom: 1rpx solid var(--app-line);
+  font-size: 22rpx;
+  color: var(--app-ink);
+}
+
+.filter-body-split {
+  overflow: hidden;
+}
+
+.filter-left-menu {
+  width: 180rpx;
+  background: #f1f5f9;
+  border-right: 1rpx solid var(--app-line);
+}
+
+.filter-menu-item {
+  padding: 28rpx 16rpx;
+  font-size: 19rpx;
+  color: var(--app-muted);
+  text-align: center;
+  cursor: pointer;
+  border-bottom: 1rpx solid var(--app-line);
+  
+  &.active {
+    background: #fff;
+    color: #ff5000;
+    font-weight: 800;
+  }
+}
+
+.filter-right-grid-pane {
+  flex: 1;
+  background: #fff;
+  padding: 28rpx;
+}
+
+.active-category-headline {
+  font-size: 20rpx;
+  color: var(--app-ink);
+}
+
+.price-range-inputs {
+  gap: 12rpx;
+}
+
+.min-max-input {
+  flex: 1;
+  height: 60rpx;
+  background: #f1f5f9;
+  border-radius: 8rpx;
+  font-size: 18rpx;
+  text-align: center;
+  color: var(--app-ink);
+}
+
+.hyphen {
+  font-size: 24rpx;
+  color: var(--app-muted);
+}
+
+.filter-tags-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16rpx;
+}
+
+.filter-select-chip {
+  background: #f1f5f9;
+  border: 1rpx solid var(--app-line);
+  border-radius: 8rpx;
+  padding: 16rpx 8rpx;
+  font-size: 18rpx;
+  text-align: center;
+  color: var(--app-ink);
+  cursor: pointer;
+  
+  &.selected {
+    background: #ffebeb;
+    border-color: #ff5000;
+    color: #ff5000;
+    font-weight: 800;
+  }
+}
+
+/* Bottom Fixed Action bar */
+.filter-footer-actions {
+  background: #fff;
+  border-top: 1rpx solid var(--app-line);
+  padding: 20rpx 24rpx calc(20rpx + env(safe-area-inset-bottom));
+  gap: 16rpx;
+}
+
+.footer-btn {
+  padding: 22rpx 0;
+  border-radius: 99rpx;
+  font-size: 21rpx;
+  cursor: pointer;
+}
+
+.btn-reset {
+  background: #f1f5f9;
+  color: var(--app-ink);
+  border: 1rpx solid var(--app-line);
+}
+
+.btn-confirm {
+  background: linear-gradient(135deg, #ff5000 0%, #ff2000 100%);
+  color: #fff;
 }
 
 .flex { display: flex; }
+.flex-column { display: flex; flex-direction: column; }
 .flex-1 { flex: 1; }
 .items-center { align-items: center; }
 .justify-between { justify-content: space-between; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
 .font-bold { font-weight: 800; }
 .text-ink { color: var(--app-ink); }
+.text-red { color: #ff5000; }
+.ml-1 { margin-left: 8rpx; }
 .ml-2 { margin-left: 16rpx; }
 .mt-1 { margin-top: 8rpx; }
 .mt-2 { margin-top: 16rpx; }
 .mt-3 { margin-top: 24rpx; }
 .mt-4 { margin-top: 32rpx; }
 .relative-context { position: relative; }
+.mx-2 { margin-left: 16rpx; margin-right: 16rpx; }
 </style>
