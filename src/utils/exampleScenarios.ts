@@ -740,6 +740,13 @@ export const exampleScenarios: ExampleScenario[] = [
     path: 'video-gallery',
     description: '包含抖音短视频流、手势控制、弹幕、多机位、画中画、互动剧情选择等 15 种特定场景。',
     tags: ['Video', 'Feed', 'PIP']
+  },
+  {
+    level: '展示',
+    title: 'iOS/Android系统特性百宝箱',
+    path: 'os-features',
+    description: '集成 iOS 物理阻尼与果冻边缘回弹、灵动岛扩展、Android 触顶溢出发光等 12 种系统底层特写。',
+    tags: ['Damping', 'Gesture', 'Physics']
   }
 ]
 

@@ -217,6 +217,12 @@
       }
     },
     {
+      "path": "pages/examples/os-features",
+      "style": {
+        "navigationBarTitleText": "系统特性百宝箱"
+      }
+    },
+    {
       "path": "pages/other/index",
       "style": {
         "navigationBarTitleText": "其他"
