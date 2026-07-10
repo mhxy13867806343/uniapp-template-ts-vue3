@@ -6,6 +6,7 @@ import { usePagePagination, useStepPagination } from '@/hooks/pagination'
 import { usePlatform } from '@/hooks/usePlatform'
 import { useAppStore } from '@/store'
 import { appCache } from '@/utils/cache'
+import { ecommercePageCount, ecommercePlatformSummaries } from '@/utils/ecommerceCatalog'
 import { navigateToExample } from '@/utils/exampleScenarios'
 import {
   formatAddress,
@@ -63,6 +64,8 @@ const channels = [
   { name: '抖音小程序', progress: 74 },
   { name: '鸿蒙 App', progress: 68 }
 ]
+
+const ecommercePlatforms = ecommercePlatformSummaries
 
 const pagePagination = usePagePagination({ page: 2, pageSize: 10, total: 58 })
 const stepPagination = useStepPagination({ offset: 20, step: 20, total: 86 })
@@ -257,6 +260,18 @@ function navToBubbleGallery() {
   })
 }
 
+function navToEcommerceZone() {
+  uni.navigateTo({
+    url: '/pages/ecommerce/index'
+  })
+}
+
+function navToEcommercePage(url: string) {
+  uni.navigateTo({
+    url
+  })
+}
+
 function triggerSystemShare() {
   systemShare(shareConfig)
 }
@@ -336,6 +351,32 @@ appStore.markReady()
             <text>{{ item.progress }}%</text>
           </view>
           <wd-progress :percentage="item.progress" />
+        </view>
+      </view>
+
+      <view class="panel-section">
+        <view class="section-head">
+          <text>电商专区</text>
+          <wd-button size="small" type="primary" plain @click="navToEcommerceZone">查看全部 {{ ecommercePageCount }} 页</wd-button>
+        </view>
+        <view class="share-desc-info mb-2">
+          新增淘宝、京东、拼多多三大电商平台页面矩阵，覆盖浏览、商品详情、购物车、下单、支付、订单、售后、店铺、营销、商家后台等高频链路。
+        </view>
+
+        <view class="ecommerce-platform-grid">
+          <view
+            v-for="item in ecommercePlatforms"
+            :key="item.key"
+            class="ecommerce-platform-card"
+            :style="{ background: item.surface, borderColor: item.accent }"
+          >
+            <view class="ecommerce-platform-title">{{ item.label }}</view>
+            <view class="ecommerce-platform-desc">{{ item.description }}</view>
+            <view class="ecommerce-platform-actions">
+              <wd-button size="small" type="primary" @click="navToEcommercePage(item.browseRoute)">去浏览</wd-button>
+              <wd-button size="small" plain @click="navToEcommercePage(item.orderRoute)">去下单</wd-button>
+            </view>
+          </view>
         </view>
       </view>
 
@@ -659,6 +700,37 @@ appStore.markReady()
   gap: 18rpx;
   border-top: 1rpx solid #eef2f7;
   padding-top: 16rpx;
+}
+
+.ecommerce-platform-grid {
+  display: grid;
+  gap: 20rpx;
+}
+
+.ecommerce-platform-card {
+  border: 1rpx solid var(--app-line);
+  border-radius: 20rpx;
+  padding: 24rpx;
+}
+
+.ecommerce-platform-title {
+  color: var(--app-ink);
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.ecommerce-platform-desc {
+  margin-top: 10rpx;
+  color: var(--app-muted);
+  font-size: 24rpx;
+  line-height: 1.6;
+}
+
+.ecommerce-platform-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14rpx;
+  margin-top: 18rpx;
 }
 
 /* Bottom share styling */

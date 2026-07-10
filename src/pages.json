@@ -394,5 +394,1962 @@
         "text": "其他"
       }
     ]
-  }
+  },
+  "subPackages": [
+    {
+      "root": "pages/ecommerce",
+      "pages": [
+        {
+          "path": "index",
+          "style": {
+            "navigationBarTitleText": "电商专区"
+          }
+        },
+        {
+          "path": "taobao/home-recommend",
+          "style": {
+            "navigationBarTitleText": "淘宝·首页推荐流"
+          }
+        },
+        {
+          "path": "taobao/search-results",
+          "style": {
+            "navigationBarTitleText": "淘宝·搜索结果页"
+          }
+        },
+        {
+          "path": "taobao/channel-plaza",
+          "style": {
+            "navigationBarTitleText": "淘宝·频道会场页"
+          }
+        },
+        {
+          "path": "taobao/live-square",
+          "style": {
+            "navigationBarTitleText": "淘宝·直播广场页"
+          }
+        },
+        {
+          "path": "taobao/flash-sale",
+          "style": {
+            "navigationBarTitleText": "淘宝·限时秒杀页"
+          }
+        },
+        {
+          "path": "taobao/subsidy-center",
+          "style": {
+            "navigationBarTitleText": "淘宝·补贴专区页"
+          }
+        },
+        {
+          "path": "taobao/brand-hall",
+          "style": {
+            "navigationBarTitleText": "淘宝·品牌馆页"
+          }
+        },
+        {
+          "path": "taobao/new-arrivals",
+          "style": {
+            "navigationBarTitleText": "淘宝·新品首发页"
+          }
+        },
+        {
+          "path": "taobao/guess-like",
+          "style": {
+            "navigationBarTitleText": "淘宝·猜你喜欢页"
+          }
+        },
+        {
+          "path": "taobao/product-detail",
+          "style": {
+            "navigationBarTitleText": "淘宝·商品详情页"
+          }
+        },
+        {
+          "path": "taobao/sku-selector",
+          "style": {
+            "navigationBarTitleText": "淘宝·规格选择页"
+          }
+        },
+        {
+          "path": "taobao/graphic-detail",
+          "style": {
+            "navigationBarTitleText": "淘宝·图文详情页"
+          }
+        },
+        {
+          "path": "taobao/review-list",
+          "style": {
+            "navigationBarTitleText": "淘宝·评价列表页"
+          }
+        },
+        {
+          "path": "taobao/ask-community",
+          "style": {
+            "navigationBarTitleText": "淘宝·问大家页"
+          }
+        },
+        {
+          "path": "taobao/bundle-recommend",
+          "style": {
+            "navigationBarTitleText": "淘宝·搭配推荐页"
+          }
+        },
+        {
+          "path": "taobao/price-drop-alert",
+          "style": {
+            "navigationBarTitleText": "淘宝·降价提醒页"
+          }
+        },
+        {
+          "path": "taobao/stock-alert",
+          "style": {
+            "navigationBarTitleText": "淘宝·到货提醒页"
+          }
+        },
+        {
+          "path": "taobao/service-commitment",
+          "style": {
+            "navigationBarTitleText": "淘宝·服务承诺页"
+          }
+        },
+        {
+          "path": "taobao/cart",
+          "style": {
+            "navigationBarTitleText": "淘宝·购物车页"
+          }
+        },
+        {
+          "path": "taobao/checkout-confirm",
+          "style": {
+            "navigationBarTitleText": "淘宝·确认订单页"
+          }
+        },
+        {
+          "path": "taobao/address-selector",
+          "style": {
+            "navigationBarTitleText": "淘宝·地址选择页"
+          }
+        },
+        {
+          "path": "taobao/coupon-center",
+          "style": {
+            "navigationBarTitleText": "淘宝·优惠券页"
+          }
+        },
+        {
+          "path": "taobao/invoice-editor",
+          "style": {
+            "navigationBarTitleText": "淘宝·发票信息页"
+          }
+        },
+        {
+          "path": "taobao/payment-cashier",
+          "style": {
+            "navigationBarTitleText": "淘宝·支付收银台页"
+          }
+        },
+        {
+          "path": "taobao/installment-plan",
+          "style": {
+            "navigationBarTitleText": "淘宝·分期方案页"
+          }
+        },
+        {
+          "path": "taobao/order-success",
+          "style": {
+            "navigationBarTitleText": "淘宝·下单成功页"
+          }
+        },
+        {
+          "path": "taobao/group-invite",
+          "style": {
+            "navigationBarTitleText": "淘宝·拼团邀请页"
+          }
+        },
+        {
+          "path": "taobao/order-list",
+          "style": {
+            "navigationBarTitleText": "淘宝·订单列表页"
+          }
+        },
+        {
+          "path": "taobao/pending-payment",
+          "style": {
+            "navigationBarTitleText": "淘宝·待付款页"
+          }
+        },
+        {
+          "path": "taobao/pending-shipment",
+          "style": {
+            "navigationBarTitleText": "淘宝·待发货页"
+          }
+        },
+        {
+          "path": "taobao/pending-delivery",
+          "style": {
+            "navigationBarTitleText": "淘宝·待收货页"
+          }
+        },
+        {
+          "path": "taobao/pending-review",
+          "style": {
+            "navigationBarTitleText": "淘宝·待评价页"
+          }
+        },
+        {
+          "path": "taobao/logistics-tracking",
+          "style": {
+            "navigationBarTitleText": "淘宝·物流轨迹页"
+          }
+        },
+        {
+          "path": "taobao/order-detail",
+          "style": {
+            "navigationBarTitleText": "淘宝·订单详情页"
+          }
+        },
+        {
+          "path": "taobao/refund-after-sale",
+          "style": {
+            "navigationBarTitleText": "淘宝·退款售后页"
+          }
+        },
+        {
+          "path": "taobao/rebuy-center",
+          "style": {
+            "navigationBarTitleText": "淘宝·再次购买页"
+          }
+        },
+        {
+          "path": "taobao/store-home",
+          "style": {
+            "navigationBarTitleText": "淘宝·店铺首页页"
+          }
+        },
+        {
+          "path": "taobao/store-category",
+          "style": {
+            "navigationBarTitleText": "淘宝·店铺分类页"
+          }
+        },
+        {
+          "path": "taobao/store-live",
+          "style": {
+            "navigationBarTitleText": "淘宝·店铺直播页"
+          }
+        },
+        {
+          "path": "taobao/store-member",
+          "style": {
+            "navigationBarTitleText": "淘宝·店铺会员页"
+          }
+        },
+        {
+          "path": "taobao/store-discount",
+          "style": {
+            "navigationBarTitleText": "淘宝·店铺优惠页"
+          }
+        },
+        {
+          "path": "taobao/service-chat",
+          "style": {
+            "navigationBarTitleText": "淘宝·客服会话页"
+          }
+        },
+        {
+          "path": "taobao/fan-benefits",
+          "style": {
+            "navigationBarTitleText": "淘宝·粉丝权益页"
+          }
+        },
+        {
+          "path": "taobao/new-user-gift",
+          "style": {
+            "navigationBarTitleText": "淘宝·新客礼金页"
+          }
+        },
+        {
+          "path": "taobao/follow-store",
+          "style": {
+            "navigationBarTitleText": "淘宝·关注店铺页"
+          }
+        },
+        {
+          "path": "taobao/campaign-main",
+          "style": {
+            "navigationBarTitleText": "淘宝·大促主会场页"
+          }
+        },
+        {
+          "path": "taobao/campaign-seckill",
+          "style": {
+            "navigationBarTitleText": "淘宝·秒杀会场页"
+          }
+        },
+        {
+          "path": "taobao/campaign-cross-reduce",
+          "style": {
+            "navigationBarTitleText": "淘宝·跨店满减页"
+          }
+        },
+        {
+          "path": "taobao/red-packet-center",
+          "style": {
+            "navigationBarTitleText": "淘宝·红包中心页"
+          }
+        },
+        {
+          "path": "taobao/task-signin",
+          "style": {
+            "navigationBarTitleText": "淘宝·任务签到页"
+          }
+        },
+        {
+          "path": "taobao/coupon-club",
+          "style": {
+            "navigationBarTitleText": "淘宝·神券会场页"
+          }
+        },
+        {
+          "path": "taobao/member-day",
+          "style": {
+            "navigationBarTitleText": "淘宝·会员日页"
+          }
+        },
+        {
+          "path": "taobao/bargain-event",
+          "style": {
+            "navigationBarTitleText": "淘宝·砍价活动页"
+          }
+        },
+        {
+          "path": "taobao/fission-invite",
+          "style": {
+            "navigationBarTitleText": "淘宝·裂变邀请页"
+          }
+        },
+        {
+          "path": "taobao/buyer-show",
+          "style": {
+            "navigationBarTitleText": "淘宝·买家秀页"
+          }
+        },
+        {
+          "path": "taobao/video-discovery",
+          "style": {
+            "navigationBarTitleText": "淘宝·短视频种草页"
+          }
+        },
+        {
+          "path": "taobao/ranking-list",
+          "style": {
+            "navigationBarTitleText": "淘宝·榜单频道页"
+          }
+        },
+        {
+          "path": "taobao/topic-square",
+          "style": {
+            "navigationBarTitleText": "淘宝·话题广场页"
+          }
+        },
+        {
+          "path": "taobao/creator-live",
+          "style": {
+            "navigationBarTitleText": "淘宝·达人直播页"
+          }
+        },
+        {
+          "path": "taobao/note-feed",
+          "style": {
+            "navigationBarTitleText": "淘宝·图文笔记页"
+          }
+        },
+        {
+          "path": "taobao/favorites",
+          "style": {
+            "navigationBarTitleText": "淘宝·收藏夹页"
+          }
+        },
+        {
+          "path": "taobao/browse-history",
+          "style": {
+            "navigationBarTitleText": "淘宝·浏览历史页"
+          }
+        },
+        {
+          "path": "taobao/subscription-reminder",
+          "style": {
+            "navigationBarTitleText": "淘宝·订阅提醒页"
+          }
+        },
+        {
+          "path": "taobao/wallet",
+          "style": {
+            "navigationBarTitleText": "淘宝·我的钱包页"
+          }
+        },
+        {
+          "path": "taobao/member-center",
+          "style": {
+            "navigationBarTitleText": "淘宝·会员中心页"
+          }
+        },
+        {
+          "path": "taobao/address-book",
+          "style": {
+            "navigationBarTitleText": "淘宝·地址管理页"
+          }
+        },
+        {
+          "path": "taobao/footprint",
+          "style": {
+            "navigationBarTitleText": "淘宝·足迹中心页"
+          }
+        },
+        {
+          "path": "taobao/favorite-center",
+          "style": {
+            "navigationBarTitleText": "淘宝·关注收藏页"
+          }
+        },
+        {
+          "path": "taobao/message-center",
+          "style": {
+            "navigationBarTitleText": "淘宝·消息中心页"
+          }
+        },
+        {
+          "path": "taobao/security-center",
+          "style": {
+            "navigationBarTitleText": "淘宝·安全中心页"
+          }
+        },
+        {
+          "path": "taobao/invoice-profile",
+          "style": {
+            "navigationBarTitleText": "淘宝·发票抬头页"
+          }
+        },
+        {
+          "path": "taobao/after-sale-progress",
+          "style": {
+            "navigationBarTitleText": "淘宝·售后进度页"
+          }
+        },
+        {
+          "path": "taobao/local-delivery",
+          "style": {
+            "navigationBarTitleText": "淘宝·同城到家页"
+          }
+        },
+        {
+          "path": "taobao/supermarket-delivery",
+          "style": {
+            "navigationBarTitleText": "淘宝·外卖超市页"
+          }
+        },
+        {
+          "path": "taobao/pickup-store",
+          "style": {
+            "navigationBarTitleText": "淘宝·门店自提页"
+          }
+        },
+        {
+          "path": "taobao/install-booking",
+          "style": {
+            "navigationBarTitleText": "淘宝·预约安装页"
+          }
+        },
+        {
+          "path": "taobao/trade-in",
+          "style": {
+            "navigationBarTitleText": "淘宝·以旧换新页"
+          }
+        },
+        {
+          "path": "taobao/store-verification",
+          "style": {
+            "navigationBarTitleText": "淘宝·到店核销页"
+          }
+        },
+        {
+          "path": "taobao/service-orders",
+          "style": {
+            "navigationBarTitleText": "淘宝·服务订单页"
+          }
+        },
+        {
+          "path": "taobao/home-repair",
+          "style": {
+            "navigationBarTitleText": "淘宝·上门维修页"
+          }
+        },
+        {
+          "path": "taobao/local-groupbuy",
+          "style": {
+            "navigationBarTitleText": "淘宝·本地团购页"
+          }
+        },
+        {
+          "path": "taobao/merchant-dashboard",
+          "style": {
+            "navigationBarTitleText": "淘宝·商家工作台页"
+          }
+        },
+        {
+          "path": "taobao/merchant-publish",
+          "style": {
+            "navigationBarTitleText": "淘宝·商品发布页"
+          }
+        },
+        {
+          "path": "taobao/merchant-orders",
+          "style": {
+            "navigationBarTitleText": "淘宝·订单处理页"
+          }
+        },
+        {
+          "path": "taobao/merchant-shipping",
+          "style": {
+            "navigationBarTitleText": "淘宝·发货管理页"
+          }
+        },
+        {
+          "path": "taobao/merchant-marketing",
+          "style": {
+            "navigationBarTitleText": "淘宝·营销工具页"
+          }
+        },
+        {
+          "path": "taobao/merchant-analytics",
+          "style": {
+            "navigationBarTitleText": "淘宝·数据看板页"
+          }
+        },
+        {
+          "path": "taobao/merchant-service",
+          "style": {
+            "navigationBarTitleText": "淘宝·客服分流页"
+          }
+        },
+        {
+          "path": "taobao/merchant-stock",
+          "style": {
+            "navigationBarTitleText": "淘宝·库存预警页"
+          }
+        },
+        {
+          "path": "taobao/merchant-diagnosis",
+          "style": {
+            "navigationBarTitleText": "淘宝·经营诊断页"
+          }
+        },
+        {
+          "path": "taobao/revenue-center",
+          "style": {
+            "navigationBarTitleText": "淘宝·收益中心页"
+          }
+        },
+        {
+          "path": "taobao/statement-list",
+          "style": {
+            "navigationBarTitleText": "淘宝·对账单页"
+          }
+        },
+        {
+          "path": "taobao/capital-flow",
+          "style": {
+            "navigationBarTitleText": "淘宝·资金流水页"
+          }
+        },
+        {
+          "path": "taobao/withdraw-apply",
+          "style": {
+            "navigationBarTitleText": "淘宝·提现申请页"
+          }
+        },
+        {
+          "path": "taobao/profit-sharing",
+          "style": {
+            "navigationBarTitleText": "淘宝·分账管理页"
+          }
+        },
+        {
+          "path": "taobao/commission-plan",
+          "style": {
+            "navigationBarTitleText": "淘宝·佣金计划页"
+          }
+        },
+        {
+          "path": "taobao/invoice-download",
+          "style": {
+            "navigationBarTitleText": "淘宝·发票下载页"
+          }
+        },
+        {
+          "path": "taobao/deposit-center",
+          "style": {
+            "navigationBarTitleText": "淘宝·保证金页"
+          }
+        },
+        {
+          "path": "taobao/settlement-calendar",
+          "style": {
+            "navigationBarTitleText": "淘宝·结算日历页"
+          }
+        },
+        {
+          "path": "taobao/merchant-entry",
+          "style": {
+            "navigationBarTitleText": "淘宝·开店入驻页"
+          }
+        },
+        {
+          "path": "taobao/brand-recruit",
+          "style": {
+            "navigationBarTitleText": "淘宝·品牌招商页"
+          }
+        },
+        {
+          "path": "taobao/service-market",
+          "style": {
+            "navigationBarTitleText": "淘宝·服务市场页"
+          }
+        },
+        {
+          "path": "taobao/ads-delivery",
+          "style": {
+            "navigationBarTitleText": "淘宝·广告投放页"
+          }
+        },
+        {
+          "path": "taobao/crm-operations",
+          "style": {
+            "navigationBarTitleText": "淘宝·客户运营页"
+          }
+        },
+        {
+          "path": "taobao/private-traffic",
+          "style": {
+            "navigationBarTitleText": "淘宝·私域引流页"
+          }
+        },
+        {
+          "path": "taobao/growth-missions",
+          "style": {
+            "navigationBarTitleText": "淘宝·会员任务页"
+          }
+        },
+        {
+          "path": "taobao/content-studio",
+          "style": {
+            "navigationBarTitleText": "淘宝·内容中心页"
+          }
+        },
+        {
+          "path": "taobao/ai-selection",
+          "style": {
+            "navigationBarTitleText": "淘宝·AI选品页"
+          }
+        },
+        {
+          "path": "jd/home-recommend",
+          "style": {
+            "navigationBarTitleText": "京东·首页推荐流"
+          }
+        },
+        {
+          "path": "jd/search-results",
+          "style": {
+            "navigationBarTitleText": "京东·搜索结果页"
+          }
+        },
+        {
+          "path": "jd/channel-plaza",
+          "style": {
+            "navigationBarTitleText": "京东·频道会场页"
+          }
+        },
+        {
+          "path": "jd/live-square",
+          "style": {
+            "navigationBarTitleText": "京东·直播广场页"
+          }
+        },
+        {
+          "path": "jd/flash-sale",
+          "style": {
+            "navigationBarTitleText": "京东·限时秒杀页"
+          }
+        },
+        {
+          "path": "jd/subsidy-center",
+          "style": {
+            "navigationBarTitleText": "京东·补贴专区页"
+          }
+        },
+        {
+          "path": "jd/brand-hall",
+          "style": {
+            "navigationBarTitleText": "京东·品牌馆页"
+          }
+        },
+        {
+          "path": "jd/new-arrivals",
+          "style": {
+            "navigationBarTitleText": "京东·新品首发页"
+          }
+        },
+        {
+          "path": "jd/guess-like",
+          "style": {
+            "navigationBarTitleText": "京东·猜你喜欢页"
+          }
+        },
+        {
+          "path": "jd/product-detail",
+          "style": {
+            "navigationBarTitleText": "京东·商品详情页"
+          }
+        },
+        {
+          "path": "jd/sku-selector",
+          "style": {
+            "navigationBarTitleText": "京东·规格选择页"
+          }
+        },
+        {
+          "path": "jd/graphic-detail",
+          "style": {
+            "navigationBarTitleText": "京东·图文详情页"
+          }
+        },
+        {
+          "path": "jd/review-list",
+          "style": {
+            "navigationBarTitleText": "京东·评价列表页"
+          }
+        },
+        {
+          "path": "jd/ask-community",
+          "style": {
+            "navigationBarTitleText": "京东·问大家页"
+          }
+        },
+        {
+          "path": "jd/bundle-recommend",
+          "style": {
+            "navigationBarTitleText": "京东·搭配推荐页"
+          }
+        },
+        {
+          "path": "jd/price-drop-alert",
+          "style": {
+            "navigationBarTitleText": "京东·降价提醒页"
+          }
+        },
+        {
+          "path": "jd/stock-alert",
+          "style": {
+            "navigationBarTitleText": "京东·到货提醒页"
+          }
+        },
+        {
+          "path": "jd/service-commitment",
+          "style": {
+            "navigationBarTitleText": "京东·服务承诺页"
+          }
+        },
+        {
+          "path": "jd/cart",
+          "style": {
+            "navigationBarTitleText": "京东·购物车页"
+          }
+        },
+        {
+          "path": "jd/checkout-confirm",
+          "style": {
+            "navigationBarTitleText": "京东·确认订单页"
+          }
+        },
+        {
+          "path": "jd/address-selector",
+          "style": {
+            "navigationBarTitleText": "京东·地址选择页"
+          }
+        },
+        {
+          "path": "jd/coupon-center",
+          "style": {
+            "navigationBarTitleText": "京东·优惠券页"
+          }
+        },
+        {
+          "path": "jd/invoice-editor",
+          "style": {
+            "navigationBarTitleText": "京东·发票信息页"
+          }
+        },
+        {
+          "path": "jd/payment-cashier",
+          "style": {
+            "navigationBarTitleText": "京东·支付收银台页"
+          }
+        },
+        {
+          "path": "jd/installment-plan",
+          "style": {
+            "navigationBarTitleText": "京东·分期方案页"
+          }
+        },
+        {
+          "path": "jd/order-success",
+          "style": {
+            "navigationBarTitleText": "京东·下单成功页"
+          }
+        },
+        {
+          "path": "jd/group-invite",
+          "style": {
+            "navigationBarTitleText": "京东·拼团邀请页"
+          }
+        },
+        {
+          "path": "jd/order-list",
+          "style": {
+            "navigationBarTitleText": "京东·订单列表页"
+          }
+        },
+        {
+          "path": "jd/pending-payment",
+          "style": {
+            "navigationBarTitleText": "京东·待付款页"
+          }
+        },
+        {
+          "path": "jd/pending-shipment",
+          "style": {
+            "navigationBarTitleText": "京东·待发货页"
+          }
+        },
+        {
+          "path": "jd/pending-delivery",
+          "style": {
+            "navigationBarTitleText": "京东·待收货页"
+          }
+        },
+        {
+          "path": "jd/pending-review",
+          "style": {
+            "navigationBarTitleText": "京东·待评价页"
+          }
+        },
+        {
+          "path": "jd/logistics-tracking",
+          "style": {
+            "navigationBarTitleText": "京东·物流轨迹页"
+          }
+        },
+        {
+          "path": "jd/order-detail",
+          "style": {
+            "navigationBarTitleText": "京东·订单详情页"
+          }
+        },
+        {
+          "path": "jd/refund-after-sale",
+          "style": {
+            "navigationBarTitleText": "京东·退款售后页"
+          }
+        },
+        {
+          "path": "jd/rebuy-center",
+          "style": {
+            "navigationBarTitleText": "京东·再次购买页"
+          }
+        },
+        {
+          "path": "jd/store-home",
+          "style": {
+            "navigationBarTitleText": "京东·店铺首页页"
+          }
+        },
+        {
+          "path": "jd/store-category",
+          "style": {
+            "navigationBarTitleText": "京东·店铺分类页"
+          }
+        },
+        {
+          "path": "jd/store-live",
+          "style": {
+            "navigationBarTitleText": "京东·店铺直播页"
+          }
+        },
+        {
+          "path": "jd/store-member",
+          "style": {
+            "navigationBarTitleText": "京东·店铺会员页"
+          }
+        },
+        {
+          "path": "jd/store-discount",
+          "style": {
+            "navigationBarTitleText": "京东·店铺优惠页"
+          }
+        },
+        {
+          "path": "jd/service-chat",
+          "style": {
+            "navigationBarTitleText": "京东·客服会话页"
+          }
+        },
+        {
+          "path": "jd/fan-benefits",
+          "style": {
+            "navigationBarTitleText": "京东·粉丝权益页"
+          }
+        },
+        {
+          "path": "jd/new-user-gift",
+          "style": {
+            "navigationBarTitleText": "京东·新客礼金页"
+          }
+        },
+        {
+          "path": "jd/follow-store",
+          "style": {
+            "navigationBarTitleText": "京东·关注店铺页"
+          }
+        },
+        {
+          "path": "jd/campaign-main",
+          "style": {
+            "navigationBarTitleText": "京东·大促主会场页"
+          }
+        },
+        {
+          "path": "jd/campaign-seckill",
+          "style": {
+            "navigationBarTitleText": "京东·秒杀会场页"
+          }
+        },
+        {
+          "path": "jd/campaign-cross-reduce",
+          "style": {
+            "navigationBarTitleText": "京东·跨店满减页"
+          }
+        },
+        {
+          "path": "jd/red-packet-center",
+          "style": {
+            "navigationBarTitleText": "京东·红包中心页"
+          }
+        },
+        {
+          "path": "jd/task-signin",
+          "style": {
+            "navigationBarTitleText": "京东·任务签到页"
+          }
+        },
+        {
+          "path": "jd/coupon-club",
+          "style": {
+            "navigationBarTitleText": "京东·神券会场页"
+          }
+        },
+        {
+          "path": "jd/member-day",
+          "style": {
+            "navigationBarTitleText": "京东·会员日页"
+          }
+        },
+        {
+          "path": "jd/bargain-event",
+          "style": {
+            "navigationBarTitleText": "京东·砍价活动页"
+          }
+        },
+        {
+          "path": "jd/fission-invite",
+          "style": {
+            "navigationBarTitleText": "京东·裂变邀请页"
+          }
+        },
+        {
+          "path": "jd/buyer-show",
+          "style": {
+            "navigationBarTitleText": "京东·买家秀页"
+          }
+        },
+        {
+          "path": "jd/video-discovery",
+          "style": {
+            "navigationBarTitleText": "京东·短视频种草页"
+          }
+        },
+        {
+          "path": "jd/ranking-list",
+          "style": {
+            "navigationBarTitleText": "京东·榜单频道页"
+          }
+        },
+        {
+          "path": "jd/topic-square",
+          "style": {
+            "navigationBarTitleText": "京东·话题广场页"
+          }
+        },
+        {
+          "path": "jd/creator-live",
+          "style": {
+            "navigationBarTitleText": "京东·达人直播页"
+          }
+        },
+        {
+          "path": "jd/note-feed",
+          "style": {
+            "navigationBarTitleText": "京东·图文笔记页"
+          }
+        },
+        {
+          "path": "jd/favorites",
+          "style": {
+            "navigationBarTitleText": "京东·收藏夹页"
+          }
+        },
+        {
+          "path": "jd/browse-history",
+          "style": {
+            "navigationBarTitleText": "京东·浏览历史页"
+          }
+        },
+        {
+          "path": "jd/subscription-reminder",
+          "style": {
+            "navigationBarTitleText": "京东·订阅提醒页"
+          }
+        },
+        {
+          "path": "jd/wallet",
+          "style": {
+            "navigationBarTitleText": "京东·我的钱包页"
+          }
+        },
+        {
+          "path": "jd/member-center",
+          "style": {
+            "navigationBarTitleText": "京东·会员中心页"
+          }
+        },
+        {
+          "path": "jd/address-book",
+          "style": {
+            "navigationBarTitleText": "京东·地址管理页"
+          }
+        },
+        {
+          "path": "jd/footprint",
+          "style": {
+            "navigationBarTitleText": "京东·足迹中心页"
+          }
+        },
+        {
+          "path": "jd/favorite-center",
+          "style": {
+            "navigationBarTitleText": "京东·关注收藏页"
+          }
+        },
+        {
+          "path": "jd/message-center",
+          "style": {
+            "navigationBarTitleText": "京东·消息中心页"
+          }
+        },
+        {
+          "path": "jd/security-center",
+          "style": {
+            "navigationBarTitleText": "京东·安全中心页"
+          }
+        },
+        {
+          "path": "jd/invoice-profile",
+          "style": {
+            "navigationBarTitleText": "京东·发票抬头页"
+          }
+        },
+        {
+          "path": "jd/after-sale-progress",
+          "style": {
+            "navigationBarTitleText": "京东·售后进度页"
+          }
+        },
+        {
+          "path": "jd/local-delivery",
+          "style": {
+            "navigationBarTitleText": "京东·同城到家页"
+          }
+        },
+        {
+          "path": "jd/supermarket-delivery",
+          "style": {
+            "navigationBarTitleText": "京东·外卖超市页"
+          }
+        },
+        {
+          "path": "jd/pickup-store",
+          "style": {
+            "navigationBarTitleText": "京东·门店自提页"
+          }
+        },
+        {
+          "path": "jd/install-booking",
+          "style": {
+            "navigationBarTitleText": "京东·预约安装页"
+          }
+        },
+        {
+          "path": "jd/trade-in",
+          "style": {
+            "navigationBarTitleText": "京东·以旧换新页"
+          }
+        },
+        {
+          "path": "jd/store-verification",
+          "style": {
+            "navigationBarTitleText": "京东·到店核销页"
+          }
+        },
+        {
+          "path": "jd/service-orders",
+          "style": {
+            "navigationBarTitleText": "京东·服务订单页"
+          }
+        },
+        {
+          "path": "jd/home-repair",
+          "style": {
+            "navigationBarTitleText": "京东·上门维修页"
+          }
+        },
+        {
+          "path": "jd/local-groupbuy",
+          "style": {
+            "navigationBarTitleText": "京东·本地团购页"
+          }
+        },
+        {
+          "path": "jd/merchant-dashboard",
+          "style": {
+            "navigationBarTitleText": "京东·商家工作台页"
+          }
+        },
+        {
+          "path": "jd/merchant-publish",
+          "style": {
+            "navigationBarTitleText": "京东·商品发布页"
+          }
+        },
+        {
+          "path": "jd/merchant-orders",
+          "style": {
+            "navigationBarTitleText": "京东·订单处理页"
+          }
+        },
+        {
+          "path": "jd/merchant-shipping",
+          "style": {
+            "navigationBarTitleText": "京东·发货管理页"
+          }
+        },
+        {
+          "path": "jd/merchant-marketing",
+          "style": {
+            "navigationBarTitleText": "京东·营销工具页"
+          }
+        },
+        {
+          "path": "jd/merchant-analytics",
+          "style": {
+            "navigationBarTitleText": "京东·数据看板页"
+          }
+        },
+        {
+          "path": "jd/merchant-service",
+          "style": {
+            "navigationBarTitleText": "京东·客服分流页"
+          }
+        },
+        {
+          "path": "jd/merchant-stock",
+          "style": {
+            "navigationBarTitleText": "京东·库存预警页"
+          }
+        },
+        {
+          "path": "jd/merchant-diagnosis",
+          "style": {
+            "navigationBarTitleText": "京东·经营诊断页"
+          }
+        },
+        {
+          "path": "jd/revenue-center",
+          "style": {
+            "navigationBarTitleText": "京东·收益中心页"
+          }
+        },
+        {
+          "path": "jd/statement-list",
+          "style": {
+            "navigationBarTitleText": "京东·对账单页"
+          }
+        },
+        {
+          "path": "jd/capital-flow",
+          "style": {
+            "navigationBarTitleText": "京东·资金流水页"
+          }
+        },
+        {
+          "path": "jd/withdraw-apply",
+          "style": {
+            "navigationBarTitleText": "京东·提现申请页"
+          }
+        },
+        {
+          "path": "jd/profit-sharing",
+          "style": {
+            "navigationBarTitleText": "京东·分账管理页"
+          }
+        },
+        {
+          "path": "jd/commission-plan",
+          "style": {
+            "navigationBarTitleText": "京东·佣金计划页"
+          }
+        },
+        {
+          "path": "jd/invoice-download",
+          "style": {
+            "navigationBarTitleText": "京东·发票下载页"
+          }
+        },
+        {
+          "path": "jd/deposit-center",
+          "style": {
+            "navigationBarTitleText": "京东·保证金页"
+          }
+        },
+        {
+          "path": "jd/settlement-calendar",
+          "style": {
+            "navigationBarTitleText": "京东·结算日历页"
+          }
+        },
+        {
+          "path": "jd/merchant-entry",
+          "style": {
+            "navigationBarTitleText": "京东·开店入驻页"
+          }
+        },
+        {
+          "path": "jd/brand-recruit",
+          "style": {
+            "navigationBarTitleText": "京东·品牌招商页"
+          }
+        },
+        {
+          "path": "jd/service-market",
+          "style": {
+            "navigationBarTitleText": "京东·服务市场页"
+          }
+        },
+        {
+          "path": "jd/ads-delivery",
+          "style": {
+            "navigationBarTitleText": "京东·广告投放页"
+          }
+        },
+        {
+          "path": "jd/crm-operations",
+          "style": {
+            "navigationBarTitleText": "京东·客户运营页"
+          }
+        },
+        {
+          "path": "jd/private-traffic",
+          "style": {
+            "navigationBarTitleText": "京东·私域引流页"
+          }
+        },
+        {
+          "path": "jd/growth-missions",
+          "style": {
+            "navigationBarTitleText": "京东·会员任务页"
+          }
+        },
+        {
+          "path": "jd/content-studio",
+          "style": {
+            "navigationBarTitleText": "京东·内容中心页"
+          }
+        },
+        {
+          "path": "jd/ai-selection",
+          "style": {
+            "navigationBarTitleText": "京东·AI选品页"
+          }
+        },
+        {
+          "path": "pdd/home-recommend",
+          "style": {
+            "navigationBarTitleText": "拼多多·首页推荐流"
+          }
+        },
+        {
+          "path": "pdd/search-results",
+          "style": {
+            "navigationBarTitleText": "拼多多·搜索结果页"
+          }
+        },
+        {
+          "path": "pdd/channel-plaza",
+          "style": {
+            "navigationBarTitleText": "拼多多·频道会场页"
+          }
+        },
+        {
+          "path": "pdd/live-square",
+          "style": {
+            "navigationBarTitleText": "拼多多·直播广场页"
+          }
+        },
+        {
+          "path": "pdd/flash-sale",
+          "style": {
+            "navigationBarTitleText": "拼多多·限时秒杀页"
+          }
+        },
+        {
+          "path": "pdd/subsidy-center",
+          "style": {
+            "navigationBarTitleText": "拼多多·补贴专区页"
+          }
+        },
+        {
+          "path": "pdd/brand-hall",
+          "style": {
+            "navigationBarTitleText": "拼多多·品牌馆页"
+          }
+        },
+        {
+          "path": "pdd/new-arrivals",
+          "style": {
+            "navigationBarTitleText": "拼多多·新品首发页"
+          }
+        },
+        {
+          "path": "pdd/guess-like",
+          "style": {
+            "navigationBarTitleText": "拼多多·猜你喜欢页"
+          }
+        },
+        {
+          "path": "pdd/product-detail",
+          "style": {
+            "navigationBarTitleText": "拼多多·商品详情页"
+          }
+        },
+        {
+          "path": "pdd/sku-selector",
+          "style": {
+            "navigationBarTitleText": "拼多多·规格选择页"
+          }
+        },
+        {
+          "path": "pdd/graphic-detail",
+          "style": {
+            "navigationBarTitleText": "拼多多·图文详情页"
+          }
+        },
+        {
+          "path": "pdd/review-list",
+          "style": {
+            "navigationBarTitleText": "拼多多·评价列表页"
+          }
+        },
+        {
+          "path": "pdd/ask-community",
+          "style": {
+            "navigationBarTitleText": "拼多多·问大家页"
+          }
+        },
+        {
+          "path": "pdd/bundle-recommend",
+          "style": {
+            "navigationBarTitleText": "拼多多·搭配推荐页"
+          }
+        },
+        {
+          "path": "pdd/price-drop-alert",
+          "style": {
+            "navigationBarTitleText": "拼多多·降价提醒页"
+          }
+        },
+        {
+          "path": "pdd/stock-alert",
+          "style": {
+            "navigationBarTitleText": "拼多多·到货提醒页"
+          }
+        },
+        {
+          "path": "pdd/service-commitment",
+          "style": {
+            "navigationBarTitleText": "拼多多·服务承诺页"
+          }
+        },
+        {
+          "path": "pdd/cart",
+          "style": {
+            "navigationBarTitleText": "拼多多·购物车页"
+          }
+        },
+        {
+          "path": "pdd/checkout-confirm",
+          "style": {
+            "navigationBarTitleText": "拼多多·确认订单页"
+          }
+        },
+        {
+          "path": "pdd/address-selector",
+          "style": {
+            "navigationBarTitleText": "拼多多·地址选择页"
+          }
+        },
+        {
+          "path": "pdd/coupon-center",
+          "style": {
+            "navigationBarTitleText": "拼多多·优惠券页"
+          }
+        },
+        {
+          "path": "pdd/invoice-editor",
+          "style": {
+            "navigationBarTitleText": "拼多多·发票信息页"
+          }
+        },
+        {
+          "path": "pdd/payment-cashier",
+          "style": {
+            "navigationBarTitleText": "拼多多·支付收银台页"
+          }
+        },
+        {
+          "path": "pdd/installment-plan",
+          "style": {
+            "navigationBarTitleText": "拼多多·分期方案页"
+          }
+        },
+        {
+          "path": "pdd/order-success",
+          "style": {
+            "navigationBarTitleText": "拼多多·下单成功页"
+          }
+        },
+        {
+          "path": "pdd/group-invite",
+          "style": {
+            "navigationBarTitleText": "拼多多·拼团邀请页"
+          }
+        },
+        {
+          "path": "pdd/order-list",
+          "style": {
+            "navigationBarTitleText": "拼多多·订单列表页"
+          }
+        },
+        {
+          "path": "pdd/pending-payment",
+          "style": {
+            "navigationBarTitleText": "拼多多·待付款页"
+          }
+        },
+        {
+          "path": "pdd/pending-shipment",
+          "style": {
+            "navigationBarTitleText": "拼多多·待发货页"
+          }
+        },
+        {
+          "path": "pdd/pending-delivery",
+          "style": {
+            "navigationBarTitleText": "拼多多·待收货页"
+          }
+        },
+        {
+          "path": "pdd/pending-review",
+          "style": {
+            "navigationBarTitleText": "拼多多·待评价页"
+          }
+        },
+        {
+          "path": "pdd/logistics-tracking",
+          "style": {
+            "navigationBarTitleText": "拼多多·物流轨迹页"
+          }
+        },
+        {
+          "path": "pdd/order-detail",
+          "style": {
+            "navigationBarTitleText": "拼多多·订单详情页"
+          }
+        },
+        {
+          "path": "pdd/refund-after-sale",
+          "style": {
+            "navigationBarTitleText": "拼多多·退款售后页"
+          }
+        },
+        {
+          "path": "pdd/rebuy-center",
+          "style": {
+            "navigationBarTitleText": "拼多多·再次购买页"
+          }
+        },
+        {
+          "path": "pdd/store-home",
+          "style": {
+            "navigationBarTitleText": "拼多多·店铺首页页"
+          }
+        },
+        {
+          "path": "pdd/store-category",
+          "style": {
+            "navigationBarTitleText": "拼多多·店铺分类页"
+          }
+        },
+        {
+          "path": "pdd/store-live",
+          "style": {
+            "navigationBarTitleText": "拼多多·店铺直播页"
+          }
+        },
+        {
+          "path": "pdd/store-member",
+          "style": {
+            "navigationBarTitleText": "拼多多·店铺会员页"
+          }
+        },
+        {
+          "path": "pdd/store-discount",
+          "style": {
+            "navigationBarTitleText": "拼多多·店铺优惠页"
+          }
+        },
+        {
+          "path": "pdd/service-chat",
+          "style": {
+            "navigationBarTitleText": "拼多多·客服会话页"
+          }
+        },
+        {
+          "path": "pdd/fan-benefits",
+          "style": {
+            "navigationBarTitleText": "拼多多·粉丝权益页"
+          }
+        },
+        {
+          "path": "pdd/new-user-gift",
+          "style": {
+            "navigationBarTitleText": "拼多多·新客礼金页"
+          }
+        },
+        {
+          "path": "pdd/follow-store",
+          "style": {
+            "navigationBarTitleText": "拼多多·关注店铺页"
+          }
+        },
+        {
+          "path": "pdd/campaign-main",
+          "style": {
+            "navigationBarTitleText": "拼多多·大促主会场页"
+          }
+        },
+        {
+          "path": "pdd/campaign-seckill",
+          "style": {
+            "navigationBarTitleText": "拼多多·秒杀会场页"
+          }
+        },
+        {
+          "path": "pdd/campaign-cross-reduce",
+          "style": {
+            "navigationBarTitleText": "拼多多·跨店满减页"
+          }
+        },
+        {
+          "path": "pdd/red-packet-center",
+          "style": {
+            "navigationBarTitleText": "拼多多·红包中心页"
+          }
+        },
+        {
+          "path": "pdd/task-signin",
+          "style": {
+            "navigationBarTitleText": "拼多多·任务签到页"
+          }
+        },
+        {
+          "path": "pdd/coupon-club",
+          "style": {
+            "navigationBarTitleText": "拼多多·神券会场页"
+          }
+        },
+        {
+          "path": "pdd/member-day",
+          "style": {
+            "navigationBarTitleText": "拼多多·会员日页"
+          }
+        },
+        {
+          "path": "pdd/bargain-event",
+          "style": {
+            "navigationBarTitleText": "拼多多·砍价活动页"
+          }
+        },
+        {
+          "path": "pdd/fission-invite",
+          "style": {
+            "navigationBarTitleText": "拼多多·裂变邀请页"
+          }
+        },
+        {
+          "path": "pdd/buyer-show",
+          "style": {
+            "navigationBarTitleText": "拼多多·买家秀页"
+          }
+        },
+        {
+          "path": "pdd/video-discovery",
+          "style": {
+            "navigationBarTitleText": "拼多多·短视频种草页"
+          }
+        },
+        {
+          "path": "pdd/ranking-list",
+          "style": {
+            "navigationBarTitleText": "拼多多·榜单频道页"
+          }
+        },
+        {
+          "path": "pdd/topic-square",
+          "style": {
+            "navigationBarTitleText": "拼多多·话题广场页"
+          }
+        },
+        {
+          "path": "pdd/creator-live",
+          "style": {
+            "navigationBarTitleText": "拼多多·达人直播页"
+          }
+        },
+        {
+          "path": "pdd/note-feed",
+          "style": {
+            "navigationBarTitleText": "拼多多·图文笔记页"
+          }
+        },
+        {
+          "path": "pdd/favorites",
+          "style": {
+            "navigationBarTitleText": "拼多多·收藏夹页"
+          }
+        },
+        {
+          "path": "pdd/browse-history",
+          "style": {
+            "navigationBarTitleText": "拼多多·浏览历史页"
+          }
+        },
+        {
+          "path": "pdd/subscription-reminder",
+          "style": {
+            "navigationBarTitleText": "拼多多·订阅提醒页"
+          }
+        },
+        {
+          "path": "pdd/wallet",
+          "style": {
+            "navigationBarTitleText": "拼多多·我的钱包页"
+          }
+        },
+        {
+          "path": "pdd/member-center",
+          "style": {
+            "navigationBarTitleText": "拼多多·会员中心页"
+          }
+        },
+        {
+          "path": "pdd/address-book",
+          "style": {
+            "navigationBarTitleText": "拼多多·地址管理页"
+          }
+        },
+        {
+          "path": "pdd/footprint",
+          "style": {
+            "navigationBarTitleText": "拼多多·足迹中心页"
+          }
+        },
+        {
+          "path": "pdd/favorite-center",
+          "style": {
+            "navigationBarTitleText": "拼多多·关注收藏页"
+          }
+        },
+        {
+          "path": "pdd/message-center",
+          "style": {
+            "navigationBarTitleText": "拼多多·消息中心页"
+          }
+        },
+        {
+          "path": "pdd/security-center",
+          "style": {
+            "navigationBarTitleText": "拼多多·安全中心页"
+          }
+        },
+        {
+          "path": "pdd/invoice-profile",
+          "style": {
+            "navigationBarTitleText": "拼多多·发票抬头页"
+          }
+        },
+        {
+          "path": "pdd/after-sale-progress",
+          "style": {
+            "navigationBarTitleText": "拼多多·售后进度页"
+          }
+        },
+        {
+          "path": "pdd/local-delivery",
+          "style": {
+            "navigationBarTitleText": "拼多多·同城到家页"
+          }
+        },
+        {
+          "path": "pdd/supermarket-delivery",
+          "style": {
+            "navigationBarTitleText": "拼多多·外卖超市页"
+          }
+        },
+        {
+          "path": "pdd/pickup-store",
+          "style": {
+            "navigationBarTitleText": "拼多多·门店自提页"
+          }
+        },
+        {
+          "path": "pdd/install-booking",
+          "style": {
+            "navigationBarTitleText": "拼多多·预约安装页"
+          }
+        },
+        {
+          "path": "pdd/trade-in",
+          "style": {
+            "navigationBarTitleText": "拼多多·以旧换新页"
+          }
+        },
+        {
+          "path": "pdd/store-verification",
+          "style": {
+            "navigationBarTitleText": "拼多多·到店核销页"
+          }
+        },
+        {
+          "path": "pdd/service-orders",
+          "style": {
+            "navigationBarTitleText": "拼多多·服务订单页"
+          }
+        },
+        {
+          "path": "pdd/home-repair",
+          "style": {
+            "navigationBarTitleText": "拼多多·上门维修页"
+          }
+        },
+        {
+          "path": "pdd/local-groupbuy",
+          "style": {
+            "navigationBarTitleText": "拼多多·本地团购页"
+          }
+        },
+        {
+          "path": "pdd/merchant-dashboard",
+          "style": {
+            "navigationBarTitleText": "拼多多·商家工作台页"
+          }
+        },
+        {
+          "path": "pdd/merchant-publish",
+          "style": {
+            "navigationBarTitleText": "拼多多·商品发布页"
+          }
+        },
+        {
+          "path": "pdd/merchant-orders",
+          "style": {
+            "navigationBarTitleText": "拼多多·订单处理页"
+          }
+        },
+        {
+          "path": "pdd/merchant-shipping",
+          "style": {
+            "navigationBarTitleText": "拼多多·发货管理页"
+          }
+        },
+        {
+          "path": "pdd/merchant-marketing",
+          "style": {
+            "navigationBarTitleText": "拼多多·营销工具页"
+          }
+        },
+        {
+          "path": "pdd/merchant-analytics",
+          "style": {
+            "navigationBarTitleText": "拼多多·数据看板页"
+          }
+        },
+        {
+          "path": "pdd/merchant-service",
+          "style": {
+            "navigationBarTitleText": "拼多多·客服分流页"
+          }
+        },
+        {
+          "path": "pdd/merchant-stock",
+          "style": {
+            "navigationBarTitleText": "拼多多·库存预警页"
+          }
+        },
+        {
+          "path": "pdd/merchant-diagnosis",
+          "style": {
+            "navigationBarTitleText": "拼多多·经营诊断页"
+          }
+        },
+        {
+          "path": "pdd/revenue-center",
+          "style": {
+            "navigationBarTitleText": "拼多多·收益中心页"
+          }
+        },
+        {
+          "path": "pdd/statement-list",
+          "style": {
+            "navigationBarTitleText": "拼多多·对账单页"
+          }
+        },
+        {
+          "path": "pdd/capital-flow",
+          "style": {
+            "navigationBarTitleText": "拼多多·资金流水页"
+          }
+        },
+        {
+          "path": "pdd/withdraw-apply",
+          "style": {
+            "navigationBarTitleText": "拼多多·提现申请页"
+          }
+        },
+        {
+          "path": "pdd/profit-sharing",
+          "style": {
+            "navigationBarTitleText": "拼多多·分账管理页"
+          }
+        },
+        {
+          "path": "pdd/commission-plan",
+          "style": {
+            "navigationBarTitleText": "拼多多·佣金计划页"
+          }
+        },
+        {
+          "path": "pdd/invoice-download",
+          "style": {
+            "navigationBarTitleText": "拼多多·发票下载页"
+          }
+        },
+        {
+          "path": "pdd/deposit-center",
+          "style": {
+            "navigationBarTitleText": "拼多多·保证金页"
+          }
+        },
+        {
+          "path": "pdd/settlement-calendar",
+          "style": {
+            "navigationBarTitleText": "拼多多·结算日历页"
+          }
+        },
+        {
+          "path": "pdd/merchant-entry",
+          "style": {
+            "navigationBarTitleText": "拼多多·开店入驻页"
+          }
+        },
+        {
+          "path": "pdd/brand-recruit",
+          "style": {
+            "navigationBarTitleText": "拼多多·品牌招商页"
+          }
+        },
+        {
+          "path": "pdd/service-market",
+          "style": {
+            "navigationBarTitleText": "拼多多·服务市场页"
+          }
+        },
+        {
+          "path": "pdd/ads-delivery",
+          "style": {
+            "navigationBarTitleText": "拼多多·广告投放页"
+          }
+        },
+        {
+          "path": "pdd/crm-operations",
+          "style": {
+            "navigationBarTitleText": "拼多多·客户运营页"
+          }
+        },
+        {
+          "path": "pdd/private-traffic",
+          "style": {
+            "navigationBarTitleText": "拼多多·私域引流页"
+          }
+        },
+        {
+          "path": "pdd/growth-missions",
+          "style": {
+            "navigationBarTitleText": "拼多多·会员任务页"
+          }
+        },
+        {
+          "path": "pdd/content-studio",
+          "style": {
+            "navigationBarTitleText": "拼多多·内容中心页"
+          }
+        },
+        {
+          "path": "pdd/ai-selection",
+          "style": {
+            "navigationBarTitleText": "拼多多·AI选品页"
+          }
+        }
+      ]
+    }
+  ]
 }
