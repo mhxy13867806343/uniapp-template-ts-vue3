@@ -125,7 +125,172 @@ const { NeoOrderSummary } = neoExtraComponents
 
 const { NeoInfoBanner } = neoExtraComponents
 
-<NeoInfoBanner />`, ['活动横幅', '消息提示', '运营宣传'])
+<NeoInfoBanner />`, ['活动横幅', '消息提示', '运营宣传']),
+  makeExtraMeta('NeoKpiStrip', 'KPI 速览', 'neo-kpi-strip', '适合经营指标、首页看板和关键数据总览。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoKpiStrip } = neoExtraComponents
+
+<NeoKpiStrip />`, ['经营指标', '首页看板', '关键数据']),
+  makeExtraMeta('NeoDataDigest', '数据摘要', 'neo-data-digest', '适合渠道数据、访问数据和摘要指标展示。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoDataDigest } = neoExtraComponents
+
+<NeoDataDigest />`, ['渠道数据', '访问统计', '摘要指标']),
+  makeExtraMeta('NeoMiniChartCard', '趋势摘要卡', 'neo-mini-chart-card', '适合小趋势结论、环比变化和简要图表摘要。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoMiniChartCard } = neoExtraComponents
+
+<NeoMiniChartCard />`, ['趋势结论', '环比变化', '小图摘要']),
+  makeExtraMeta('NeoSplitStats', '分栏统计', 'neo-split-stats', '适合对比数据、渠道占比和结构型统计。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoSplitStats } = neoExtraComponents
+
+<NeoSplitStats />`, ['渠道占比', '结构对比', '分栏数据']),
+  makeExtraMeta('NeoChecklistPanel', '检查清单', 'neo-checklist-panel', '适合上线检查、配置核验和任务确认。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoChecklistPanel } = neoExtraComponents
+
+<NeoChecklistPanel />`, ['上线检查', '配置核验', '任务确认']),
+  makeExtraMeta('NeoFaqPanel', '问题面板', 'neo-faq-panel', '适合 FAQ、帮助中心和常见问题说明。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoFaqPanel } = neoExtraComponents
+
+<NeoFaqPanel />`, ['FAQ', '帮助中心', '问题说明']),
+  makeExtraMeta('NeoUserBadge', '用户标识', 'neo-user-badge', '适合用户标签、身份状态和个人摘要区域。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoUserBadge } = neoExtraComponents
+
+<NeoUserBadge />`, ['用户标签', '身份状态', '个人摘要']),
+  makeExtraMeta('NeoContactCard', '联系人卡', 'neo-contact-card', '适合商务联系人、客户经理和对接人信息。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoContactCard } = neoExtraComponents
+
+<NeoContactCard />`, ['商务联系人', '客户经理', '对接人信息']),
+  makeExtraMeta('NeoArticleCard', '文章卡片', 'neo-article-card', '适合文章列表、资讯摘要和内容推荐。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoArticleCard } = neoExtraComponents
+
+<NeoArticleCard />`, ['文章列表', '资讯摘要', '内容推荐']),
+  makeExtraMeta('NeoMediaCard', '媒体卡片', 'neo-media-card', '适合视频专题、图文封面和媒体内容入口。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoMediaCard } = neoExtraComponents
+
+<NeoMediaCard />`, ['视频专题', '图文封面', '媒体入口']),
+  makeExtraMeta('NeoQuickActions', '快捷操作', 'neo-quick-actions', '适合工作台高频动作和一键操作入口。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoQuickActions } = neoExtraComponents
+
+<NeoQuickActions />`, ['高频动作', '一键操作', '工作台入口']),
+  makeExtraMeta('NeoOperationQueue', '待办队列', 'neo-operation-queue', '适合待处理事项、工单积压和审批队列。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoOperationQueue } = neoExtraComponents
+
+<NeoOperationQueue />`, ['待处理事项', '工单积压', '审批队列']),
+  makeExtraMeta('NeoTaskSummary', '任务摘要', 'neo-task-summary', '适合日任务概览、执行进度和效率追踪。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoTaskSummary } = neoExtraComponents
+
+<NeoTaskSummary />`, ['日任务概览', '执行进度', '效率追踪']),
+  makeExtraMeta('NeoAnnouncementCard', '公告卡片', 'neo-announcement-card', '适合系统公告、维护通知和版本提醒。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoAnnouncementCard } = neoExtraComponents
+
+<NeoAnnouncementCard />`, ['系统公告', '维护通知', '版本提醒']),
+  makeExtraMeta('NeoPermissionCard', '权限卡片', 'neo-permission-card', '适合角色权限说明、能力范围和访问提醒。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoPermissionCard } = neoExtraComponents
+
+<NeoPermissionCard />`, ['角色权限', '能力范围', '访问提醒']),
+  makeExtraMeta('NeoBillingCard', '账单卡片', 'neo-billing-card', '适合月账单、自动扣费和费用提醒。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoBillingCard } = neoExtraComponents
+
+<NeoBillingCard />`, ['月账单', '自动扣费', '费用提醒']),
+  makeExtraMeta('NeoReceiptCard', '收款卡片', 'neo-receipt-card', '适合回款进度、收据状态和财务确认。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoReceiptCard } = neoExtraComponents
+
+<NeoReceiptCard />`, ['回款进度', '收据状态', '财务确认']),
+  makeExtraMeta('NeoAddressCard', '地址卡片', 'neo-address-card', '适合收货地址、门店地址和配送信息展示。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoAddressCard } = neoExtraComponents
+
+<NeoAddressCard />`, ['收货地址', '门店地址', '配送信息']),
+  makeExtraMeta('NeoShipmentTracker', '物流追踪', 'neo-shipment-tracker', '适合物流节点、履约进度和配送状态。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoShipmentTracker } = neoExtraComponents
+
+<NeoShipmentTracker />`, ['物流节点', '履约进度', '配送状态']),
+  makeExtraMeta('NeoOrderStatusCard', '订单状态卡', 'neo-order-status-card', '适合订单履约、支付后状态和售后跟踪。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoOrderStatusCard } = neoExtraComponents
+
+<NeoOrderStatusCard />`, ['订单履约', '支付状态', '售后跟踪']),
+  makeExtraMeta('NeoPlanCard', '方案卡片', 'neo-plan-card', '适合套餐方案、订阅升级和版本对比。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoPlanCard } = neoExtraComponents
+
+<NeoPlanCard />`, ['套餐方案', '订阅升级', '版本对比']),
+  makeExtraMeta('NeoMemberCard', '成员卡片', 'neo-member-card', '适合团队成员、负责人信息和个人工作摘要。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoMemberCard } = neoExtraComponents
+
+<NeoMemberCard />`, ['团队成员', '负责人信息', '工作摘要']),
+  makeExtraMeta('NeoTeamStats', '团队统计', 'neo-team-stats', '适合团队管理、排班统计和组织概览。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoTeamStats } = neoExtraComponents
+
+<NeoTeamStats />`, ['团队管理', '排班统计', '组织概览']),
+  makeExtraMeta('NeoAuditPanel', '审计面板', 'neo-audit-panel', '适合操作审计、变更记录和行为追踪。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoAuditPanel } = neoExtraComponents
+
+<NeoAuditPanel />`, ['操作审计', '变更记录', '行为追踪']),
+  makeExtraMeta('NeoActivityFeed', '动态流', 'neo-activity-feed', '适合协作动态、项目更新和团队活动。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoActivityFeed } = neoExtraComponents
+
+<NeoActivityFeed />`, ['协作动态', '项目更新', '团队活动']),
+  makeExtraMeta('NeoLogList', '日志列表', 'neo-log-list', '适合系统日志、事件记录和排障信息。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoLogList } = neoExtraComponents
+
+<NeoLogList />`, ['系统日志', '事件记录', '排障信息']),
+  makeExtraMeta('NeoTagCloud', '标签云', 'neo-tag-cloud', '适合标签聚合、兴趣标签和状态词集合。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoTagCloud } = neoExtraComponents
+
+<NeoTagCloud />`, ['标签聚合', '兴趣标签', '状态词']),
+  makeExtraMeta('NeoShortcutPanel', '快捷面板', 'neo-shortcut-panel', '适合首页入口、业务导航和二级操作。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoShortcutPanel } = neoExtraComponents
+
+<NeoShortcutPanel />`, ['首页入口', '业务导航', '二级操作']),
+  makeExtraMeta('NeoWorkspaceCard', '工作区卡', 'neo-workspace-card', '适合工作台入口、空间卡片和角色起始页。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoWorkspaceCard } = neoExtraComponents
+
+<NeoWorkspaceCard />`, ['工作台入口', '空间卡片', '角色起始页']),
+  makeExtraMeta('NeoHighlightCard', '重点提示卡', 'neo-highlight-card', '适合高优提醒、风险提示和重要事项强调。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoHighlightCard } = neoExtraComponents
+
+<NeoHighlightCard />`, ['高优提醒', '风险提示', '事项强调']),
+  makeExtraMeta('NeoPromoBanner', '促销横幅', 'neo-promo-banner', '适合活动推广、优惠通知和营销转化入口。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoPromoBanner } = neoExtraComponents
+
+<NeoPromoBanner />`, ['活动推广', '优惠通知', '营销入口']),
+  makeExtraMeta('NeoServicePanel', '服务面板', 'neo-service-panel', '适合服务能力展示、售后说明和支持入口。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoServicePanel } = neoExtraComponents
+
+<NeoServicePanel />`, ['服务能力', '售后说明', '支持入口']),
+  makeExtraMeta('NeoFeatureMatrix', '能力矩阵', 'neo-feature-matrix', '适合产品能力对比、功能矩阵和方案说明。', `import { neoExtraComponents } from '@/components/neo/extra-library'
+
+const { NeoFeatureMatrix } = neoExtraComponents
+
+<NeoFeatureMatrix />`, ['能力对比', '功能矩阵', '方案说明'])
 ]
 
 export const neoExtraMetaMap = Object.fromEntries(

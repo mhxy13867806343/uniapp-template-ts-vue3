@@ -1,8 +1,23 @@
 <script setup lang="ts">
 import PageShell from '@/components/PageShell.vue'
+import { getHardwareInfo } from '@/plugins'
 
 const toast = useToast('plugins-toast')
 const appStore = useAppStore()
+
+// Native Bridge state
+const hardwareInfoResult = ref('')
+
+function fetchHardwareInfo() {
+  try {
+    const res = getHardwareInfo()
+    hardwareInfoResult.value = res
+    toast.success('原生硬件网桥调用成功！')
+  } catch (e: any) {
+    hardwareInfoResult.value = `网桥调用失败: ${e.message || e}`
+    toast.error('网桥调用失败')
+  }
+}
 
 // Wot & UnoCSS Sandbox states
 const sliderVal = ref(60)
@@ -61,10 +76,30 @@ function changeLocalBrandColor(color: string) {
     <view class="plugins-framework-page">
       <wd-toast selector="plugins-toast" />
 
-      <!-- 1. Pinia Store Sandbox -->
+      <!-- 0. Native Bridge Hardware Tester -->
       <view class="panel-section">
         <view class="section-head font-bold mb-2">
-          <text>🍍 1. Pinia 全局状态联动演示</text>
+          <text>⚡️ 1. 跨端统一原生硬件网桥测试</text>
+        </view>
+        <view class="share-desc-info text-muted mb-3">
+          自动根据当前平台环境分发给对应的原生扩展：在 Android 下调用 Java 插件，在 iOS 下调用 Objective-C 插件，在 H5/小程序下调用平台 API：
+        </view>
+
+        <view class="pinia-demo-card p-3 mb-2 flex-column">
+          <view class="flex justify-between items-center mb-2">
+            <text class="font-bold text-ink">当前硬件网桥返回：</text>
+            <wd-button size="small" type="primary" @click="fetchHardwareInfo">获取硬件详情</wd-button>
+          </view>
+          <view class="hardware-info-box p-2 mt-1">
+            <text class="hardware-text">{{ hardwareInfoResult || '点击右上方按钮开始调用网桥...' }}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 1. Pinia Store Sandbox -->
+      <view class="panel-section mt-3">
+        <view class="section-head font-bold mb-2">
+          <text>🍍 2. Pinia 全局状态联动演示</text>
         </view>
         <view class="share-desc-info text-muted mb-3">
           点击按钮修改 AppStore 里的全局变量，可即时响应界面上绑定的灯光状态：
@@ -85,10 +120,10 @@ function changeLocalBrandColor(color: string) {
       <!-- 2. Wot Easycom Sandbox -->
       <view class="panel-section mt-3">
         <view class="section-head font-bold mb-2">
-          <text>📦 2. Wot Design Easycom 按需加载</text>
+          <text>📦 3. Wot Design Easycom 按需加载</text>
         </view>
         <view class="share-desc-info text-muted mb-3">
-          以下 Wot 基础组件直接在 Template 处使用，无需写任何 import，打生产包时会自动进行 Tree Shaking 剔除多余组件：
+          以下 Wot 基础组件直接在 Template 处使用，无需写 any import，打生产包时会自动进行 Tree Shaking 剔除多余组件：
         </view>
 
         <view class="p-2 border-box">
@@ -102,7 +137,7 @@ function changeLocalBrandColor(color: string) {
       <!-- 3. UnoCSS Theme Variables Customizer -->
       <view class="panel-section mt-3">
         <view class="section-head font-bold mb-2">
-          <text>🎨 3. UnoCSS 跨端主题变量自适应</text>
+          <text>🎨 4. UnoCSS 跨端主题变量自适应</text>
         </view>
         <view class="share-desc-info text-muted mb-3">
           点击下方色块即时改变 CSS 变量（演示 UnoCSS 样式的即时重绘）：
@@ -264,4 +299,17 @@ function changeLocalBrandColor(color: string) {
 .mb-3 { margin-bottom: 24rpx; }
 .p-2 { padding: 16rpx; }
 .p-3 { padding: 24rpx; }
+
+.hardware-info-box {
+  background: #f1f5f9;
+  border-radius: 12rpx;
+  border: 1rpx dashed #cbd5e1;
+}
+
+.hardware-text {
+  font-family: monospace;
+  font-size: 19rpx;
+  color: #334155;
+  word-break: break-all;
+}
 </style>
