@@ -7,37 +7,47 @@ const activeTab = ref('all')
 
 const tabs = [
   { name: 'all', label: '全部' },
-  { name: 'junior', label: '基础/初级' },
-  { name: 'intermediate', label: '中级业务' },
-  { name: 'advanced', label: '高级/复杂' }
+  { name: 'pages', label: '基础页面' },
+  { name: 'forms', label: '基础表单' },
+  { name: 'feedbacks', label: '反馈提示' },
+  { name: 'layouts', label: '数据展示' },
+  { name: 'animations', label: '交互动画' },
+  { name: 'business', label: '中高级业务' }
 ]
 
 const filteredScenarios = computed(() => {
   if (activeTab.value === 'all') {
     return exampleScenarios
   }
-  if (activeTab.value === 'junior') {
-    return exampleScenarios.filter(item => 
-      item.level === '初级' || item.level === '页面'
-    )
+  if (activeTab.value === 'pages') {
+    return exampleScenarios.filter(item => item.level === '页面')
   }
-  if (activeTab.value === 'intermediate') {
-    return exampleScenarios.filter(item => 
-      item.level === '中级' || item.level === '表单' || item.level === '反馈' || item.level === '文件' || item.level === '通讯' || item.level === '消息'
-    )
+  if (activeTab.value === 'forms') {
+    return exampleScenarios.filter(item => item.level === '表单')
   }
-  if (activeTab.value === 'advanced') {
+  if (activeTab.value === 'feedbacks') {
+    return exampleScenarios.filter(item => item.level === '反馈')
+  }
+  if (activeTab.value === 'layouts') {
+    return exampleScenarios.filter(item => item.level === '展示')
+  }
+  if (activeTab.value === 'animations') {
+    return exampleScenarios.filter(item => item.level === '动效')
+  }
+  if (activeTab.value === 'business') {
     return exampleScenarios.filter(item => 
-      item.level === '高级' || item.level === '复杂' || item.level === '动效' || item.level === '展示' || item.level === '更新'
+      ['初级', '中级', '高级', '复杂', '更新', '文件', '通讯', '消息'].includes(item.level)
     )
   }
   return exampleScenarios
 })
 
 function getLevelTagType(level: string) {
-  if (level === '初级' || level === '页面') return 'success'
-  if (level === '中级' || level === '表单' || level === '反馈' || level === '文件' || level === '通讯' || level === '消息') return 'primary'
-  if (level === '高级' || level === '复杂' || level === '动效' || level === '展示' || level === '更新') return 'danger'
+  if (level === '页面') return 'success'
+  if (level === '表单') return 'primary'
+  if (level === '反馈') return 'warning'
+  if (level === '展示') return 'info'
+  if (level === '动效') return 'danger'
   return 'neutral'
 }
 </script>
@@ -97,10 +107,12 @@ function getLevelTagType(level: string) {
 }
 
 .tabs-container {
+  position: sticky;
+  top: var(--window-top);
+  z-index: 100;
   background: #fff;
-  border-radius: 12rpx;
-  border: 1rpx solid var(--app-line);
-  overflow: hidden;
+  border-bottom: 1rpx solid var(--app-line);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.03);
 }
 
 .summary-card,

@@ -7,6 +7,8 @@ export interface CustomComponentItem {
   group: string
 }
 
+import { neoExtraMetaList, neoExtraMetaMap } from './neoExtraData'
+
 export const customComponents: CustomComponentItem[] = [
   {
     name: 'NeoMetricBoard',
@@ -223,7 +225,8 @@ export const customComponents: CustomComponentItem[] = [
     summary: '可展开收起的内容面板，适合 FAQ、配置分组和详情分段展示。',
     tags: ['独立实现', '基础件', '折叠'],
     group: '第三方组件'
-  }
+  },
+  ...neoExtraMetaList
 ]
 
 export function findCustomComponent(path?: string) {
@@ -231,6 +234,11 @@ export function findCustomComponent(path?: string) {
 }
 
 export function getCustomComponentCode(path: string) {
+  const extraMeta = neoExtraMetaMap[path]
+  if (extraMeta) {
+    return extraMeta.code
+  }
+
   if (path === 'neo-metric-board') {
     return `import NeoMetricBoard from '@/components/neo/NeoMetricBoard.vue'
 
@@ -529,6 +537,11 @@ export function getCustomComponentCode(path: string) {
 }
 
 export function getCustomComponentScenes(path: string) {
+  const extraMeta = neoExtraMetaMap[path]
+  if (extraMeta) {
+    return extraMeta.scenes
+  }
+
   if (path === 'neo-metric-board') {
     return [
       '首页经营看板',

@@ -114,6 +114,8 @@ declare global {
   const navigateBack: typeof import('../utils/router').navigateBack
   const navigateTo: typeof import('../utils/router').navigateTo
   const navigateToExample: typeof import('../utils/exampleScenarios').navigateToExample
+  const neoExtraMetaList: typeof import('../utils/neoExtraData').neoExtraMetaList
+  const neoExtraMetaMap: typeof import('../utils/neoExtraData').neoExtraMetaMap
   const newsFeeds: typeof import('../utils/waterfallFeeds').newsFeeds
   const nextTick: typeof import('vue').nextTick
   const numberToChinese: typeof import('../utils/format').numberToChinese
@@ -380,6 +382,8 @@ declare module 'vue' {
     readonly navigateBack: UnwrapRef<typeof import('../utils/router')['navigateBack']>
     readonly navigateTo: UnwrapRef<typeof import('../utils/router')['navigateTo']>
     readonly navigateToExample: UnwrapRef<typeof import('../utils/exampleScenarios')['navigateToExample']>
+    readonly neoExtraMetaList: UnwrapRef<typeof import('../utils/neoExtraData')['neoExtraMetaList']>
+    readonly neoExtraMetaMap: UnwrapRef<typeof import('../utils/neoExtraData')['neoExtraMetaMap']>
     readonly newsFeeds: UnwrapRef<typeof import('../utils/waterfallFeeds')['newsFeeds']>
     readonly nextTick: UnwrapRef<typeof import('vue')['nextTick']>
     readonly numberToChinese: UnwrapRef<typeof import('../utils/format')['numberToChinese']>

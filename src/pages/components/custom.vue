@@ -28,6 +28,7 @@ import NeoTextarea from '@/components/neo/NeoTextarea.vue'
 import NeoTimeline from '@/components/neo/NeoTimeline.vue'
 import NeoToast from '@/components/neo/NeoToast.vue'
 import NeoUpload from '@/components/neo/NeoUpload.vue'
+import { neoExtraDemoMap } from '@/components/neo/extra-library'
 import { customComponents, findCustomComponent, getCustomComponentCode, getCustomComponentScenes } from '@/utils/customComponents'
 
 const currentPath = ref(customComponents[0].path)
@@ -35,6 +36,7 @@ const currentPath = ref(customComponents[0].path)
 const currentComponent = computed(() => findCustomComponent(currentPath.value))
 const currentCode = computed(() => getCustomComponentCode(currentPath.value))
 const currentScenes = computed(() => getCustomComponentScenes(currentPath.value))
+const extraDemo = computed(() => neoExtraDemoMap[currentPath.value])
 
 const boardMetrics = [
   { label: '今日成交', value: '¥28,600', meta: '+12%' },
@@ -555,7 +557,7 @@ function handleActionSelect(value: string) {
           <NeoTimeline :items="timelineItems" />
         </view>
 
-        <view v-else class="stack-demo">
+        <view v-else-if="currentPath === 'neo-collapse'" class="stack-demo">
           <NeoCollapse
             v-model="openedPanels"
             :items="collapseItems"
@@ -564,6 +566,17 @@ function handleActionSelect(value: string) {
             <view class="form-preview__title">当前展开</view>
             <view class="form-preview__line">{{ openedPanels.join('、') || '未展开' }}</view>
           </view>
+        </view>
+
+        <component
+          :is="extraDemo.component"
+          v-else-if="extraDemo"
+          v-bind="extraDemo.props || {}"
+        />
+
+        <view v-else class="form-preview">
+          <view class="form-preview__title">组件预览暂未配置</view>
+          <view class="form-preview__line">这个组件已经加入组件清单，但当前页面还没有单独的交互演示。</view>
         </view>
       </view>
 
