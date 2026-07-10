@@ -45,6 +45,7 @@ function showAboutApp() {
           clickable
           @click="navigateTo(item.url)"
         />
+        <wd-cell title="关于作者" value="主页及源码" is-link clickable @click="navigateTo('/pages/other/author')" />
         <wd-cell title="关于应用" value="0.1.0" is-link clickable @click="showAboutApp" />
         <wd-cell title="帮助中心" is-link clickable @click="navigateTo('/pages/other/help')" />
         <wd-cell title="隐私协议" is-link clickable @click="navigateTo('/pages/other/privacy')" />

@@ -277,6 +277,12 @@
       }
     },
     {
+      "path": "pages/other/author",
+      "style": {
+        "navigationBarTitleText": "关于作者"
+      }
+    },
+    {
       "path": "pages/framework/plugins",
       "style": {
         "navigationBarTitleText": "插件体系"
