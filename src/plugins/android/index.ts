@@ -1,4 +1,4 @@
-import { copySharePayload, createLocationApis, createModalApis, getMockDeviceInfo, mapAppShareProvider, mapAppShareScene, mapPaymentProvider, requestUniPayment, simulatePayment } from '../shared'
+import { copySharePayload, createLocationApis, createModalApis, mapAppShareProvider, mapAppShareScene, mapPaymentProvider, requestUniPayment, simulatePayment } from '../shared'
 import type { PaymentPayload, PlatformPlugins, PluginResult, SharePayload } from '../types'
 
 export function getAndroidHardwareInfo(): string {
