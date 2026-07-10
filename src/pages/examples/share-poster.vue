@@ -19,32 +19,69 @@ const shareContent = {
 }
 
 // Share channels
-const shareChannels = [
-  { name: '微信好友', icon: 'chat', color: '#22c55e' },
-  { name: '微信朋友圈', icon: 'time-out', color: '#10b981' },
-  { name: '新浪微博', icon: 'share', color: '#ef4444' },
-  { name: '复制链接', icon: 'file-paste', color: '#3b82f6' },
-  { name: '生成卡片海报', icon: 'picture', color: '#a855f7' }
-]
+const shareChannels = ref([
+  { id: '1', name: '微信好友', icon: 'chat', color: '#22c55e', toast: '已成功分享给微信好友' },
+  { id: '2', name: '微信朋友圈', icon: 'time-out', color: '#10b981', toast: '已成功分享到微信朋友圈' },
+  { id: '3', name: '新浪微博', icon: 'share', color: '#ef4444', toast: '已成功分享到新浪微博' },
+  { id: '4', name: '复制链接', icon: 'file-paste', color: '#3b82f6', toast: '链接已复制到剪贴板' },
+  { id: '5', name: '生成卡片海报', icon: 'picture', color: '#a855f7', toast: '正在为您生成卡片海报...' }
+])
+
+const newChannelForm = reactive({
+  name: '',
+  icon: 'star',
+  color: '#fbbf24',
+  toast: '触发自定义分享操作'
+})
+
+const presetIcons = ['star', 'share', 'chat', 'time-out', 'picture', 'file-paste', 'download', 'heart', 'flag', 'mail']
+const presetColors = ['#fbbf24', '#22c55e', '#10b981', '#3b82f6', '#a855f7', '#ef4444', '#ec4899', '#6366f1']
+
+function addCustomChannel() {
+  if (!newChannelForm.name.trim()) {
+    toast.warning('请输入渠道名称')
+    return
+  }
+  
+  shareChannels.value.push({
+    id: `custom_${Date.now()}`,
+    name: newChannelForm.name.trim(),
+    icon: newChannelForm.icon,
+    color: newChannelForm.color,
+    toast: newChannelForm.toast.trim() || '触发分享'
+  })
+  
+  toast.success(`成功添加分享渠道 [${newChannelForm.name}]`)
+  newChannelForm.name = '' // Reset
+}
+
+function deleteChannel(id: string) {
+  const index = shareChannels.value.findIndex(c => c.id === id)
+  if (index !== -1) {
+    const name = shareChannels.value[index].name
+    shareChannels.value.splice(index, 1)
+    toast.success(`已删除分享渠道 [${name}]`)
+  }
+}
 
 function openShare() {
   showShareSheet.value = true
 }
 
-function handleChannelClick(channelName: string) {
+function handleChannelClick(channel: any) {
   showShareSheet.value = false
   
-  if (channelName === '复制链接') {
+  if (channel.name === '复制链接') {
     uni.setClipboardData({
       data: 'https://github.com/mhxy13867806343/uniapp-template-ts-vue3',
       success: () => {
-        toast.success('链接已复制到剪贴板')
+        toast.success(channel.toast || '链接已复制到剪贴板')
       }
     })
-  } else if (channelName === '生成卡片海报') {
+  } else if (channel.name === '生成卡片海报') {
     triggerPosterGeneration()
   } else {
-    toast.success(`已成功呼起并分享至：${channelName}`)
+    toast.success(channel.toast || `已成功呼起并分享至：${channel.name}`)
   }
 }
 
@@ -149,6 +186,87 @@ function sharePosterDirectly() {
         </view>
       </view>
 
+      <!-- 3. Channel Manager Panel -->
+      <view class="compatibility-card-panel mt-3">
+        <view class="panel-header font-bold text-ink mb-2">
+          <text>🛠️ 自定义分享渠道管理面板</text>
+        </view>
+        <view class="share-desc-info text-muted">
+          您可以在下方实时添加、删除底部的分享动作渠道。修改后的渠道会立即在底部“分享给好友”弹窗中生效：
+        </view>
+
+        <!-- Current Channel Manager List -->
+        <view class="current-channels-editor mt-3">
+          <view class="editor-title font-bold text-ink">当前生效渠道：</view>
+          <view class="editor-channels-list mt-2">
+            <view
+              v-for="channel in shareChannels"
+              :key="channel.id"
+              class="editor-channel-row flex justify-between items-center p-2 mb-2"
+            >
+              <view class="flex items-center">
+                <view class="editor-channel-circle flex items-center justify-center" :style="{ backgroundColor: channel.color + '15', color: channel.color }">
+                  <wd-icon :name="channel.icon" size="20px" />
+                </view>
+                <view class="editor-channel-meta ml-2">
+                  <text class="font-bold text-ink" style="font-size: 20rpx;">{{ channel.name }}</text>
+                  <text class="text-muted" style="font-size: 16rpx;">点击提示：{{ channel.toast }}</text>
+                </view>
+              </view>
+              <wd-button size="small" type="error" plain @click="deleteChannel(channel.id)">删除</wd-button>
+            </view>
+          </view>
+        </view>
+
+        <view class="editor-divider my-3"></view>
+
+        <!-- Add Channel Form -->
+        <view class="add-channel-editor-form">
+          <view class="editor-title font-bold text-ink mb-2">➕ 新增自定义渠道：</view>
+          
+          <view class="form-row">
+            <text class="row-label font-bold">渠道显示名称</text>
+            <input v-model="newChannelForm.name" placeholder="请输入渠道名称，如：QQ好友" class="custom-native-input mt-1" />
+          </view>
+
+          <view class="form-row mt-2">
+            <text class="row-label font-bold">点击操作提示文案</text>
+            <input v-model="newChannelForm.toast" placeholder="请输入点击后的 Toast 提示" class="custom-native-input mt-1" />
+          </view>
+
+          <view class="form-row mt-2">
+            <text class="row-label font-bold">选择图标（Wot Design 内置图标）</text>
+            <view class="preset-items-picker mt-1 flex">
+              <view
+                v-for="icon in presetIcons"
+                :key="icon"
+                :class="['preset-icon-cell flex items-center justify-center', { active: newChannelForm.icon === icon }]"
+                @click="newChannelForm.icon = icon"
+              >
+                <wd-icon :name="icon" size="18px" />
+              </view>
+            </view>
+          </view>
+
+          <view class="form-row mt-2">
+            <text class="row-label font-bold">选择渠道主题色</text>
+            <view class="preset-items-picker mt-1 flex">
+              <view
+                v-for="col in presetColors"
+                :key="col"
+                :class="['preset-color-cell', { active: newChannelForm.color === col }]"
+                :style="{ backgroundColor: col }"
+                @click="newChannelForm.color = col"
+              ></view>
+            </view>
+          </view>
+
+          <view class="add-action-btn mt-3">
+            <wd-button type="warning" block @click="addCustomChannel">添加该渠道至分享面板</wd-button>
+          </view>
+        </view>
+      </view>
+
       <!-- Bottom Sheet: Share Channels -->
       <wd-popup
         v-model="showShareSheet"
@@ -166,9 +284,9 @@ function sharePosterDirectly() {
           <view class="channels-grid">
             <view
               v-for="channel in shareChannels"
-              :key="channel.name"
+              :key="channel.id"
               class="channel-item"
-              @click="handleChannelClick(channel.name)"
+              @click="handleChannelClick(channel)"
             >
               <view class="icon-circle" :style="{ backgroundColor: channel.color + '15', color: channel.color }">
                 <wd-icon :name="channel.icon" size="28px" />
@@ -288,6 +406,77 @@ function sharePosterDirectly() {
   border-radius: 16rpx;
   padding: 28rpx;
   text-align: left;
+}
+
+/* Custom channel list editor styles */
+.editor-channels-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-channel-row {
+  border: 1rpx solid var(--app-line);
+  border-radius: 12rpx;
+  background: #f8fafc;
+}
+
+.editor-channel-circle {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50%;
+}
+
+.editor-channel-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-divider {
+  border-top: 1rpx dashed var(--app-line);
+}
+
+.preset-items-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.preset-icon-cell {
+  width: 54rpx;
+  height: 54rpx;
+  border: 1rpx solid var(--app-line);
+  border-radius: 12rpx;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  
+  &.active {
+    border-color: var(--app-brand);
+    color: var(--app-brand);
+    background: #fffbeb;
+  }
+}
+
+.preset-color-cell {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 4rpx solid transparent;
+  transition: all 0.2s ease;
+  
+  &.active {
+    border-color: #000;
+    transform: scale(1.1);
+  }
+}
+
+.my-3 {
+  margin-top: 24rpx;
+  margin-bottom: 24rpx;
 }
 
 .compatibility-table-grid {

@@ -24,17 +24,17 @@ function handleCustomTap(path: string) {
 
 <template>
   <PageShell
-    title="自定义的组件"
-    :description="`这里新增了 ${customCount} 个可直接使用的业务组合组件，同时保留 ${totalCount} 个 Wot UI 基础条目。`"
+    title="组件"
+    :description="`这里新增了 ${customCount} 个独立封装的第三方组件，同时保留 ${totalCount} 个 Wot UI 基础条目。`"
   >
     <view class="component-catalog">
       <view class="custom-section">
         <view class="custom-summary">
           <view>
-            <view class="custom-title">自定义的组件</view>
-            <view class="custom-desc">不和基础按钮、输入框重复，直接给你偏业务场景的组合式组件。</view>
+            <view class="custom-title">第三方组件</view>
+            <view class="custom-desc">这部分是我们自己封装的本地组件，内部不依赖 `wd-*`，和原来的组件库完全分开。</view>
           </view>
-          <wd-tag type="primary">{{ customCount }} 个可用组件</wd-tag>
+          <view class="custom-count">{{ customCount }} 个组件</view>
         </view>
 
         <view class="custom-list">
@@ -48,16 +48,15 @@ function handleCustomTap(path: string) {
               <view class="custom-card-name">{{ item.title }}</view>
               <view class="custom-card-summary">{{ item.summary }}</view>
               <view class="custom-tags">
-                <wd-tag
+                <view
                   v-for="tag in item.tags"
                   :key="tag"
-                  plain
                 >
                   {{ tag }}
-                </wd-tag>
+                </view>
               </view>
             </view>
-            <wd-icon name="arrow-right" size="18px" custom-class="custom-arrow" />
+            <text class="custom-arrow">&gt;</text>
           </view>
         </view>
       </view>
@@ -135,6 +134,16 @@ function handleCustomTap(path: string) {
   line-height: 1.6;
 }
 
+.custom-count {
+  flex-shrink: 0;
+  border-radius: 999rpx;
+  background: #eef4ff;
+  padding: 12rpx 20rpx;
+  color: #2756d8;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
 .custom-list {
   display: grid;
   gap: 20rpx;
@@ -175,6 +184,16 @@ function handleCustomTap(path: string) {
   flex-wrap: wrap;
   gap: 12rpx;
   margin-top: 18rpx;
+}
+
+.custom-tags view {
+  border: 1rpx solid #dde5f2;
+  border-radius: 999rpx;
+  background: #fff;
+  padding: 8rpx 16rpx;
+  color: #5f6b7a;
+  font-size: 22rpx;
+  font-weight: 700;
 }
 
 .catalog-label {

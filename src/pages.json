@@ -45,7 +45,7 @@
     {
       "path": "pages/components/custom",
       "style": {
-        "navigationBarTitleText": "自定义的组件"
+        "navigationBarTitleText": "第三方组件"
       }
     },
     {
