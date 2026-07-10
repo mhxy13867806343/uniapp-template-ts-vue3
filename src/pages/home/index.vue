@@ -251,6 +251,12 @@ function navToApiPage(type: 'interface' | 'storage' | 'routing') {
   })
 }
 
+function navToBubbleGallery() {
+  uni.navigateTo({
+    url: '/pages/examples/bubble-gallery'
+  })
+}
+
 function triggerSystemShare() {
   systemShare(shareConfig)
 }
@@ -469,6 +475,30 @@ appStore.markReady()
               <view class="share-link-meta ml-2">
                 <text class="share-link-title font-bold text-ink">页面栈与路由 APIs</text>
                 <text class="share-link-desc">抓取小程序/App原生路由历史堆栈，navigateTo/redirectTo 状态演示</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+        </view>
+      </view>
+
+      <!-- Bottom Bubble Gallery Entry -->
+      <view class="panel-section bottom-share-section mt-3">
+        <view class="section-head font-bold mb-2">
+          <text>🔮 20 种水泡与环形进度画廊</text>
+          <wd-tag type="danger">新奇动效</wd-tag>
+        </view>
+        <view class="share-desc-info mb-3">
+          集成了 20 种高水准环形进度环与液态水泡起伏动效，包含手势上下拖拽互动水位响应，提供极佳的交互式视觉体验：
+        </view>
+
+        <view class="share-links-list flex-column">
+          <view class="share-link-row flex justify-between items-center p-2" @click="navToBubbleGallery">
+            <view class="flex items-center">
+              <text class="share-link-icon">🫧</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">液态水泡与环形进度条画廊</text>
+                <text class="share-link-desc">查看 20 种不同的动效展现与物理触控高度反馈</text>
               </view>
             </view>
             <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
