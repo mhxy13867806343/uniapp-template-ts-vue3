@@ -12,6 +12,28 @@ const activeStyle = ref('classic')
 
 const colorPresets = ['#2756d8', '#22c55e', '#ef4444', '#a855f7', '#fbbf24', '#06b6d4']
 
+// Warning threshold controls
+const enableWarning = ref(true)
+const warningThreshold = ref(80)
+
+const isExceeded = computed(() => {
+  if (activeStyle.value === 'gaming-hp-mp' || activeStyle.value === 'crystal-heart' || activeStyle.value === 'heartbeat') {
+    return false // Gaming bars use Low Health warning instead of High Limit warning
+  }
+  return enableWarning.value && progressVal.value >= warningThreshold.value
+})
+
+const isLowHealth = computed(() => {
+  return progressVal.value <= 25
+})
+
+const displayColor = computed(() => {
+  if (activeStyle.value === 'gaming-hp-mp' || activeStyle.value === 'crystal-heart' || activeStyle.value === 'heartbeat') {
+    return isLowHealth.value ? '#ef4444' : '#22c55e' // HP/Heart defaults to Green, warning turns Red!
+  }
+  return isExceeded.value ? '#ef4444' : activeColor.value // regular style turns Red if exceeded
+})
+
 const stylesList = [
   { id: 'classic', name: '01. 经典极简圆环', desc: '纯净的 SVG 环形进度线' },
   { id: 'gradient', name: '02. 极光渐变圆环', desc: '极光色锥形高光轮廓环' },
@@ -32,7 +54,9 @@ const stylesList = [
   { id: 'heartbeat', name: '17. 心率跳动红环', desc: '居中爱心随节律缩放红环' },
   { id: 'fire-energy', name: '18. 熔岩烈焰能量', desc: '红黄相间烈焰外焰呼吸灯' },
   { id: 'spinning-gear', name: '19. 工业旋转齿轮', desc: '咬合转动的蒸汽朋克齿轮' },
-  { id: 'interactive-drag', name: '20. 手势拖拽水位', desc: '上下手势划动实时改变百分比' }
+  { id: 'interactive-drag', name: '20. 手势拖拽水位', desc: '上下手势划动实时改变百分比' },
+  { id: 'gaming-hp-mp', name: '21. 双轨血魔值球', desc: '红绿双色HP血量舱与蓝色MP法力舱' },
+  { id: 'crystal-heart', name: '22. 水晶生命红心', desc: '经典暗黑RPG游戏生命红心容器' }
 ]
 
 // Drag states for style 20
@@ -82,6 +106,8 @@ function selectStyle(id: string) {
     toast.success('双限额同心环已加载 (还原/升华限制示意图)')
   } else if (id === 'interactive-drag') {
     toast.success('手势控制已激活：请在下方圆盒中上下滑动手指！')
+  } else if (id === 'gaming-hp-mp' || id === 'crystal-heart') {
+    toast.success('游戏角色血魔池已激活！低于25%时将闪烁红色警报！')
   } else {
     toast.success(`效果 ${id} 切换成功`)
   }
@@ -102,7 +128,15 @@ function randomizeValue() {
       <view class="active-demo-container">
         <view class="active-demo-header">
           <text class="style-title">{{ stylesList.find(s => s.id === activeStyle)?.name }}</text>
-          <wd-tag size="small" type="primary" plain>{{ progressVal }}%</wd-tag>
+          <wd-tag size="small" :type="isExceeded || ((activeStyle === 'gaming-hp-mp' || activeStyle === 'crystal-heart') && isLowHealth) ? 'danger' : 'primary'" plain>{{ progressVal }}%</wd-tag>
+        </view>
+
+        <!-- Warning Alert Banner -->
+        <view v-if="isExceeded" class="alarm-banner">
+          <text class="alarm-text">⚠️ 警告：当前进度 ({{ progressVal }}%) 已超载限额 (>= {{ warningThreshold }}%)！</text>
+        </view>
+        <view v-if="(activeStyle === 'gaming-hp-mp' || activeStyle === 'crystal-heart') && isLowHealth" class="alarm-banner flashing-red">
+          <text class="alarm-text">🩸 警告：角色处于濒血状态！HP: {{ progressVal }}%！请及时补药！</text>
         </view>
 
         <view
@@ -121,26 +155,26 @@ function randomizeValue() {
                 cy="60"
                 r="50"
                 :style="{
-                  stroke: activeColor,
+                  stroke: displayColor,
                   strokeDashoffset: strokeDashoffset,
                   transition: `stroke-dashoffset ${animSpeed}s ease-in-out`
                 }"
               />
             </svg>
-            <view class="center-text" :style="{ color: activeColor }">{{ progressVal }}%</view>
+            <view class="center-text" :style="{ color: displayColor }">{{ progressVal }}%</view>
           </view>
 
           <!-- 02. Conic Gradient -->
           <view v-else-if="activeStyle === 'gradient'" class="demo-wrapper">
-            <view class="conic-ring" :style="{ '--brand': activeColor, '--pct': `${progressVal}%` }">
+            <view class="conic-ring" :style="{ '--brand': displayColor, '--pct': `${progressVal}%` }">
               <view class="inner-cut"></view>
             </view>
-            <view class="center-text">{{ progressVal }}%</view>
+            <view class="center-text" :style="{ color: displayColor }">{{ progressVal }}%</view>
           </view>
 
           <!-- 03. Liquid Wave Bubble -->
           <view v-else-if="activeStyle === 'liquid-wave'" class="demo-wrapper">
-            <view class="wave-bubble-box" :style="{ '--brand': activeColor }">
+            <view class="wave-bubble-box" :style="{ '--brand': displayColor }">
               <view class="wave-wave-layer" :style="{ bottom: `${progressVal}%`, animationDuration: `${animSpeed}s` }"></view>
               <view class="wave-wave-second" :style="{ bottom: `${progressVal}%`, animationDuration: `${animSpeed * 1.5}s` }"></view>
               <view class="center-text-on-wave">{{ progressVal }}%</view>
@@ -149,10 +183,10 @@ function randomizeValue() {
 
           <!-- 04. Glow Neon -->
           <view v-else-if="activeStyle === 'glow-neon'" class="demo-wrapper">
-            <view class="neon-glow-ring" :style="{ '--brand': activeColor, '--pct': `${progressVal}%` }">
+            <view class="neon-glow-ring" :style="{ '--brand': displayColor, '--pct': `${progressVal}%` }">
               <view class="neon-inner"></view>
             </view>
-            <view class="center-text neon-text" :style="{ textShadow: `0 0 10rpx ${activeColor}` }">{{ progressVal }}%</view>
+            <view class="center-text neon-text" :style="{ textShadow: `0 0 10rpx ${displayColor}`, color: displayColor }">{{ progressVal }}%</view>
           </view>
 
           <!-- 05. Dotted Gauge -->
@@ -165,19 +199,19 @@ function randomizeValue() {
                 cy="60"
                 r="50"
                 :style="{
-                  stroke: activeColor,
+                  stroke: displayColor,
                   strokeDashoffset: strokeDashoffset,
                   transition: `stroke-dashoffset ${animSpeed}s ease-in-out`
                 }"
               />
             </svg>
-            <view class="center-text">{{ progressVal }}%</view>
+            <view class="center-text" :style="{ color: displayColor }">{{ progressVal }}%</view>
           </view>
 
           <!-- 06. Gemini Concentric limit rings -->
           <view v-else-if="activeStyle === 'concentric'" class="demo-wrapper concentric-view">
             <view class="concentric-ring-box">
-              <view class="concentric-ring outer" :style="{ '--brand': '#22c55e', '--pct': '92%' }">
+              <view class="concentric-ring outer" :style="{ '--brand': displayColor, '--pct': `${progressVal}%` }">
                 <view class="inner-cut"></view>
               </view>
               <view class="concentric-ring inner" :style="{ '--brand': '#ef4444', '--pct': '8%' }">
@@ -185,15 +219,15 @@ function randomizeValue() {
               </view>
             </view>
             <view class="concentric-labels flex-column">
-              <text class="lbl-row text-green">5-Hour: 92%</text>
-              <text class="lbl-row text-red">Weekly: 8%</text>
+              <text class="lbl-row" :style="{ color: displayColor }">5-Hour Limit: {{ progressVal }}%</text>
+              <text class="lbl-row text-red">Weekly Limit: 8%</text>
             </view>
           </view>
 
           <!-- 07. Glass Wave -->
           <view v-else-if="activeStyle === 'glass-wave'" class="demo-wrapper">
             <view class="glass-bubble-card">
-              <view class="wave-bubble-box glass-interior" :style="{ '--brand': activeColor }">
+              <view class="wave-bubble-box glass-interior" :style="{ '--brand': displayColor }">
                 <view class="wave-wave-layer" :style="{ bottom: `${progressVal}%`, opacity: 0.6 }"></view>
                 <view class="wave-wave-second" :style="{ bottom: `${progressVal}%`, opacity: 0.4 }"></view>
                 <view class="center-text-on-wave">{{ progressVal }}%</view>
@@ -203,7 +237,7 @@ function randomizeValue() {
 
           <!-- 08. Teardrop shape -->
           <view v-else-if="activeStyle === 'teardrop'" class="demo-wrapper">
-            <view class="teardrop-bubble-box" :style="{ '--brand': activeColor }">
+            <view class="teardrop-bubble-box" :style="{ '--brand': displayColor }">
               <view class="wave-wave-layer teardrop-wave" :style="{ bottom: `${progressVal}%` }"></view>
               <view class="center-text-on-wave text-white">{{ progressVal }}%</view>
             </view>
@@ -212,8 +246,8 @@ function randomizeValue() {
           <!-- 09. Pulse Ripple -->
           <view v-else-if="activeStyle === 'pulse-ripple'" class="demo-wrapper">
             <view class="ripple-outer-glow">
-              <view class="ripple-ring anim-r1" :style="{ borderColor: activeColor }"></view>
-              <view class="ripple-ring anim-r2" :style="{ borderColor: activeColor }"></view>
+              <view class="ripple-ring anim-r1" :style="{ borderColor: displayColor }"></view>
+              <view class="ripple-ring anim-r2" :style="{ borderColor: displayColor }"></view>
               <svg class="svg-ring scale-down" viewBox="0 0 120 120">
                 <circle class="svg-bg" cx="60" cy="60" r="50" />
                 <circle
@@ -222,12 +256,12 @@ function randomizeValue() {
                   cy="60"
                   r="50"
                   :style="{
-                    stroke: activeColor,
+                    stroke: displayColor,
                     strokeDashoffset: strokeDashoffset
                   }"
                 />
               </svg>
-              <view class="center-text">{{ progressVal }}%</view>
+              <view class="center-text" :style="{ color: displayColor }">{{ progressVal }}%</view>
             </view>
           </view>
 
@@ -339,7 +373,7 @@ function randomizeValue() {
 
           <!-- 20. Interactive Draggable Water -->
           <view v-else-if="activeStyle === 'interactive-drag'" class="demo-wrapper flex-column items-center justify-between">
-            <view class="wave-bubble-box interactive-bubble" :style="{ '--brand': activeColor }">
+            <view class="wave-bubble-box interactive-bubble" :style="{ '--brand': displayColor }">
               <view
                 class="wave-wave-layer"
                 :class="{ 'wave-agitated': isDragging }"
@@ -354,6 +388,41 @@ function randomizeValue() {
                 <text class="hud-pct">{{ progressVal }}%</text>
                 <text class="hud-sub">{{ isDragging ? '↕️ 拖动中' : '↕️ 上下滑动' }}</text>
               </view>
+            </view>
+          </view>
+
+          <!-- 21. Gaming HP & MP Bubbles -->
+          <view v-else-if="activeStyle === 'gaming-hp-mp'" class="demo-wrapper hp-mp-view">
+            <!-- HP Bubble (Red / Green) -->
+            <view class="hp-mp-column">
+              <view class="wave-bubble-box hp-orb" :style="{ '--brand': displayColor }">
+                <view class="wave-wave-layer" :style="{ bottom: `${progressVal}%` }"></view>
+                <view class="wave-wave-second" :style="{ bottom: `${progressVal}%` }"></view>
+                <view class="center-text-on-wave text-xs font-bold">{{ progressVal }}%</view>
+              </view>
+              <text class="hp-mp-label text-red">HP (生命值)</text>
+            </view>
+
+            <!-- MP Bubble (Blue) -->
+            <view class="hp-mp-column">
+              <view class="wave-bubble-box mp-orb" :style="{ '--brand': '#2563eb' }">
+                <view class="wave-wave-layer" :style="{ bottom: '85%' }"></view>
+                <view class="wave-wave-second" :style="{ bottom: '85%' }"></view>
+                <view class="center-text-on-wave text-xs font-bold">85%</view>
+              </view>
+              <text class="hp-mp-label text-blue">MP (魔法值)</text>
+            </view>
+          </view>
+
+          <!-- 22. RPG Crystal Heart HP -->
+          <view v-else-if="activeStyle === 'crystal-heart'" class="demo-wrapper">
+            <view class="crystal-heart-box" :style="{ '--brand': displayColor }">
+              <svg class="heart-mask-svg" viewBox="0 0 100 100">
+                <path d="M50 88.25 C-3.6 57.6 -3.6 23.4 32.4 12.6 C43.2 9 50 19.8 50 19.8 C50 19.8 56.8 9 67.6 12.6 C103.6 23.4 103.6 57.6 50 88.25 Z" />
+              </svg>
+              <view class="wave-wave-layer" :style="{ bottom: `${progressVal}%` }"></view>
+              <view class="wave-wave-second" :style="{ bottom: `${progressVal}%`, opacity: 0.4 }"></view>
+              <view class="center-text-on-wave font-bold text-xs" style="margin-top: -10rpx;">HP {{ progressVal }}%</view>
             </view>
           </view>
         </view>
@@ -372,7 +441,7 @@ function randomizeValue() {
             <text>进度百分比 (Progress)</text>
             <text class="text-brand">{{ progressVal }}%</text>
           </view>
-          <wd-slider v-model="progressVal" :disabled="activeStyle === 'concentric'" />
+          <wd-slider v-model="progressVal" />
         </view>
 
         <!-- Speed -->
@@ -385,7 +454,7 @@ function randomizeValue() {
         </view>
 
         <!-- Color preset -->
-        <view class="control-slider-row mb-1">
+        <view class="control-slider-row mb-3">
           <view class="text-muted text-xs mb-1">自定义主题颜色 (Theme Color)</view>
           <view class="flex mt-1">
             <view
@@ -396,6 +465,23 @@ function randomizeValue() {
               @click="activeColor = color"
             ></view>
           </view>
+        </view>
+
+        <!-- Warning Threshold Settings -->
+        <view class="control-slider-row mb-3 flex items-center justify-between border-top-gray pt-2">
+          <view class="flex-column" style="flex: 1; margin-right: 20rpx;">
+            <text class="text-white text-xs font-bold">⚠️ 启用高额报警变色 (Enable Red Alert)</text>
+            <text class="text-muted" style="font-size: 18rpx; line-height: 1.4; display: block;">开启后数值超过设定的临界阈值，进度圆环与水泡会自动变为警示红色并展示报警横幅</text>
+          </view>
+          <wd-switch v-model="enableWarning" />
+        </view>
+
+        <view v-if="enableWarning" class="control-slider-row">
+          <view class="flex justify-between text-muted text-xs mb-1">
+            <text>报警临界值 (Alarm Threshold)</text>
+            <text class="text-red font-bold">{{ warningThreshold }}%</text>
+          </view>
+          <wd-slider v-model="warningThreshold" :min="10" :max="95" />
         </view>
       </view>
 
@@ -1122,4 +1208,110 @@ function randomizeValue() {
 .mb-3 { margin-bottom: 24rpx; }
 .p-2 { padding: 16rpx; }
 .p-3 { padding: 24rpx; }
+
+/* Gaming HP & MP styling */
+.hp-mp-view {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.hp-mp-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.hp-mp-label {
+  font-size: 22rpx;
+  font-weight: 800;
+  margin-top: 10rpx;
+}
+
+.hp-orb {
+  box-shadow: 0 0 16rpx rgba(34, 197, 94, 0.2);
+}
+
+.mp-orb {
+  box-shadow: 0 0 16rpx rgba(37, 99, 235, 0.2);
+}
+
+/* RPG Crystal Heart */
+.crystal-heart-box {
+  width: 200rpx;
+  height: 200rpx;
+  position: relative;
+  overflow: hidden;
+  background: #1e293b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4rpx solid var(--brand);
+  
+  -webkit-clip-path: path("M50,88.25 C-3.6,57.6 -3.6,23.4 32.4,12.6 C43.2,9 50,19.8 50,19.8 C50,19.8 56.8,9 67.6,12.6 C103.6,23.4 103.6,57.6 50,88.25 Z");
+  clip-path: path("M50,88.25 C-3.6,57.6 -3.6,23.4 32.4,12.6 C43.2,9 50,19.8 50,19.8 C50,19.8 56.8,9 67.6,12.6 C103.6,23.4 103.6,57.6 50,88.25 Z");
+}
+
+.heart-mask-svg {
+  position: absolute;
+  width: 100rpx;
+  height: 100rpx;
+  fill: none;
+  stroke: var(--brand);
+  stroke-width: 4;
+  z-index: 12;
+  pointer-events: none;
+}
+
+/* Warning Alerts styling */
+.alarm-banner {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1rpx solid rgba(239, 68, 68, 0.4);
+  border-radius: 10rpx;
+  padding: 14rpx 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10rpx;
+  
+  &.flashing-red {
+    background: rgba(239, 68, 68, 0.25);
+    border-color: #ef4444;
+    animation: dangerFlash 1s infinite alternate ease-in-out;
+  }
+}
+
+@keyframes dangerFlash {
+  0% { box-shadow: 0 0 4rpx rgba(239,68,68,0.3); opacity: 0.8; }
+  100% { box-shadow: 0 0 16rpx rgba(239,68,68,0.7); opacity: 1; }
+}
+
+.alarm-text {
+  color: #ef4444;
+  font-size: 21rpx;
+  font-weight: 800;
+  text-align: center;
+}
+
+.border-top-gray {
+  border-top: 1rpx solid #334155;
+}
+
+.text-red {
+  color: #ef4444;
+}
+
+.text-green {
+  color: #22c55e;
+}
+
+.text-blue {
+  color: #2563eb;
+}
+
+.text-xxs {
+  font-size: 16rpx;
+}
 </style>
