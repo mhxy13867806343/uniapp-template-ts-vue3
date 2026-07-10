@@ -226,6 +226,31 @@ const shareConfig = {
   imageUrl: 'https://mhxy13867806343.github.io/uniapp-template-ts-vue3/logo.png'
 }
 
+onShareAppMessage(() => getAppMessageShare(shareConfig))
+onShareTimeline(() => getTimelineShare(shareConfig))
+
+function navToSharePage(type: 'wechat' | 'system' | 'poster') {
+  const urlMap = {
+    wechat: '/pages/uni-api/share-wechat',
+    system: '/pages/uni-api/share-system',
+    poster: '/pages/uni-api/share-poster'
+  }
+  uni.navigateTo({
+    url: urlMap[type]
+  })
+}
+
+function navToApiPage(type: 'interface' | 'storage' | 'routing') {
+  const urlMap = {
+    interface: '/pages/uni-api/interface',
+    storage: '/pages/uni-api/storage',
+    routing: '/pages/uni-api/routing'
+  }
+  uni.navigateTo({
+    url: urlMap[type]
+  })
+}
+
 function triggerSystemShare() {
   systemShare(shareConfig)
 }
@@ -395,6 +420,55 @@ appStore.markReady()
               <view class="share-link-meta ml-2">
                 <text class="share-link-title font-bold text-ink">卡片海报生成保存</text>
                 <text class="share-link-desc">基于 Canvas 绘图生成分享卡片，一键授权保存相册</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+        </view>
+      </view>
+
+      <!-- Bottom Core API Entry zone (3 pages grid) -->
+      <view class="panel-section bottom-share-section mt-3">
+        <view class="section-head font-bold mb-2">
+          <text>🔧 UniApp 核心 API 演示专区</text>
+          <wd-tag type="primary">3类核心组件</wd-tag>
+        </view>
+        <view class="share-desc-info mb-3">
+          精选封装了微信/App常用的界面反馈、导航Tab定制、异步/同步数据存储管理与路由历史堆栈的可视化调试演示：
+        </view>
+
+        <view class="share-links-list flex-column">
+          <!-- Interface -->
+          <view class="share-link-row flex justify-between items-center p-2 mb-2" @click="navToApiPage('interface')">
+            <view class="flex items-center">
+              <text class="share-link-icon">🎨</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">界面交互控制 APIs</text>
+                <text class="share-link-desc">交互反馈 (Toast/Modal)、动态导航栏及 TabBar Badge 设置</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+
+          <!-- Storage -->
+          <view class="share-link-row flex justify-between items-center p-2 mb-2" @click="navToApiPage('storage')">
+            <view class="flex items-center">
+              <text class="share-link-icon">💾</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">数据缓存 APIs</text>
+                <text class="share-link-desc">同步与异步 get/set/removeStorage 键值读写及内存清理</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+
+          <!-- Routing -->
+          <view class="share-link-row flex justify-between items-center p-2" @click="navToApiPage('routing')">
+            <view class="flex items-center">
+              <text class="share-link-icon">🥞</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">页面栈与路由 APIs</text>
+                <text class="share-link-desc">抓取小程序/App原生路由历史堆栈，navigateTo/redirectTo 状态演示</text>
               </view>
             </view>
             <wd-icon name="arrow-right" size="16px" color="#94a3b8" />

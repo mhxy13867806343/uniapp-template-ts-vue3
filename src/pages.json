@@ -169,21 +169,39 @@
       }
     },
     {
-      "path": "pages/examples/share-poster",
+      "path": "pages/uni-api/share-poster",
       "style": {
         "navigationBarTitleText": "分享海报与面板"
       }
     },
     {
-      "path": "pages/examples/share-wechat",
+      "path": "pages/uni-api/share-wechat",
       "style": {
         "navigationBarTitleText": "微信社交生态分享"
       }
     },
     {
-      "path": "pages/examples/share-system",
+      "path": "pages/uni-api/share-system",
       "style": {
         "navigationBarTitleText": "OS 系统原生分享"
+      }
+    },
+    {
+      "path": "pages/uni-api/interface",
+      "style": {
+        "navigationBarTitleText": "界面控制 APIs"
+      }
+    },
+    {
+      "path": "pages/uni-api/storage",
+      "style": {
+        "navigationBarTitleText": "本地数据缓存 APIs"
+      }
+    },
+    {
+      "path": "pages/uni-api/routing",
+      "style": {
+        "navigationBarTitleText": "页面与路由 APIs"
       }
     },
     {

@@ -15,8 +15,10 @@ const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>()
 
-function handleInput(event: { detail?: { value?: string } }) {
-  emit('update:modelValue', event.detail?.value || '')
+function handleInput(event: Event) {
+  const detailValue = (event as { detail?: { value?: string } }).detail?.value
+  const targetValue = (event.target as HTMLInputElement | null)?.value
+  emit('update:modelValue', detailValue || targetValue || '')
 }
 </script>
 
@@ -33,9 +35,8 @@ function handleInput(event: { detail?: { value?: string } }) {
         :value="modelValue"
         :type="type"
         :placeholder="placeholder"
-        placeholder-class="neo-field__placeholder"
         @input="handleInput"
-      >
+      />
     </view>
   </view>
 </template>
@@ -81,10 +82,5 @@ function handleInput(event: { detail?: { value?: string } }) {
   color: #1b263d;
   font-size: 28rpx;
   font-weight: 600;
-}
-
-:global(.neo-field__placeholder) {
-  color: #9aa5b6;
-  font-size: 26rpx;
 }
 </style>
