@@ -81,7 +81,7 @@ const examples: WsExampleItem[] = [
 ]
 
 const activeTab = ref<WsExampleKey>('echo')
-const endpoint = ref('wss://echo.websocket.events')
+const serverBase = ref('ws://127.0.0.1:8001')
 const customMessage = ref(examples[0].draft)
 const status = ref<WsStatus>('idle')
 const logs = ref<WsLogItem[]>([])
@@ -95,6 +95,9 @@ let autoTimer: ReturnType<typeof setInterval> | null = null
 let logSeed = 1
 
 const currentExample = computed(() => examples.find(item => item.key === activeTab.value) || examples[0])
+const normalizedServerBase = computed(() => serverBase.value.trim().replace(/\/$/, ''))
+const endpoint = computed(() => `${normalizedServerBase.value}/ws/${activeTab.value}`)
+const docsBase = computed(() => normalizedServerBase.value.replace(/^ws/, 'http'))
 
 const statusText = computed(() => {
   const map: Record<WsStatus, string> = {
@@ -201,8 +204,8 @@ function disconnectSocket(showToast = true) {
 }
 
 function connectSocket(isReconnect = false) {
-  if (!endpoint.value.trim()) {
-    toast.error('请先填写 WebSocket 地址')
+  if (!normalizedServerBase.value) {
+    toast.error('请先填写 WebSocket 服务地址')
     return
   }
 
@@ -215,7 +218,7 @@ function connectSocket(isReconnect = false) {
   pushLog('system', isReconnect ? '重新连接' : '开始连接', endpoint.value)
 
   const task = uni.connectSocket({
-    url: endpoint.value.trim(),
+    url: endpoint.value,
     complete: () => {}
   })
 
@@ -325,6 +328,10 @@ function startAutoMode() {
 watch(activeTab, () => {
   customMessage.value = currentExample.value.draft
   pushLog('system', '切换示例', `当前示例：${currentExample.value.title}`)
+  if (status.value === 'open') {
+    connectSocket(true)
+    return
+  }
   startAutoMode()
 })
 
@@ -341,7 +348,7 @@ onUnmounted(() => {
       <view class="hero-card">
         <view>
           <view class="hero-title">6 种 WebSocket 示例</view>
-          <view class="hero-desc">默认使用公共 Echo 服务演示，你可以直接修改地址后重连，观察不同消息结构的收发日志。</view>
+          <view class="hero-desc">默认指向本地 FastAPI WebSocket 服务，你可以直接改服务基地址，然后切 tabs 观察 6 条不同 ws 路由的收发日志。</view>
         </view>
         <wd-tag :type="statusTagType" plain>{{ statusText }}</wd-tag>
       </view>
@@ -366,8 +373,11 @@ onUnmounted(() => {
         </view>
         <view class="desc-text">{{ currentExample.description }}</view>
 
-        <view class="input-label">WebSocket 地址</view>
-        <input v-model="endpoint" class="native-input" placeholder="请输入 ws:// 或 wss:// 地址" />
+        <view class="input-label">WebSocket 服务基地址</view>
+        <input v-model="serverBase" class="native-input" placeholder="例如 ws://127.0.0.1:8001" />
+        <view class="tips-line">当前连接地址：{{ endpoint }}</view>
+        <view class="tips-line">健康检查：{{ docsBase }}/health</view>
+        <view class="tips-line">接口文档：{{ docsBase }}/docs</view>
 
         <view class="action-row">
           <wd-button size="small" type="primary" @click="connectSocket(false)">连接</wd-button>

@@ -12,6 +12,8 @@
     "dev:mp-weixin": "uni -p mp-weixin --mode development",
     "dev:mp-alipay": "uni -p mp-alipay --mode development",
     "dev:mp-toutiao": "uni -p mp-toutiao --mode development",
+    "setup:ws-backend": "cd backend && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt",
+    "dev:ws-backend": "cd backend && .venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8001 --reload",
     "build:h5": "uni build -p h5 --mode production",
     "build:github": "uni build -p h5 --mode github",
     "build:app": "uni build -p app --mode production",
