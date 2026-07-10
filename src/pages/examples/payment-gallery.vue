@@ -62,6 +62,27 @@ function handleCashierPay() {
 const isQrExpired = ref(false)
 const qrTimeLeft = ref(60)
 let qrTimer: any = null
+const activeQrChannel = ref<'wechat' | 'alipay' | 'union'>('wechat')
+const qrChannels = {
+  wechat: {
+    name: '微信支付收款码',
+    hint: '使用微信 [扫一扫] 完成付款',
+    emoji: '💬',
+    color: '#22c55e'
+  },
+  alipay: {
+    name: '支付宝收款码',
+    hint: '使用支付宝 [扫一扫] 完成付款',
+    emoji: '🔹',
+    color: '#2563eb'
+  },
+  union: {
+    name: '银联云闪付码',
+    hint: '使用云闪付或银行APP [扫一扫] 完成付款',
+    emoji: '💳',
+    color: '#dc2626'
+  }
+}
 
 function startQrTimer() {
   qrTimeLeft.value = 60
@@ -307,31 +328,52 @@ onUnload(() => {
 
         <!-- 2. QR CODE SCAN PAY -->
         <view v-slot:default v-else-if="activeId === 2" class="scan-radar-pay-view animate-fade-in text-center flex-column items-center">
+          <!-- QR Code channel tabs -->
+          <view class="qr-channel-tabs flex justify-center mb-3">
+            <view
+              v-for="(conf, key) in qrChannels"
+              :key="key"
+              :class="['qr-channel-tab-item', key, { active: activeQrChannel === key }]"
+              @click="activeQrChannel = key"
+            >
+              {{ conf.name }}
+            </view>
+          </view>
+
           <view class="scan-header mb-3">
-            <view class="scan-title font-bold text-ink">主扫/被扫支付二维码</view>
-            <view class="scan-desc">向商家出示，或用另外一部手机扫码付款</view>
+            <view class="scan-title font-bold text-ink" :style="{ color: qrChannels[activeQrChannel].color }">
+              {{ qrChannels[activeQrChannel].name }}
+            </view>
+            <view class="scan-desc">{{ qrChannels[activeQrChannel].hint }}</view>
           </view>
 
           <!-- Barcode Display -->
           <view class="scan-barcode-box flex-column items-center">
-            <view class="barcode-lines"></view>
+            <view
+              class="barcode-lines"
+              :style="{ background: 'repeating-linear-gradient(90deg, ' + qrChannels[activeQrChannel].color + ', ' + qrChannels[activeQrChannel].color + ' 4rpx, #fff 4rpx, #fff 8rpx)' }"
+            ></view>
             <text class="barcode-num">9821 0029 8832 9912</text>
           </view>
 
           <!-- QR Code Box with Laser Scan Beam Animation -->
-          <view class="qr-code-radar-container mt-3">
+          <view class="qr-code-radar-container mt-3" :style="{ borderColor: qrChannels[activeQrChannel].color }">
             <!-- Simulated QR code pixels background -->
             <view class="simulated-qr-pixels flex items-center justify-center">
-              <view class="qr-corner-square top-left"></view>
-              <view class="qr-corner-square top-right"></view>
-              <view class="qr-corner-square bottom-left"></view>
-              <view class="qr-center-box">
-                <text class="logo-emoji">💰</text>
+              <view class="qr-corner-square top-left" :style="{ borderColor: qrChannels[activeQrChannel].color }"></view>
+              <view class="qr-corner-square top-right" :style="{ borderColor: qrChannels[activeQrChannel].color }"></view>
+              <view class="qr-corner-square bottom-left" :style="{ borderColor: qrChannels[activeQrChannel].color }"></view>
+              <view class="qr-center-box" :style="{ borderColor: qrChannels[activeQrChannel].color }">
+                <text class="logo-emoji">{{ qrChannels[activeQrChannel].emoji }}</text>
               </view>
             </view>
 
             <!-- Radar Scanner beam moving vertically -->
-            <view v-if="!isQrExpired" class="radar-scan-beam"></view>
+            <view
+              v-if="!isQrExpired"
+              class="radar-scan-beam"
+              :style="{ background: 'linear-gradient(to right, transparent, ' + qrChannels[activeQrChannel].color + ', transparent)', boxShadow: '0 0 10rpx ' + qrChannels[activeQrChannel].color }"
+            ></view>
 
             <!-- Expired Mask -->
             <view v-if="isQrExpired" class="qr-expired-overlay flex-column items-center justify-center">
@@ -343,7 +385,7 @@ onUnload(() => {
 
           <!-- Expire Countdown text -->
           <view v-if="!isQrExpired" class="qr-expire-lbl mt-3">
-            付款码每分钟自动刷新，剩余有效时间 <text class="sec-text font-bold">{{ qrTimeLeft }}</text> 秒
+            付款码每分钟自动刷新，剩余有效时间 <text class="sec-text font-bold" :style="{ color: qrChannels[activeQrChannel].color }">{{ qrTimeLeft }}</text> 秒
           </view>
 
           <!-- Simulator actions -->
@@ -555,6 +597,33 @@ onUnload(() => {
   display: flex;
   flex-direction: column;
   gap: 24rpx;
+}
+
+/* QR Code channel tabs */
+.qr-channel-tabs {
+  display: flex;
+  gap: 12rpx;
+  background: #f1f5f9;
+  padding: 8rpx;
+  border-radius: 99rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.qr-channel-tab-item {
+  flex: 1;
+  font-size: 19rpx;
+  padding: 12rpx 0;
+  border-radius: 99rpx;
+  color: var(--app-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 800;
+  background: transparent;
+  
+  &.wechat.active { background: #22c55e; color: #fff; }
+  &.alipay.active { background: #2563eb; color: #fff; }
+  &.union.active { background: #dc2626; color: #fff; }
 }
 
 /* ==========================================
