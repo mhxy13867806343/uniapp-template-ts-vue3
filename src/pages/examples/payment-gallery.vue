@@ -158,10 +158,36 @@ function triggerFingerprint() {
 const balance = ref(1250.00)
 const selectedRechargeAmount = ref(200)
 const rechargeGrid = [100, 200, 500, 1000, 2000, 5000]
+const customRechargeVal = ref('')
+const selectedRechargeBank = ref('cmb') // cmb, ccb, wechat, alipay
+const rechargeBankOptions = [
+  { id: 'cmb', name: '招商银行 借记卡 (7018)', desc: '单笔限额 ¥50,000', icon: '🔴' },
+  { id: 'ccb', name: '建设银行 信用卡 (9921)', desc: '单笔限额 ¥100,000', icon: '🔵' },
+  { id: 'wechat', name: '微信支付', desc: '免密快速扣款', icon: '💬' },
+  { id: 'alipay', name: '支付宝', desc: '支付宝免密扣款', icon: '🔹' }
+]
+
+function handleRecharge(amount: number) {
+  selectedRechargeAmount.value = amount
+  customRechargeVal.value = '' // Clear custom input
+}
+
+const finalRechargePrice = computed(() => {
+  if (selectedRechargeAmount.value > 0) {
+    return selectedRechargeAmount.value
+  }
+  return Number(customRechargeVal.value) || 0
+})
 
 function confirmRecharge() {
-  balance.value += selectedRechargeAmount.value
-  toast.success(`成功充值 ¥${selectedRechargeAmount.value}，尊享卡余额 ¥${balance.value}`)
+  const amt = finalRechargePrice.value
+  if (amt <= 0) {
+    toast.warning('请输入或选择有效的充值金额')
+    return
+  }
+  balance.value += amt
+  const bankName = rechargeBankOptions.find(b => b.id === selectedRechargeBank.value)?.name || '外部账户'
+  toast.success(`通过 [${bankName}] 成功充值 ¥${amt}，尊享卡当前余额 ¥${balance.value}`)
 }
 
 // Tab 5 States: E-Invoice Receipt
@@ -455,9 +481,43 @@ onUnload(() => {
               </view>
             </view>
 
+            <!-- Custom Amount input -->
+            <view class="custom-recharge-row mt-3 flex items-center">
+              <text class="custom-lbl font-bold text-ink">自定义金额 ¥</text>
+              <input
+                v-model="customRechargeVal"
+                type="number"
+                placeholder="在此输入自定义充值金额"
+                class="custom-amt-input ml-2 flex-1"
+                @input="selectedRechargeAmount = 0"
+              />
+            </view>
+
+            <!-- Recharge payment bank sources picker -->
+            <view class="recharge-sources-panel mt-3">
+              <view class="recharge-title font-bold mb-2">选择扣款账户</view>
+              <view class="recharge-sources-list">
+                <view
+                  v-for="bank in rechargeBankOptions"
+                  :key="bank.id"
+                  :class="['recharge-source-row', { active: selectedRechargeBank === bank.id }]"
+                  @click="selectedRechargeBank = bank.id"
+                >
+                  <view class="flex items-center">
+                    <text class="source-icon">{{ bank.icon }}</text>
+                    <view class="source-meta ml-2">
+                      <text class="source-name font-bold text-ink">{{ bank.name }}</text>
+                      <text class="source-desc">{{ bank.desc }}</text>
+                    </view>
+                  </view>
+                  <radio :checked="selectedRechargeBank === bank.id" color="#fbbf24" />
+                </view>
+              </view>
+            </view>
+
             <!-- Confirm topup button -->
             <view class="recharge-action-btn mt-3">
-              <wd-button type="warning" block @click="confirmRecharge">确认充值立返并支付</wd-button>
+              <wd-button type="warning" block @click="confirmRecharge">确认充值并支付 ¥{{ finalRechargePrice }}</wd-button>
             </view>
           </view>
         </view>
@@ -624,6 +684,73 @@ onUnload(() => {
   &.wechat.active { background: #22c55e; color: #fff; }
   &.alipay.active { background: #2563eb; color: #fff; }
   &.union.active { background: #dc2626; color: #fff; }
+}
+
+/* Custom amount input and bank options */
+.custom-recharge-row {
+  background: #f8fafc;
+  border: 1rpx solid var(--app-line);
+  border-radius: 12rpx;
+  padding: 16rpx 24rpx;
+}
+
+.custom-lbl {
+  font-size: 21rpx;
+}
+
+.custom-amt-input {
+  font-size: 21rpx;
+  color: var(--app-ink);
+  font-weight: 800;
+  background: transparent;
+}
+
+.recharge-sources-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.recharge-source-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18rpx 20rpx;
+  border: 1rpx solid var(--app-line);
+  border-radius: 16rpx;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &.active {
+    border-color: #fbbf24;
+    background: #fffbeb;
+  }
+}
+
+.source-icon {
+  font-size: 34rpx;
+  width: 54rpx;
+  height: 54rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+}
+
+.source-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.source-name {
+  font-size: 20rpx;
+}
+
+.source-desc {
+  font-size: 15rpx;
+  color: var(--app-muted);
 }
 
 /* ==========================================
