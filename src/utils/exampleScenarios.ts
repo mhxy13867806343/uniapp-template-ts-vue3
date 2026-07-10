@@ -761,6 +761,13 @@ export const exampleScenarios: ExampleScenario[] = [
     path: 'leaderboards',
     description: '采用左侧侧边栏导航 + 右侧各异卡片布局，完整展现 20 种主题特色的数据排行榜。',
     tags: ['Leaderboard', 'Split', 'Rank']
+  },
+  {
+    level: '表单',
+    title: '3步向导式分步表单',
+    path: 'wizard-form',
+    description: '集成 3 步向导流程控制及分步字段验证，支持灵活上一步/下一步切换。',
+    tags: ['Form', 'Steps', 'Validation']
   }
 ]
 

@@ -61,6 +61,12 @@
       }
     },
     {
+      "path": "pages/examples/wizard-form",
+      "style": {
+        "navigationBarTitleText": "分步向导表单"
+      }
+    },
+    {
       "path": "pages/examples/music-player",
       "style": {
         "navigationBarTitleText": "音乐播放器"
