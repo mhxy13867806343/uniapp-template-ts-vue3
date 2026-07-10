@@ -247,6 +247,12 @@
       }
     },
     {
+      "path": "pages/examples/payment-gallery",
+      "style": {
+        "navigationBarTitleText": "聚合支付演示中心"
+      }
+    },
+    {
       "path": "pages/other/index",
       "style": {
         "navigationBarTitleText": "其他"

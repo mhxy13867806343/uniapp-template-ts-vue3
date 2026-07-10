@@ -768,6 +768,13 @@ export const exampleScenarios: ExampleScenario[] = [
     path: 'wizard-form',
     description: '集成 3 步向导流程控制及分步字段验证，支持灵活上一步/下一步切换。',
     tags: ['Form', 'Steps', 'Validation']
+  },
+  {
+    level: '表单',
+    title: '5种特色聚合支付演示',
+    path: 'payment-gallery',
+    description: '整合收银台、雷达扫码、数字安全键盘密码指纹校验、黑金尊享卡及发票通知等多维支付效果。',
+    tags: ['Pay', 'Keyboard', 'Animation']
   }
 ]
 
