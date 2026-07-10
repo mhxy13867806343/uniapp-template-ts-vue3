@@ -30,6 +30,8 @@ import {
   truncateBySpecialLength
 } from '@/utils/format'
 import { isBankCard, isEmail, isIdCard, isPhone, isStrongPassword } from '@/utils/validate'
+import { getAppMessageShare, getTimelineShare, systemShare } from '@/utils/share'
+import { onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 
 const appStore = useAppStore()
 const { appEnv } = useAppEnv()
@@ -218,6 +220,32 @@ function viewMoreUtilities() {
   })
 }
 
+const shareConfig = {
+  title: 'UniApp Vue3 TS 多端极速开发模板',
+  path: '/pages/home/index?from=wechat_mp_home',
+  imageUrl: 'https://mhxy13867806343.github.io/uniapp-template-ts-vue3/logo.png'
+}
+
+function triggerSystemShare() {
+  systemShare(shareConfig)
+}
+
+function copyCodeSnippet() {
+  uni.setClipboardData({
+    data: `import { getAppMessageShare, getTimelineShare, systemShare } from '@/utils/share'
+
+// 微信小程序页面内配置：
+onShareAppMessage(() => getAppMessageShare({ title: '分享标题', path: '/pages/home/index' }))
+onShareTimeline(() => getTimelineShare({ title: '分享标题', path: '/pages/home/index' }))
+
+// App/H5唤起系统分享：
+systemShare({ title: '分享标题', path: '/pages/home/index' })`,
+    success: () => {
+      uni.showToast({ title: '代码片段已复制', icon: 'success' })
+    }
+  })
+}
+
 appStore.markReady()
 </script>
 
@@ -324,6 +352,56 @@ appStore.markReady()
           </view>
         </view>
       </view>
+
+      <!-- Bottom Share Entry zone (3 pages grid) -->
+      <view class="panel-section bottom-share-section mt-3">
+        <view class="section-head font-bold mb-2">
+          <text>⚙️ 平台分享与开发调用专区</text>
+          <wd-tag type="success">3类分享接口</wd-tag>
+        </view>
+        <view class="share-desc-info mb-3">
+          我们为外部使用者封装了三类主流的跨端分享方法。点击下方入口即可跳转到专用页面，查看运行兼容性、预览卡片并拷贝代码调用接口：
+        </view>
+
+        <view class="share-links-list flex-column">
+          <!-- WeChat -->
+          <view class="share-link-row flex justify-between items-center p-2 mb-2" @click="navToSharePage('wechat')">
+            <view class="flex items-center">
+              <text class="share-link-icon">💬</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">微信社交生态分享</text>
+                <text class="share-link-desc">支持小程序卡片、朋友圈定制及微信 JSSDK/App 调用</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+
+          <!-- System -->
+          <view class="share-link-row flex justify-between items-center p-2 mb-2" @click="navToSharePage('system')">
+            <view class="flex items-center">
+              <text class="share-link-icon">📱</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">OS 系统原生分享</text>
+                <text class="share-link-desc">一键呼起 iOS AirDrop/Android 系统原生社交面板</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+
+          <!-- Poster -->
+          <view class="share-link-row flex justify-between items-center p-2" @click="navToSharePage('poster')">
+            <view class="flex items-center">
+              <text class="share-link-icon">🖼️</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">卡片海报生成保存</text>
+                <text class="share-link-desc">基于 Canvas 绘图生成分享卡片，一键授权保存相册</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+        </view>
+      </view>
+
     </view>
   </PageShell>
 </template>
@@ -478,4 +556,75 @@ appStore.markReady()
   border-top: 1rpx solid #eef2f7;
   padding-top: 16rpx;
 }
+
+/* Bottom share styling */
+.bottom-share-section {
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 28rpx;
+}
+
+.share-desc-info {
+  font-size: 21rpx;
+  color: var(--app-muted);
+  line-height: 1.5;
+}
+
+.share-links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.share-link-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 24rpx;
+  background: #f8fafc;
+  border: 1rpx solid var(--app-line);
+  border-radius: 16rpx;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:active {
+    background: #f1f5f9;
+    border-color: var(--app-brand);
+  }
+}
+
+.share-link-icon {
+  font-size: 40rpx;
+}
+
+.share-link-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.share-link-title {
+  font-size: 22rpx;
+  color: var(--app-ink);
+}
+
+.share-link-desc {
+  font-size: 17rpx;
+  color: var(--app-muted);
+  margin-top: 4rpx;
+}
+
+.flex { display: flex; }
+.flex-column { display: flex; flex-direction: column; }
+.flex-1 { flex: 1; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.font-bold { font-weight: 800; }
+.text-brand { color: var(--app-brand); }
+.ml-2 { margin-left: 16rpx; }
+.mt-1 { margin-top: 8rpx; }
+.mt-2 { margin-top: 16rpx; }
+.mt-3 { margin-top: 24rpx; }
+.p-2 { padding: 16rpx; }
+.mb-2 { margin-bottom: 16rpx; }
 </style>

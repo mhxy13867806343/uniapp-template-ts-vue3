@@ -24,6 +24,7 @@ declare global {
   const createPinia: typeof import('pinia').createPinia
   const createRequest: typeof import('../hooks/requests').createRequest
   const createValidateResult: typeof import('../utils/validate').createValidateResult
+  const customComponents: typeof import('../utils/customComponents').customComponents
   const customRef: typeof import('vue').customRef
   const cycle: typeof import('../utils/poly').cycle
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
@@ -35,6 +36,7 @@ declare global {
   const exampleScenarios: typeof import('../utils/exampleScenarios').exampleScenarios
   const feedCategories: typeof import('../utils/waterfallFeeds').feedCategories
   const findComponent: typeof import('../utils/wotComponents').findComponent
+  const findCustomComponent: typeof import('../utils/customComponents').findCustomComponent
   const flatten: typeof import('../utils/poly').flatten
   const formatAddress: typeof import('../utils/format').formatAddress
   const formatBankCard: typeof import('../utils/format').formatBankCard
@@ -60,14 +62,18 @@ declare global {
   const get: typeof import('../utils/poly').get
   const getActivePinia: typeof import('pinia').getActivePinia
   const getActiveTabName: typeof import('../utils/tabbar').getActiveTabName
+  const getAppMessageShare: typeof import('../utils/share').getAppMessageShare
   const getComponentApi: typeof import('../utils/wotComponents').getComponentApi
   const getComponentCode: typeof import('../utils/wotComponents').getComponentCode
   const getCurrentInstance: typeof import('vue').getCurrentInstance
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
+  const getCustomComponentCode: typeof import('../utils/customComponents').getCustomComponentCode
+  const getCustomComponentScenes: typeof import('../utils/customComponents').getCustomComponentScenes
   const getFeedsByScene: typeof import('../utils/waterfallFeeds').getFeedsByScene
   const getPlatformInfo: typeof import('../utils/platform').getPlatformInfo
   const getSpecialLength: typeof import('../utils/format').getSpecialLength
+  const getTimelineShare: typeof import('../utils/share').getTimelineShare
   const getWaterfallFeed: typeof import('../utils/waterfallFeeds').getWaterfallFeed
   const groupBy: typeof import('../utils/poly').groupBy
   const h: typeof import('vue').h
@@ -151,6 +157,7 @@ declare global {
   const retry: typeof import('../utils/poly').retry
   const safeRun: typeof import('../utils/poly').safeRun
   const sample: typeof import('../utils/poly').sample
+  const saveImageToAlbum: typeof import('../utils/share').saveImageToAlbum
   const sceneTabs: typeof import('../utils/waterfallFeeds').sceneTabs
   const setActivePinia: typeof import('pinia').setActivePinia
   const setMapStoreSuffix: typeof import('pinia').setMapStoreSuffix
@@ -163,6 +170,7 @@ declare global {
   const storeToRefs: typeof import('pinia').storeToRefs
   const sum: typeof import('../utils/poly').sum
   const switchTabByName: typeof import('../utils/tabbar').switchTabByName
+  const systemShare: typeof import('../utils/share').systemShare
   const tabbarItems: typeof import('../utils/tabbar').tabbarItems
   const take: typeof import('../utils/poly').take
   const throttle: typeof import('../utils/poly').throttle
@@ -225,6 +233,9 @@ declare global {
   export type { CachePayload, CacheOptions } from '../utils/cache'
   import('../utils/cache')
   // @ts-ignore
+  export type { CustomComponentItem } from '../utils/customComponents'
+  import('../utils/customComponents')
+  // @ts-ignore
   export type { AppEnvMode } from '../utils/env'
   import('../utils/env')
   // @ts-ignore
@@ -239,6 +250,9 @@ declare global {
   // @ts-ignore
   export type { SafeRunResult } from '../utils/poly'
   import('../utils/poly')
+  // @ts-ignore
+  export type { ShareConfig } from '../utils/share'
+  import('../utils/share')
   // @ts-ignore
   export type { TabbarName, TabbarItem } from '../utils/tabbar'
   import('../utils/tabbar')
@@ -276,6 +290,7 @@ declare module 'vue' {
     readonly createPinia: UnwrapRef<typeof import('pinia')['createPinia']>
     readonly createRequest: UnwrapRef<typeof import('../hooks/requests')['createRequest']>
     readonly createValidateResult: UnwrapRef<typeof import('../utils/validate')['createValidateResult']>
+    readonly customComponents: UnwrapRef<typeof import('../utils/customComponents')['customComponents']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
     readonly cycle: UnwrapRef<typeof import('../utils/poly')['cycle']>
     readonly defineAsyncComponent: UnwrapRef<typeof import('vue')['defineAsyncComponent']>
@@ -287,6 +302,7 @@ declare module 'vue' {
     readonly exampleScenarios: UnwrapRef<typeof import('../utils/exampleScenarios')['exampleScenarios']>
     readonly feedCategories: UnwrapRef<typeof import('../utils/waterfallFeeds')['feedCategories']>
     readonly findComponent: UnwrapRef<typeof import('../utils/wotComponents')['findComponent']>
+    readonly findCustomComponent: UnwrapRef<typeof import('../utils/customComponents')['findCustomComponent']>
     readonly flatten: UnwrapRef<typeof import('../utils/poly')['flatten']>
     readonly formatAddress: UnwrapRef<typeof import('../utils/format')['formatAddress']>
     readonly formatBankCard: UnwrapRef<typeof import('../utils/format')['formatBankCard']>
@@ -312,14 +328,18 @@ declare module 'vue' {
     readonly get: UnwrapRef<typeof import('../utils/poly')['get']>
     readonly getActivePinia: UnwrapRef<typeof import('pinia')['getActivePinia']>
     readonly getActiveTabName: UnwrapRef<typeof import('../utils/tabbar')['getActiveTabName']>
+    readonly getAppMessageShare: UnwrapRef<typeof import('../utils/share')['getAppMessageShare']>
     readonly getComponentApi: UnwrapRef<typeof import('../utils/wotComponents')['getComponentApi']>
     readonly getComponentCode: UnwrapRef<typeof import('../utils/wotComponents')['getComponentCode']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getCurrentWatcher: UnwrapRef<typeof import('vue')['getCurrentWatcher']>
+    readonly getCustomComponentCode: UnwrapRef<typeof import('../utils/customComponents')['getCustomComponentCode']>
+    readonly getCustomComponentScenes: UnwrapRef<typeof import('../utils/customComponents')['getCustomComponentScenes']>
     readonly getFeedsByScene: UnwrapRef<typeof import('../utils/waterfallFeeds')['getFeedsByScene']>
     readonly getPlatformInfo: UnwrapRef<typeof import('../utils/platform')['getPlatformInfo']>
     readonly getSpecialLength: UnwrapRef<typeof import('../utils/format')['getSpecialLength']>
+    readonly getTimelineShare: UnwrapRef<typeof import('../utils/share')['getTimelineShare']>
     readonly getWaterfallFeed: UnwrapRef<typeof import('../utils/waterfallFeeds')['getWaterfallFeed']>
     readonly groupBy: UnwrapRef<typeof import('../utils/poly')['groupBy']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
@@ -403,6 +423,7 @@ declare module 'vue' {
     readonly retry: UnwrapRef<typeof import('../utils/poly')['retry']>
     readonly safeRun: UnwrapRef<typeof import('../utils/poly')['safeRun']>
     readonly sample: UnwrapRef<typeof import('../utils/poly')['sample']>
+    readonly saveImageToAlbum: UnwrapRef<typeof import('../utils/share')['saveImageToAlbum']>
     readonly sceneTabs: UnwrapRef<typeof import('../utils/waterfallFeeds')['sceneTabs']>
     readonly setActivePinia: UnwrapRef<typeof import('pinia')['setActivePinia']>
     readonly setMapStoreSuffix: UnwrapRef<typeof import('pinia')['setMapStoreSuffix']>
@@ -415,6 +436,7 @@ declare module 'vue' {
     readonly storeToRefs: UnwrapRef<typeof import('pinia')['storeToRefs']>
     readonly sum: UnwrapRef<typeof import('../utils/poly')['sum']>
     readonly switchTabByName: UnwrapRef<typeof import('../utils/tabbar')['switchTabByName']>
+    readonly systemShare: UnwrapRef<typeof import('../utils/share')['systemShare']>
     readonly tabbarItems: UnwrapRef<typeof import('../utils/tabbar')['tabbarItems']>
     readonly take: UnwrapRef<typeof import('../utils/poly')['take']>
     readonly throttle: UnwrapRef<typeof import('../utils/poly')['throttle']>

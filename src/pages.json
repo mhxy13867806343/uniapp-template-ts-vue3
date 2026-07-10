@@ -43,6 +43,12 @@
       }
     },
     {
+      "path": "pages/components/custom",
+      "style": {
+        "navigationBarTitleText": "自定义的组件"
+      }
+    },
+    {
       "path": "pages/examples/index",
       "style": {
         "navigationBarTitleText": "示例"
@@ -166,6 +172,18 @@
       "path": "pages/examples/share-poster",
       "style": {
         "navigationBarTitleText": "分享海报与面板"
+      }
+    },
+    {
+      "path": "pages/examples/share-wechat",
+      "style": {
+        "navigationBarTitleText": "微信社交生态分享"
+      }
+    },
+    {
+      "path": "pages/examples/share-system",
+      "style": {
+        "navigationBarTitleText": "OS 系统原生分享"
       }
     },
     {

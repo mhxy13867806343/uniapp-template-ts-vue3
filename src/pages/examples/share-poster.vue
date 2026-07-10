@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import PageShell from '@/components/PageShell.vue'
+import { saveImageToAlbum } from '@/utils/share'
 
 const toast = useToast('share-toast')
 
@@ -59,10 +60,10 @@ function triggerPosterGeneration() {
 }
 
 function savePoster() {
-  toast.loading('正在保存图片到相册...')
+  toast.loading('准备保存图片...')
   setTimeout(() => {
-    toast.success('已保存到相册 (Mock)')
-  }, 1000)
+    saveImageToAlbum('https://mhxy13867806343.github.io/uniapp-template-ts-vue3/logo.png')
+  }, 500)
 }
 
 function sharePosterDirectly() {
@@ -103,6 +104,48 @@ function sharePosterDirectly() {
               <text class="ml-2 font-bold">分享给好友</text>
             </view>
           </wd-button>
+        </view>
+      </view>
+
+      <!-- 1. Platform Compatibility Chart -->
+      <view class="compatibility-card-panel mt-3">
+        <view class="panel-header font-bold text-ink">
+          <text>🖼️ 海报生成与下载跨端兼容矩阵</text>
+        </view>
+        <view class="compatibility-table-grid mt-2">
+          <view class="table-row header-row">
+            <text class="cell platform">目标运行平台</text>
+            <text class="cell status">海报卡片保存/下载方式</text>
+          </view>
+          
+          <view class="table-row">
+            <text class="cell platform font-bold text-ink">微信小程序</text>
+            <text class="cell status support">🟢 完美支持 (授权直接写入系统相册)</text>
+          </view>
+
+          <view class="table-row">
+            <text class="cell platform font-bold text-ink">iOS / Android App</text>
+            <text class="cell status support">🟢 完美支持 (授权直接写入系统相册)</text>
+          </view>
+
+          <view class="table-row">
+            <text class="cell platform font-bold text-ink">移动端/桌面 H5 网页</text>
+            <text class="cell status support">🟢 支持 (长按保存 / 自动触发 Blob 文件下载)</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 2. Developer Code Section -->
+      <view class="developer-panel mt-3">
+        <view class="panel-header font-bold text-ink flex justify-between items-center mb-2">
+          <text>🧑‍💻 外部开发者调用方法</text>
+        </view>
+        <view class="developer-code-box">
+          <view class="code-line">// 导入保存到相册跨端封装方法</view>
+          <view class="code-line">import { saveImageToAlbum } from '@/utils/share'</view>
+          <view class="code-line"></view>
+          <view class="code-line">// 一键保存离屏 Canvas 生成的临时海报图片路径</view>
+          <view class="code-line">saveImageToAlbum(tempFilePath)</view>
         </view>
       </view>
 
@@ -218,6 +261,107 @@ function sharePosterDirectly() {
   position: relative;
   box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.03);
 }
+
+.card-badge {
+  position: absolute;
+  top: 24rpx;
+  left: 24rpx;
+  background: #ef4444;
+  color: #fff;
+  font-size: 22rpx;
+  font-weight: 900;
+  padding: 6rpx 16rpx;
+  border-radius: 999rpx;
+  z-index: 10;
+}
+
+:deep(.share-sheet-popup),
+:deep(.poster-popup-modal) {
+  background: transparent;
+  width: auto;
+}
+
+.compatibility-card-panel,
+.developer-panel {
+  background: #fff;
+  border: 1rpx solid var(--app-line);
+  border-radius: 16rpx;
+  padding: 28rpx;
+  text-align: left;
+}
+
+.compatibility-table-grid {
+  display: flex;
+  flex-direction: column;
+  border: 1rpx solid var(--app-line);
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+
+.table-row {
+  display: flex;
+  border-bottom: 1rpx solid var(--app-line);
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &.header-row {
+    background: #f8fafc;
+    font-weight: 800;
+  }
+}
+
+.cell {
+  flex: 1;
+  padding: 16rpx 12rpx;
+  font-size: 19rpx;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &.platform {
+    border-right: 1rpx solid var(--app-line);
+    text-align: left;
+    justify-content: flex-start;
+  }
+}
+
+.cell.status {
+  font-size: 17rpx;
+  color: #16a34a;
+}
+
+.developer-code-box {
+  background: #0f172a;
+  border-radius: 14rpx;
+  padding: 20rpx 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.code-line {
+  font-family: monospace;
+  font-size: 16rpx;
+  color: #cbd5e1;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.flex { display: flex; }
+.flex-column { display: flex; flex-direction: column; }
+.flex-1 { flex: 1; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.font-bold { font-weight: 800; }
+.text-brand { color: var(--app-brand); }
+.ml-2 { margin-left: 16rpx; }
+.mt-1 { margin-top: 8rpx; }
+.mt-2 { margin-top: 16rpx; }
+.mt-3 { margin-top: 24rpx; }
 
 .card-badge {
   position: absolute;
