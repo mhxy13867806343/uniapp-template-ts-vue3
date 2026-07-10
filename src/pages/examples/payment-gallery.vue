@@ -160,12 +160,98 @@ const selectedRechargeAmount = ref(200)
 const rechargeGrid = [100, 200, 500, 1000, 2000, 5000]
 const customRechargeVal = ref('')
 const selectedRechargeBank = ref('cmb') // cmb, ccb, wechat, alipay
-const rechargeBankOptions = [
+const rechargeBankOptions = ref([
   { id: 'cmb', name: '招商银行 借记卡 (7018)', desc: '单笔限额 ¥50,000', icon: '🔴' },
   { id: 'ccb', name: '建设银行 信用卡 (9921)', desc: '单笔限额 ¥100,000', icon: '🔵' },
   { id: 'wechat', name: '微信支付', desc: '免密快速扣款', icon: '💬' },
   { id: 'alipay', name: '支付宝', desc: '支付宝免密扣款', icon: '🔹' }
-]
+])
+
+// Add Bank Card states
+const showAddCardPopup = ref(false)
+const newCardForm = reactive({
+  cardNo: '',
+  bankName: '招商银行',
+  holderName: '',
+  phone: '',
+  smsCode: ''
+})
+const cardBankList = ['招商银行', '工商银行', '农业银行', '建设银行', '中国银行', '交通银行', '浦发银行']
+const showSmsCountdown = ref(false)
+const smsTime = ref(60)
+let smsTimer: any = null
+
+function triggerSmsCode() {
+  if (!/^1[3-9]\d{9}$/.test(newCardForm.phone)) {
+    toast.warning('请输入正确的手机号')
+    return
+  }
+  showSmsCountdown.value = true
+  smsTime.value = 60
+  clearInterval(smsTimer)
+  smsTimer = setInterval(() => {
+    if (smsTime.value > 0) {
+      smsTime.value--
+    } else {
+      showSmsCountdown.value = false
+      clearInterval(smsTimer)
+    }
+  }, 1000)
+  toast.success('验证码已发送至预留手机')
+}
+
+function handleAddCardConfirm() {
+  if (!newCardForm.cardNo.trim() || newCardForm.cardNo.length < 15) {
+    toast.warning('请输入有效的银行卡号')
+    return
+  }
+  if (!newCardForm.holderName.trim()) {
+    toast.warning('请输入持卡人姓名')
+    return
+  }
+  if (!newCardForm.smsCode.trim()) {
+    toast.warning('请输入验证码')
+    return
+  }
+
+  const lastDigits = newCardForm.cardNo.slice(-4)
+  rechargeBankOptions.value.unshift({
+    id: `custom_${Date.now()}`,
+    name: `${newCardForm.bankName} (${lastDigits})`,
+    desc: `持卡人: ${newCardForm.holderName}`,
+    icon: '💳'
+  })
+
+  // Set as active selected bank
+  selectedRechargeBank.value = rechargeBankOptions.value[0].id
+
+  // Close and reset form
+  showAddCardPopup.value = false
+  newCardForm.cardNo = ''
+  newCardForm.holderName = ''
+  newCardForm.phone = ''
+  newCardForm.smsCode = ''
+  showSmsCountdown.value = false
+  clearInterval(smsTimer)
+
+  toast.success(`成功绑定 ${newCardForm.bankName} 账户 (尾号${lastDigits})`)
+}
+
+// Peer Pay (Friend Pay) states
+const showPeerPayPopup = ref(false)
+const peerPayLink = computed(() => {
+  return `https://mhxy13867806343.github.io/uniapp-template-ts-vue3/#/pages/examples/payment-gallery?peer_pay=1&order_no=${orderNo}&amount=${orderPrice}`
+})
+
+function copyPeerPayLink() {
+  uni.setClipboardData({
+    data: peerPayLink.value,
+    success: () => {
+      toast.success('好友代付链接复制成功，去分享吧')
+      showPeerPayPopup.value = false
+    }
+  })
+}
 
 function handleRecharge(amount: number) {
   selectedRechargeAmount.value = amount
@@ -186,7 +272,7 @@ function confirmRecharge() {
     return
   }
   balance.value += amt
-  const bankName = rechargeBankOptions.find(b => b.id === selectedRechargeBank.value)?.name || '外部账户'
+  const bankName = rechargeBankOptions.value.find(b => b.id === selectedRechargeBank.value)?.name || '外部账户'
   toast.success(`通过 [${bankName}] 成功充值 ¥${amt}，尊享卡当前余额 ¥${balance.value}`)
 }
 
@@ -346,9 +432,10 @@ onUnload(() => {
             </view>
           </view>
 
-          <!-- Submit Payment button -->
-          <view class="cashier-action-bar mt-4">
-            <wd-button type="primary" block @click="handleCashierPay">立即支付 ¥{{ orderPrice.toFixed(2) }}</wd-button>
+          <!-- Submit Payment & Friend Pay button -->
+          <view class="cashier-action-bar mt-4 flex">
+            <wd-button type="primary" class="flex-1" @click="handleCashierPay">立即支付 ¥{{ orderPrice.toFixed(2) }}</wd-button>
+            <wd-button type="warning" plain class="flex-1 ml-2" @click="showPeerPayPopup = true">👥 找好友代付</wd-button>
           </view>
         </view>
 
@@ -495,7 +582,10 @@ onUnload(() => {
 
             <!-- Recharge payment bank sources picker -->
             <view class="recharge-sources-panel mt-3">
-              <view class="recharge-title font-bold mb-2">选择扣款账户</view>
+              <view class="recharge-title font-bold mb-2 flex justify-between items-center">
+                <text>选择扣款账户</text>
+                <text class="add-bank-cell-trigger font-bold text-brand" @click="showAddCardPopup = true">+ 添加新银行卡</text>
+              </view>
               <view class="recharge-sources-list">
                 <view
                   v-for="bank in rechargeBankOptions"
@@ -648,6 +738,96 @@ onUnload(() => {
         </view>
       </wd-popup>
 
+      <!-- PEER PAY (FRIEND PAY) GENERATED DIALOG POPUP MODAL -->
+      <wd-popup
+        v-model="showPeerPayPopup"
+        position="center"
+        root-portal
+        custom-class="peer-pay-center-popup"
+        :z-index="1300"
+      >
+        <view class="peer-pay-container text-center flex-column items-center">
+          <text class="peer-pay-header-icon">👥</text>
+          <view class="peer-pay-title font-bold text-ink mt-2">已为您生成好友代付链接</view>
+          <view class="peer-pay-subtitle mt-1">发给微信好友，由朋友替您付清此账单</view>
+
+          <!-- QR Code mockup of peer pay -->
+          <view class="peer-qr-box mt-3 flex items-center justify-center">
+            <view class="simulated-qr-pixels">
+              <view class="qr-corner-square top-left" style="border-color: #f59e0b;"></view>
+              <view class="qr-corner-square top-right" style="border-color: #f59e0b;"></view>
+              <view class="qr-corner-square bottom-left" style="border-color: #f59e0b;"></view>
+              <view class="qr-center-box" style="border-color: #f59e0b; font-size: 24rpx;">👥</view>
+            </view>
+          </view>
+          <text class="peer-amount-lbl mt-2 font-bold text-ink">代付总计金额：¥ {{ orderPrice.toFixed(2) }}</text>
+
+          <!-- Mock Actions -->
+          <view class="peer-actions-group mt-3 flex">
+            <wd-button type="neutral" plain @click="showPeerPayPopup = false">取消</wd-button>
+            <wd-button type="warning" class="ml-2" @click="copyPeerPayLink">复制代付链接</wd-button>
+          </view>
+        </view>
+      </wd-popup>
+
+      <!-- ADD NEW BANK CARD SHEET POPUP -->
+      <wd-popup
+        v-model="showAddCardPopup"
+        position="bottom"
+        root-portal
+        custom-class="add-card-bottom-popup"
+        :z-index="1300"
+      >
+        <view class="add-card-container">
+          <view class="pop-header flex justify-between items-center">
+            <text class="pop-title font-bold text-ink">绑定新储蓄卡/信用卡</text>
+            <wd-icon name="close" size="20px" class="close-icon" @click="showAddCardPopup = false" />
+          </view>
+
+          <view class="add-card-form mt-3">
+            <view class="form-input-row">
+              <text class="field-label font-bold">持卡人姓名</text>
+              <input v-model="newCardForm.holderName" placeholder="请填入持卡人法定真实姓名" class="card-native-input mt-1" />
+            </view>
+
+            <view class="form-input-row mt-2">
+              <text class="field-label font-bold">所属银行</text>
+              <picker :range="cardBankList" @change="newCardForm.bankName = cardBankList[$event.detail.value]" class="card-native-picker mt-1">
+                <view class="picker-inner-box flex justify-between items-center">
+                  <text class="picker-val font-bold text-ink">{{ newCardForm.bankName }}</text>
+                  <wd-icon name="arrow-down" size="14px" />
+                </view>
+              </picker>
+            </view>
+
+            <view class="form-input-row mt-2">
+              <text class="field-label font-bold">银行卡号</text>
+              <input v-model="newCardForm.cardNo" type="number" placeholder="请输入 16-19 位卡面数字" class="card-native-input mt-1" />
+            </view>
+
+            <view class="form-input-row mt-2">
+              <text class="field-label font-bold">银行预留手机号</text>
+              <input v-model="newCardForm.phone" type="number" maxlength="11" placeholder="请输入发卡行绑定的密保手机" class="card-native-input mt-1" />
+            </view>
+
+            <view class="form-input-row mt-2">
+              <text class="field-label font-bold">短信校验码</text>
+              <view class="sms-code-input-row flex items-center mt-1">
+                <input v-model="newCardForm.smsCode" type="number" maxlength="6" placeholder="请输入验证码" class="card-native-input flex-1" />
+                <wd-button size="small" type="primary" class="ml-2 sms-trigger-btn" :disabled="showSmsCountdown" @click="triggerSmsCode">
+                  {{ showSmsCountdown ? smsTime + 's后获取' : '获取验证码' }}
+                </wd-button>
+              </view>
+            </view>
+          </view>
+
+          <!-- Confirm buttons -->
+          <view class="add-card-actions mt-4">
+            <wd-button type="warning" block @click="handleAddCardConfirm">确认并绑定该银行卡</wd-button>
+          </view>
+        </view>
+      </wd-popup>
+
     </view>
   </PageShell>
 </template>
@@ -657,6 +837,111 @@ onUnload(() => {
   display: flex;
   flex-direction: column;
   gap: 24rpx;
+}
+
+/* Peer Pay Dialog styles */
+:deep(.peer-pay-center-popup) {
+  background: transparent;
+  width: auto;
+}
+
+.peer-pay-container {
+  width: 580rpx;
+  background: #fff;
+  border-radius: 28rpx;
+  padding: 40rpx;
+  box-sizing: border-box;
+  box-shadow: 0 12rpx 36rpx rgba(0,0,0,0.15);
+}
+
+.peer-pay-header-icon {
+  font-size: 80rpx;
+}
+
+.peer-pay-title {
+  font-size: 26rpx;
+}
+
+.peer-pay-subtitle {
+  font-size: 19rpx;
+  color: var(--app-muted);
+}
+
+.peer-qr-box {
+  width: 180rpx;
+  height: 180rpx;
+  border: 4rpx solid #f59e0b;
+  border-radius: 16rpx;
+  background: #fffbeb;
+  position: relative;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.peer-qr-box .simulated-qr-pixels {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.peer-amount-lbl {
+  font-size: 22rpx;
+}
+
+/* Add Bank Card Bottom sheet styles */
+:deep(.add-card-bottom-popup) {
+  background: transparent;
+  width: auto;
+}
+
+.add-card-container {
+  width: 100vw;
+  background: #fff;
+  border-top-left-radius: 28rpx;
+  border-top-right-radius: 28rpx;
+  padding: 32rpx;
+  box-sizing: border-box;
+  box-shadow: 0 -12rpx 36rpx rgba(0,0,0,0.1);
+}
+
+.add-bank-cell-trigger {
+  font-size: 19rpx;
+  cursor: pointer;
+  
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.form-input-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-native-input {
+  background: #f8fafc;
+  border: 1rpx solid var(--app-line);
+  border-radius: 12rpx;
+  padding: 16rpx 20rpx;
+  font-size: 20rpx;
+  color: var(--app-ink);
+}
+
+.card-native-picker {
+  background: #f8fafc;
+  border: 1rpx solid var(--app-line);
+  border-radius: 12rpx;
+  padding: 16rpx 20rpx;
+}
+
+.picker-inner-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.picker-val {
+  font-size: 20rpx;
 }
 
 /* QR Code channel tabs */
