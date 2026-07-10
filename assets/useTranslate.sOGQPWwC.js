@@ -1,0 +1,1 @@
+import{M as s,G as e,s as t,i as r}from"./PageShell.vue_vue_type_script_setup_true_lang.CyPwA_OT.js";import{L as a}from"./index.VKBd-oL7.js";const n=n=>{const o=n?s(n)+".":"";return{translate:(s,...n)=>{const u=a.messages(),_=e(u,o+s);return t(_)?_(...n):r(_)?_:`${o}${s}`}}};export{n as u};
