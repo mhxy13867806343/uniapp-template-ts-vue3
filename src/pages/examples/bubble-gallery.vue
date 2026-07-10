@@ -428,7 +428,28 @@ function randomizeValue() {
         </view>
       </view>
 
-      <!-- 2. Controls Panel -->
+      <!-- 2. Styles Selector List (Horizontal Swipe) -->
+      <view class="style-selector-section mt-3">
+        <view class="section-head font-bold text-white mb-2 flex justify-between items-center">
+          <text>🔮 22 种极客特效切选 (左右滑动)</text>
+          <text class="text-muted text-xs">← 左右滑动浏览 →</text>
+        </view>
+        <scroll-view class="horizontal-style-scroll" scroll-x="true" show-scrollbar="false">
+          <view class="horizontal-scroll-content">
+            <view
+              v-for="item in stylesList"
+              :key="item.id"
+              :class="['style-card-item-horizontal', { active: activeStyle === item.id }]"
+              @click="selectStyle(item.id)"
+            >
+              <view class="style-card-name font-bold">{{ item.name }}</view>
+              <view class="style-card-desc">{{ item.desc }}</view>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+
+      <!-- 3. Controls Panel -->
       <view class="control-panel-section mt-3">
         <view class="flex justify-between items-center mb-3">
           <text class="control-label font-bold text-white">🎛️ 调试控制面板</text>
@@ -482,24 +503,6 @@ function randomizeValue() {
             <text class="text-red font-bold">{{ warningThreshold }}%</text>
           </view>
           <wd-slider v-model="warningThreshold" :min="10" :max="95" />
-        </view>
-      </view>
-
-      <!-- 3. Styles Selector List -->
-      <view class="style-selector-section mt-3">
-        <view class="section-head font-bold text-white mb-2">
-          <text>🔮 20 种不同视觉效果选择</text>
-        </view>
-        <view class="style-cards-grid">
-          <view
-            v-for="item in stylesList"
-            :key="item.id"
-            :class="['style-card-item', { active: activeStyle === item.id }]"
-            @click="selectStyle(item.id)"
-          >
-            <view class="style-card-name font-bold">{{ item.name }}</view>
-            <view class="style-card-desc">{{ item.desc }}</view>
-          </view>
         </view>
       </view>
 
@@ -1152,24 +1155,37 @@ function randomizeValue() {
   padding: 30rpx;
 }
 
-.style-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+.horizontal-style-scroll {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.horizontal-scroll-content {
+  display: flex;
+  flex-direction: row;
+  padding: 10rpx 4rpx;
   gap: 16rpx;
 }
 
-.style-card-item {
+.style-card-item-horizontal {
+  flex-shrink: 0;
+  width: 290rpx;
   border: 1rpx solid #334155;
   border-radius: 12rpx;
   background: #0f172a;
-  padding: 22rpx;
+  padding: 18rpx;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: normal;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   
   &.active {
     border-color: var(--app-brand);
-    background: rgba(39, 86, 216, 0.1);
-    box-shadow: 0 0 12rpx rgba(39, 86, 216, 0.2);
+    background: rgba(39, 86, 216, 0.15);
+    box-shadow: 0 0 12rpx rgba(39, 86, 216, 0.25);
     
     .style-card-name {
       color: var(--app-brand);
