@@ -4,30 +4,51 @@ import {
   ecommercePageCount,
   ecommercePages,
   ecommercePlatformSummaries,
-  ecommerceScenarioGroups,
+  ecommerceTerminalSummaries,
   getEcommercePagesByGroup,
-  getEcommercePagesByPlatform
+  getEcommercePagesByPlatform,
+  getEcommerceScenarioGroupsByTerminal
 } from '@/utils/ecommerceCatalog'
-import type { EcommercePlatformKey } from '@/utils/ecommerceCatalog'
+import type { EcommercePlatformKey, EcommerceTerminalKey } from '@/utils/ecommerceCatalog'
 
+const activeTerminal = ref<EcommerceTerminalKey | 'all'>('all')
 const activePlatform = ref<EcommercePlatformKey | 'all'>('all')
 const activeGroup = ref('all')
+
+const terminalTabs = [
+  { label: '全部端', value: 'all' },
+  ...ecommerceTerminalSummaries.map(item => ({ label: item.label, value: item.key }))
+]
 
 const platformTabs = [
   { label: '全部', value: 'all' },
   ...ecommercePlatformSummaries.map(item => ({ label: item.shortLabel, value: item.key }))
 ]
 
-const groupTabs = [
+const terminalCards = ecommerceTerminalSummaries
+
+const scopedPlatformSummaries = computed(() => ecommercePlatformSummaries.map(item => ({
+  ...item,
+  count: getEcommercePagesByGroup('all', item.key, activeTerminal.value).length
+})))
+
+const groupTabs = computed(() => [
   { label: '全部场景', value: 'all' },
-  ...ecommerceScenarioGroups.map(item => ({ label: item.label, value: item.key }))
-]
+  ...getEcommerceScenarioGroupsByTerminal(activeTerminal.value).map(item => ({ label: item.label, value: item.key }))
+])
+
+watch(activeTerminal, () => {
+  if (!groupTabs.value.some(item => item.value === activeGroup.value)) {
+    activeGroup.value = 'all'
+  }
+})
 
 const currentList = computed(() => {
   if (activeGroup.value === 'all') {
     return getEcommercePagesByPlatform(activePlatform.value)
+      .filter(item => activeTerminal.value === 'all' || item.terminalKey === activeTerminal.value)
   }
-  return getEcommercePagesByGroup(activeGroup.value, activePlatform.value)
+  return getEcommercePagesByGroup(activeGroup.value, activePlatform.value, activeTerminal.value)
 })
 
 const featuredPages = computed(() => currentList.value.slice(0, 24))
@@ -56,7 +77,26 @@ function randomOpen() {
 
       <view class="platform-grid">
         <view
-          v-for="item in ecommercePlatformSummaries"
+          v-for="item in terminalCards"
+          :key="item.key"
+          class="platform-card"
+          :style="{ background: item.surface, borderColor: item.accent }"
+        >
+          <view class="platform-head">
+            <view>
+              <view class="platform-title">{{ item.label }}</view>
+              <view class="platform-desc">{{ item.description }}</view>
+            </view>
+            <wd-tag plain>{{ item.count }} 页</wd-tag>
+          </view>
+          <view class="platform-actions">
+            <wd-button size="small" type="primary" @click="activeTerminal = item.key">筛选该端</wd-button>
+            <wd-button size="small" plain @click="openRoute(item.firstRoute)">打开一个页面</wd-button>
+          </view>
+        </view>
+
+        <view
+          v-for="item in scopedPlatformSummaries"
           :key="item.key"
           class="platform-card"
           :style="{ background: item.surface, borderColor: item.accent }"
@@ -82,9 +122,19 @@ function randomOpen() {
         </view>
         <view class="tab-row">
           <view
+            v-for="item in terminalTabs"
+            :key="item.value"
+            :class="['tab-chip', { active: activeTerminal === item.value }]"
+            @click="activeTerminal = item.value as EcommerceTerminalKey | 'all'"
+          >
+            {{ item.label }}
+          </view>
+        </view>
+        <view class="tab-row">
+          <view
             v-for="item in platformTabs"
             :key="item.value"
-            :class="['tab-chip', { active: activePlatform === item.value }]"
+            :class="['tab-chip tab-chip--platform', { active: activePlatform === item.value }]"
             @click="activePlatform = item.value as EcommercePlatformKey | 'all'"
           >
             {{ item.label }}
@@ -116,6 +166,7 @@ function randomOpen() {
           >
             <view class="scene-meta">
               <wd-tag plain>{{ item.platform.shortLabel }}</wd-tag>
+              <wd-tag type="success" plain>{{ item.terminalLabel }}</wd-tag>
               <wd-tag type="warning" plain>{{ item.groupLabel }}</wd-tag>
             </view>
             <view class="scene-title">{{ item.title }}</view>
@@ -226,6 +277,10 @@ function randomOpen() {
 .tab-chip--light {
   background: #eef2ff;
   color: var(--app-brand);
+}
+
+.tab-chip--platform {
+  background: #0f766e;
 }
 
 .tab-chip.active {

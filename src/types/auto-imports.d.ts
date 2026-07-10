@@ -32,6 +32,14 @@ declare global {
   const defineStore: typeof import('pinia').defineStore
   const difference: typeof import('../utils/poly').difference
   const drop: typeof import('../utils/poly').drop
+  const ecommercePageCount: typeof import('../utils/ecommerceCatalog').ecommercePageCount
+  const ecommercePageMap: typeof import('../utils/ecommerceCatalog').ecommercePageMap
+  const ecommercePages: typeof import('../utils/ecommerceCatalog').ecommercePages
+  const ecommercePlatformSummaries: typeof import('../utils/ecommerceCatalog').ecommercePlatformSummaries
+  const ecommercePlatforms: typeof import('../utils/ecommerceCatalog').ecommercePlatforms
+  const ecommerceScenarioGroups: typeof import('../utils/ecommerceCatalog').ecommerceScenarioGroups
+  const ecommerceTerminalSummaries: typeof import('../utils/ecommerceCatalog').ecommerceTerminalSummaries
+  const ecommerceTerminals: typeof import('../utils/ecommerceCatalog').ecommerceTerminals
   const effectScope: typeof import('vue').effectScope
   const exampleScenarios: typeof import('../utils/exampleScenarios').exampleScenarios
   const feedCategories: typeof import('../utils/waterfallFeeds').feedCategories
@@ -72,8 +80,14 @@ declare global {
   const getCustomComponentLevel: typeof import('../utils/customComponents').getCustomComponentLevel
   const getCustomComponentLevelLabel: typeof import('../utils/customComponents').getCustomComponentLevelLabel
   const getCustomComponentScenes: typeof import('../utils/customComponents').getCustomComponentScenes
+  const getEcommercePageById: typeof import('../utils/ecommerceCatalog').getEcommercePageById
+  const getEcommercePagesByGroup: typeof import('../utils/ecommerceCatalog').getEcommercePagesByGroup
+  const getEcommercePagesByPlatform: typeof import('../utils/ecommerceCatalog').getEcommercePagesByPlatform
+  const getEcommercePagesByTerminal: typeof import('../utils/ecommerceCatalog').getEcommercePagesByTerminal
+  const getEcommerceScenarioGroupsByTerminal: typeof import('../utils/ecommerceCatalog').getEcommerceScenarioGroupsByTerminal
   const getFeedsByScene: typeof import('../utils/waterfallFeeds').getFeedsByScene
   const getPlatformInfo: typeof import('../utils/platform').getPlatformInfo
+  const getRelatedEcommercePages: typeof import('../utils/ecommerceCatalog').getRelatedEcommercePages
   const getSpecialLength: typeof import('../utils/format').getSpecialLength
   const getTimelineShare: typeof import('../utils/share').getTimelineShare
   const getWaterfallFeed: typeof import('../utils/waterfallFeeds').getWaterfallFeed
@@ -243,6 +257,9 @@ declare global {
   export type { CustomComponentItem, CustomComponentLevel } from '../utils/customComponents'
   import('../utils/customComponents')
   // @ts-ignore
+  export type { EcommercePlatformKey, EcommerceTerminalKey, EcommercePlatform, EcommerceTerminal, EcommerceScenarioTemplate, EcommerceScenarioGroup, EcommerceScenePage } from '../utils/ecommerceCatalog'
+  import('../utils/ecommerceCatalog')
+  // @ts-ignore
   export type { AppEnvMode } from '../utils/env'
   import('../utils/env')
   // @ts-ignore
@@ -308,6 +325,14 @@ declare module 'vue' {
     readonly defineStore: UnwrapRef<typeof import('pinia')['defineStore']>
     readonly difference: UnwrapRef<typeof import('../utils/poly')['difference']>
     readonly drop: UnwrapRef<typeof import('../utils/poly')['drop']>
+    readonly ecommercePageCount: UnwrapRef<typeof import('../utils/ecommerceCatalog')['ecommercePageCount']>
+    readonly ecommercePageMap: UnwrapRef<typeof import('../utils/ecommerceCatalog')['ecommercePageMap']>
+    readonly ecommercePages: UnwrapRef<typeof import('../utils/ecommerceCatalog')['ecommercePages']>
+    readonly ecommercePlatformSummaries: UnwrapRef<typeof import('../utils/ecommerceCatalog')['ecommercePlatformSummaries']>
+    readonly ecommercePlatforms: UnwrapRef<typeof import('../utils/ecommerceCatalog')['ecommercePlatforms']>
+    readonly ecommerceScenarioGroups: UnwrapRef<typeof import('../utils/ecommerceCatalog')['ecommerceScenarioGroups']>
+    readonly ecommerceTerminalSummaries: UnwrapRef<typeof import('../utils/ecommerceCatalog')['ecommerceTerminalSummaries']>
+    readonly ecommerceTerminals: UnwrapRef<typeof import('../utils/ecommerceCatalog')['ecommerceTerminals']>
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
     readonly exampleScenarios: UnwrapRef<typeof import('../utils/exampleScenarios')['exampleScenarios']>
     readonly feedCategories: UnwrapRef<typeof import('../utils/waterfallFeeds')['feedCategories']>
@@ -348,8 +373,14 @@ declare module 'vue' {
     readonly getCustomComponentLevel: UnwrapRef<typeof import('../utils/customComponents')['getCustomComponentLevel']>
     readonly getCustomComponentLevelLabel: UnwrapRef<typeof import('../utils/customComponents')['getCustomComponentLevelLabel']>
     readonly getCustomComponentScenes: UnwrapRef<typeof import('../utils/customComponents')['getCustomComponentScenes']>
+    readonly getEcommercePageById: UnwrapRef<typeof import('../utils/ecommerceCatalog')['getEcommercePageById']>
+    readonly getEcommercePagesByGroup: UnwrapRef<typeof import('../utils/ecommerceCatalog')['getEcommercePagesByGroup']>
+    readonly getEcommercePagesByPlatform: UnwrapRef<typeof import('../utils/ecommerceCatalog')['getEcommercePagesByPlatform']>
+    readonly getEcommercePagesByTerminal: UnwrapRef<typeof import('../utils/ecommerceCatalog')['getEcommercePagesByTerminal']>
+    readonly getEcommerceScenarioGroupsByTerminal: UnwrapRef<typeof import('../utils/ecommerceCatalog')['getEcommerceScenarioGroupsByTerminal']>
     readonly getFeedsByScene: UnwrapRef<typeof import('../utils/waterfallFeeds')['getFeedsByScene']>
     readonly getPlatformInfo: UnwrapRef<typeof import('../utils/platform')['getPlatformInfo']>
+    readonly getRelatedEcommercePages: UnwrapRef<typeof import('../utils/ecommerceCatalog')['getRelatedEcommercePages']>
     readonly getSpecialLength: UnwrapRef<typeof import('../utils/format')['getSpecialLength']>
     readonly getTimelineShare: UnwrapRef<typeof import('../utils/share')['getTimelineShare']>
     readonly getWaterfallFeed: UnwrapRef<typeof import('../utils/waterfallFeeds')['getWaterfallFeed']>

@@ -340,6 +340,12 @@
       }
     },
     {
+      "path": "pages/framework/websocket",
+      "style": {
+        "navigationBarTitleText": "WebSocket 示例中心"
+      }
+    },
+    {
       "path": "pages/framework/styles",
       "style": {
         "navigationBarTitleText": "样式规范"

@@ -1,4 +1,5 @@
 export type EcommercePlatformKey = 'taobao' | 'jd' | 'pdd'
+export type EcommerceTerminalKey = 'user' | 'merchant' | 'marketing'
 
 export interface EcommercePlatform {
   key: EcommercePlatformKey
@@ -9,6 +10,14 @@ export interface EcommercePlatform {
   gradient: string
   tone: string
   description: string
+}
+
+export interface EcommerceTerminal {
+  key: EcommerceTerminalKey
+  label: string
+  description: string
+  accent: string
+  surface: string
 }
 
 export interface EcommerceScenarioTemplate {
@@ -23,6 +32,7 @@ export interface EcommerceScenarioGroup {
   key: string
   label: string
   description: string
+  terminalKey: EcommerceTerminalKey
   items: EcommerceScenarioTemplate[]
 }
 
@@ -30,6 +40,8 @@ export interface EcommerceScenePage {
   id: string
   route: string
   platform: EcommercePlatform
+  terminalKey: EcommerceTerminalKey
+  terminalLabel: string
   groupKey: string
   groupLabel: string
   groupDescription: string
@@ -79,11 +91,36 @@ export const ecommercePlatforms: EcommercePlatform[] = [
   }
 ]
 
+export const ecommerceTerminals: EcommerceTerminal[] = [
+  {
+    key: 'user',
+    label: '用户端',
+    description: '覆盖浏览、商品详情、下单、订单、会员和本地零售等消费者链路。',
+    accent: '#2563eb',
+    surface: '#eff6ff'
+  },
+  {
+    key: 'merchant',
+    label: '商家端',
+    description: '覆盖商品发布、订单处理、库存、客服、财务和经营分析等后台链路。',
+    accent: '#7c3aed',
+    surface: '#f5f3ff'
+  },
+  {
+    key: 'marketing',
+    label: '营销端',
+    description: '覆盖活动会场、裂变拉新、广告投放、招商生态和会员增长链路。',
+    accent: '#db2777',
+    surface: '#fdf2f8'
+  }
+]
+
 export const ecommerceScenarioGroups: EcommerceScenarioGroup[] = [
   {
     key: 'discovery',
     label: '逛会场与浏览',
     description: '覆盖首页推荐、搜索逛街、活动会场和内容浏览入口。',
+    terminalKey: 'user',
     items: [
       { slug: 'home-recommend', title: '首页推荐流', summary: '展示猜你喜欢、品牌活动和实时热卖内容。', primaryAction: '继续浏览', secondaryAction: '加入购物车' },
       { slug: 'search-results', title: '搜索结果页', summary: '支持综合排序、销量筛选和价格区间过滤。', primaryAction: '筛选商品', secondaryAction: '查看详情' },
@@ -100,6 +137,7 @@ export const ecommerceScenarioGroups: EcommerceScenarioGroup[] = [
     key: 'product',
     label: '商品详情与决策',
     description: '覆盖商品详情、规格选择、评价问答和搭配推荐。',
+    terminalKey: 'user',
     items: [
       { slug: 'product-detail', title: '商品详情页', summary: '聚合主图、卖点、券后价和服务承诺。', primaryAction: '立即购买', secondaryAction: '加入购物车' },
       { slug: 'sku-selector', title: '规格选择页', summary: '完成颜色、尺码、套装和库存判断。', primaryAction: '确认规格', secondaryAction: '继续挑选' },
@@ -116,6 +154,7 @@ export const ecommerceScenarioGroups: EcommerceScenarioGroup[] = [
     key: 'purchase',
     label: '下单与支付',
     description: '覆盖购物车、结算、地址、优惠券和支付收银台。',
+    terminalKey: 'user',
     items: [
       { slug: 'cart', title: '购物车页', summary: '管理待购商品、凑单商品和营销提醒。', primaryAction: '去结算', secondaryAction: '继续逛逛' },
       { slug: 'checkout-confirm', title: '确认订单页', summary: '确认地址、商品清单、配送方式和发票。', primaryAction: '提交订单', secondaryAction: '修改地址' },
@@ -132,6 +171,7 @@ export const ecommerceScenarioGroups: EcommerceScenarioGroup[] = [
     key: 'order',
     label: '订单与售后',
     description: '覆盖订单履约、物流追踪、评价和退款售后。',
+    terminalKey: 'user',
     items: [
       { slug: 'order-list', title: '订单列表页', summary: '按待付款、待发货和待收货分类展示。', primaryAction: '查看全部订单', secondaryAction: '筛选状态' },
       { slug: 'pending-payment', title: '待付款页', summary: '展示剩余支付时间和补贴失效提醒。', primaryAction: '去付款', secondaryAction: '取消订单' },
@@ -148,6 +188,7 @@ export const ecommerceScenarioGroups: EcommerceScenarioGroup[] = [
     key: 'store',
     label: '店铺与客服',
     description: '覆盖店铺首页、粉丝运营、直播和客服咨询。',
+    terminalKey: 'user',
     items: [
       { slug: 'store-home', title: '店铺首页页', summary: '展示店铺氛围、主推商品和会员权益。', primaryAction: '逛店铺', secondaryAction: '关注店铺' },
       { slug: 'store-category', title: '店铺分类页', summary: '按品类、价格带和新品状态筛选店铺商品。', primaryAction: '按分类逛', secondaryAction: '查看热销' },
@@ -164,6 +205,7 @@ export const ecommerceScenarioGroups: EcommerceScenarioGroup[] = [
     key: 'marketing',
     label: '营销与活动',
     description: '覆盖大促会场、红包任务、券中心和裂变拉新。',
+    terminalKey: 'marketing',
     items: [
       { slug: 'campaign-main', title: '大促主会场页', summary: '承接双11、618等大促活动总入口。', primaryAction: '逛主会场', secondaryAction: '查看时间表' },
       { slug: 'campaign-seckill', title: '秒杀会场页', summary: '按时间场次展示爆品和库存进度。', primaryAction: '抢爆品', secondaryAction: '提醒我' },
@@ -180,6 +222,7 @@ export const ecommerceScenarioGroups: EcommerceScenarioGroup[] = [
     key: 'content',
     label: '内容与社区',
     description: '覆盖买家秀、短视频、榜单、话题和收藏历史。',
+    terminalKey: 'user',
     items: [
       { slug: 'buyer-show', title: '买家秀页', summary: '聚合真实晒图、短视频和真实体验反馈。', primaryAction: '查看晒图', secondaryAction: '发布买家秀' },
       { slug: 'video-discovery', title: '短视频种草页', summary: '以短视频流承载商品种草和带货转化。', primaryAction: '刷视频', secondaryAction: '查看商品' },
@@ -196,6 +239,7 @@ export const ecommerceScenarioGroups: EcommerceScenarioGroup[] = [
     key: 'account',
     label: '会员与账户',
     description: '覆盖钱包、地址、消息、发票和安全中心。',
+    terminalKey: 'user',
     items: [
       { slug: 'wallet', title: '我的钱包页', summary: '查看余额、红包、礼品卡和支付工具。', primaryAction: '查看资产', secondaryAction: '去充值' },
       { slug: 'member-center', title: '会员中心页', summary: '展示会员等级、成长值和专属礼包。', primaryAction: '升级会员', secondaryAction: '查看权益' },
@@ -212,6 +256,7 @@ export const ecommerceScenarioGroups: EcommerceScenarioGroup[] = [
     key: 'local',
     label: '本地零售与服务',
     description: '覆盖同城到家、门店自提、安装维修和本地团购。',
+    terminalKey: 'user',
     items: [
       { slug: 'local-delivery', title: '同城到家页', summary: '展示附近仓店、预计送达和运力状态。', primaryAction: '立即下单', secondaryAction: '选择地址' },
       { slug: 'supermarket-delivery', title: '外卖超市页', summary: '承载生鲜、快消和即时零售购物。', primaryAction: '加入购物车', secondaryAction: '查看优惠' },
@@ -228,6 +273,7 @@ export const ecommerceScenarioGroups: EcommerceScenarioGroup[] = [
     key: 'merchant',
     label: '商家经营后台',
     description: '覆盖商品、订单、库存、营销和客服分流。',
+    terminalKey: 'merchant',
     items: [
       { slug: 'merchant-dashboard', title: '商家工作台页', summary: '汇总销售额、转化率和异常提醒。', primaryAction: '查看经营看板', secondaryAction: '处理待办' },
       { slug: 'merchant-publish', title: '商品发布页', summary: '完成商品信息、类目属性和图文详情发布。', primaryAction: '发布商品', secondaryAction: '保存草稿' },
@@ -244,6 +290,7 @@ export const ecommerceScenarioGroups: EcommerceScenarioGroup[] = [
     key: 'finance',
     label: '结算与资金',
     description: '覆盖商家收益、账单、提现、佣金和保证金。',
+    terminalKey: 'merchant',
     items: [
       { slug: 'revenue-center', title: '收益中心页', summary: '查看日收入、渠道收入和退货影响。', primaryAction: '查看收益', secondaryAction: '导出明细' },
       { slug: 'statement-list', title: '对账单页', summary: '按周期展示订单收入和服务费。', primaryAction: '下载账单', secondaryAction: '筛选账期' },
@@ -260,6 +307,7 @@ export const ecommerceScenarioGroups: EcommerceScenarioGroup[] = [
     key: 'ecosystem',
     label: '平台招商与生态',
     description: '覆盖招商、广告投放、服务市场、私域和 AI 选品。',
+    terminalKey: 'marketing',
     items: [
       { slug: 'merchant-entry', title: '开店入驻页', summary: '引导品牌、商家完成入驻资料与流程。', primaryAction: '立即入驻', secondaryAction: '查看要求' },
       { slug: 'brand-recruit', title: '品牌招商页', summary: '展示平台招商政策、类目机会和招商经理。', primaryAction: '提交意向', secondaryAction: '预约沟通' },
@@ -273,6 +321,10 @@ export const ecommerceScenarioGroups: EcommerceScenarioGroup[] = [
     ]
   }
 ]
+
+const terminalLabelMap = Object.fromEntries(
+  ecommerceTerminals.map(item => [item.key, item.label])
+) as Record<EcommerceTerminalKey, string>
 
 function toMetric(value: number, suffix = '') {
   return `${value}${suffix}`
@@ -304,6 +356,8 @@ export const ecommercePages: EcommerceScenePage[] = ecommercePlatforms.flatMap((
         id: `${platform.key}-${item.slug}`,
         route: `/pages/ecommerce/${platform.key}/${item.slug}`,
         platform,
+        terminalKey: group.terminalKey,
+        terminalLabel: terminalLabelMap[group.terminalKey],
         groupKey: group.key,
         groupLabel: group.label,
         groupDescription: group.description,
@@ -347,6 +401,15 @@ export const ecommercePlatformSummaries = ecommercePlatforms.map(platform => {
   }
 })
 
+export const ecommerceTerminalSummaries = ecommerceTerminals.map(terminal => {
+  const pages = ecommercePages.filter(page => page.terminalKey === terminal.key)
+  return {
+    ...terminal,
+    count: pages.length,
+    firstRoute: pages[0]?.route || '/pages/ecommerce/index'
+  }
+})
+
 export function getEcommercePageById(id: string) {
   return ecommercePageMap.get(id) || ecommercePages[0]
 }
@@ -356,8 +419,24 @@ export function getEcommercePagesByPlatform(platformKey: EcommercePlatformKey | 
   return ecommercePages.filter(page => page.platform.key === platformKey)
 }
 
-export function getEcommercePagesByGroup(groupKey: string, platformKey: EcommercePlatformKey | 'all' = 'all') {
-  return getEcommercePagesByPlatform(platformKey).filter(page => groupKey === 'all' || page.groupKey === groupKey)
+export function getEcommercePagesByTerminal(terminalKey: EcommerceTerminalKey | 'all') {
+  if (terminalKey === 'all') return ecommercePages
+  return ecommercePages.filter(page => page.terminalKey === terminalKey)
+}
+
+export function getEcommercePagesByGroup(
+  groupKey: string,
+  platformKey: EcommercePlatformKey | 'all' = 'all',
+  terminalKey: EcommerceTerminalKey | 'all' = 'all'
+) {
+  return getEcommercePagesByTerminal(terminalKey)
+    .filter(page => platformKey === 'all' || page.platform.key === platformKey)
+    .filter(page => groupKey === 'all' || page.groupKey === groupKey)
+}
+
+export function getEcommerceScenarioGroupsByTerminal(terminalKey: EcommerceTerminalKey | 'all') {
+  if (terminalKey === 'all') return ecommerceScenarioGroups
+  return ecommerceScenarioGroups.filter(group => group.terminalKey === terminalKey)
 }
 
 export function getRelatedEcommercePages(page: EcommerceScenePage, limit = 6) {

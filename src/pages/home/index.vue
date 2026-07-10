@@ -6,7 +6,7 @@ import { usePagePagination, useStepPagination } from '@/hooks/pagination'
 import { usePlatform } from '@/hooks/usePlatform'
 import { useAppStore } from '@/store'
 import { appCache } from '@/utils/cache'
-import { ecommercePageCount, ecommercePlatformSummaries } from '@/utils/ecommerceCatalog'
+import { ecommercePageCount, ecommercePlatformSummaries, ecommerceTerminalSummaries } from '@/utils/ecommerceCatalog'
 import { navigateToExample } from '@/utils/exampleScenarios'
 import {
   formatAddress,
@@ -31,7 +31,6 @@ import {
   truncateBySpecialLength
 } from '@/utils/format'
 import { isBankCard, isEmail, isIdCard, isPhone, isStrongPassword } from '@/utils/validate'
-import { getAppMessageShare, getTimelineShare, systemShare } from '@/utils/share'
 import { onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 
 const appStore = useAppStore()
@@ -66,10 +65,11 @@ const channels = [
 ]
 
 const ecommercePlatforms = ecommercePlatformSummaries
+const ecommerceTerminals = ecommerceTerminalSummaries
 
 const pagePagination = usePagePagination({ page: 2, pageSize: 10, total: 58 })
 const stepPagination = useStepPagination({ offset: 20, step: 20, total: 86 })
-const backRefresh = useBackRefresh('home-demo')
+useBackRefresh('home-demo')
 const sampleText = 'UniApp模板🚀#H5小程序'
 const cacheDemoKey = 'home:tools'
 
@@ -229,8 +229,17 @@ const shareConfig = {
   imageUrl: 'https://mhxy13867806343.github.io/uniapp-template-ts-vue3/logo.png'
 }
 
-onShareAppMessage(() => getAppMessageShare(shareConfig))
-onShareTimeline(() => getTimelineShare(shareConfig))
+onShareAppMessage(() => ({
+  title: shareConfig.title,
+  path: shareConfig.path,
+  imageUrl: shareConfig.imageUrl
+}))
+
+onShareTimeline(() => ({
+  title: shareConfig.title,
+  query: shareConfig.path.includes('?') ? shareConfig.path.split('?')[1] : '',
+  imageUrl: shareConfig.imageUrl
+}))
 
 function navToSharePage(type: 'wechat' | 'system' | 'poster') {
   const urlMap = {
@@ -260,6 +269,12 @@ function navToBubbleGallery() {
   })
 }
 
+function navToWebsocketPage() {
+  uni.navigateTo({
+    url: '/pages/framework/websocket'
+  })
+}
+
 function navToEcommerceZone() {
   uni.navigateTo({
     url: '/pages/ecommerce/index'
@@ -269,26 +284,6 @@ function navToEcommerceZone() {
 function navToEcommercePage(url: string) {
   uni.navigateTo({
     url
-  })
-}
-
-function triggerSystemShare() {
-  systemShare(shareConfig)
-}
-
-function copyCodeSnippet() {
-  uni.setClipboardData({
-    data: `import { getAppMessageShare, getTimelineShare, systemShare } from '@/utils/share'
-
-// 微信小程序页面内配置：
-onShareAppMessage(() => getAppMessageShare({ title: '分享标题', path: '/pages/home/index' }))
-onShareTimeline(() => getTimelineShare({ title: '分享标题', path: '/pages/home/index' }))
-
-// App/H5唤起系统分享：
-systemShare({ title: '分享标题', path: '/pages/home/index' })`,
-    success: () => {
-      uni.showToast({ title: '代码片段已复制', icon: 'success' })
-    }
   })
 }
 
@@ -363,6 +358,12 @@ appStore.markReady()
           新增淘宝、京东、拼多多三大电商平台页面矩阵，覆盖浏览、商品详情、购物车、下单、支付、订单、售后、店铺、营销、商家后台等高频链路。
         </view>
 
+        <view class="ecommerce-terminal-row">
+          <view v-for="item in ecommerceTerminals" :key="item.key" class="ecommerce-terminal-chip">
+            {{ item.label }} · {{ item.count }} 页
+          </view>
+        </view>
+
         <view class="ecommerce-platform-grid">
           <view
             v-for="item in ecommercePlatforms"
@@ -421,6 +422,29 @@ appStore.markReady()
               <view class="hook-desc">{{ item.desc }}</view>
             </view>
             <wd-tag plain>{{ item.value }}</wd-tag>
+          </view>
+        </view>
+      </view>
+
+      <view class="panel-section bottom-share-section mt-3">
+        <view class="section-head font-bold mb-2">
+          <text>🔌 WebSocket 示例中心</text>
+          <wd-tag type="primary">6种 tabs 示例</wd-tag>
+        </view>
+        <view class="share-desc-info mb-3">
+          从首页直接进入统一的 WebSocket 实验页，通过 tabs 切换基础连接、聊天室、心跳保活、订单状态、价格推送、在线状态同步 6 种场景。
+        </view>
+
+        <view class="share-links-list flex-column">
+          <view class="share-link-row flex justify-between items-center p-2" @click="navToWebsocketPage">
+            <view class="flex items-center">
+              <text class="share-link-icon">🛰️</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">进入 WebSocket 示例页</text>
+                <text class="share-link-desc">支持连接、重连、断开、自定义消息发送和日志查看，tabs 下切换 6 种 ws 示例。</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
           </view>
         </view>
       </view>
@@ -705,6 +729,22 @@ appStore.markReady()
 .ecommerce-platform-grid {
   display: grid;
   gap: 20rpx;
+}
+
+.ecommerce-terminal-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14rpx;
+  margin-bottom: 18rpx;
+}
+
+.ecommerce-terminal-chip {
+  padding: 12rpx 18rpx;
+  border-radius: 999rpx;
+  background: #eef2ff;
+  color: var(--app-brand);
+  font-size: 23rpx;
+  font-weight: 700;
 }
 
 .ecommerce-platform-card {
