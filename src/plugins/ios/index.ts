@@ -1,11 +1,55 @@
-import { browserShare, copySharePayload, createLocationApis, createModalApis, getMockDeviceInfo, mapAppShareProvider, mapAppShareScene, mapPaymentProvider, requestUniPayment, simulatePayment } from '../shared'
+import { copySharePayload, createLocationApis, createModalApis, getMockDeviceInfo, mapAppShareProvider, mapAppShareScene, mapPaymentProvider, requestUniPayment, simulatePayment } from '../shared'
 import type { PaymentPayload, PlatformPlugins, PluginResult, SharePayload } from '../types'
 
-export function getIOSHardwareInfo() {
-  return getMockDeviceInfo(typeof plus !== 'undefined' ? 'iOS Native' : 'iOS Mock')
+export function getIosHardwareInfo(): string {
+  // #ifdef APP-PLUS
+  try {
+    const DevicePluginClass = plus.ios.importClass("DevicePlugin");
+    if (DevicePluginClass) {
+      return (DevicePluginClass as any).getHardwareInfo();
+    }
+  } catch (e: any) {
+    return `iOS (HTML5+ Bridge Fallback: ${e.message || e})`;
+  }
+  // #endif
+
+  const info = uni.getSystemInfoSync();
+  return `iOS Mock: ${info.model} (iPhone OS 17.5)`;
 }
 
-async function shareByIOSApp(payload: SharePayload): Promise<PluginResult> {
+export function getIosNetworkDetails(): { type: string; ip: string } {
+  // #ifdef APP-PLUS
+  try {
+    const NetworkPluginClass = plus.ios.importClass("NetworkPlugin");
+    if (NetworkPluginClass) {
+      const type = (NetworkPluginClass as any).getNetworkType();
+      const ip = (NetworkPluginClass as any).getLocalIpAddress();
+      return { type, ip };
+    }
+  } catch (e) {
+    // Fallback if load fails
+  }
+  // #endif
+  
+  return { type: 'WiFi (iOS Mock)', ip: '192.168.1.103' };
+}
+
+export function pingIosHost(host: string, timeoutMs: number): string {
+  // #ifdef APP-PLUS
+  try {
+    const NetworkPluginClass = plus.ios.importClass("NetworkPlugin");
+    if (NetworkPluginClass) {
+      return (NetworkPluginClass as any).pingHostTimeout(host, timeoutMs);
+    }
+  } catch (e: any) {
+    return `iOS Ping Error: ${e.message || e}`;
+  }
+  // #endif
+  
+  return `iOS Mock Ping: Success 38ms (Target: ${host})`;
+}
+
+async function shareByIOS(payload: SharePayload): Promise<PluginResult> {
   // #ifdef APP-PLUS
   if (payload.provider === 'system') {
     return new Promise((resolve) => {
@@ -62,8 +106,6 @@ async function shareByIOSApp(payload: SharePayload): Promise<PluginResult> {
   })
   // #endif
 
-  const browserResult = await browserShare(payload, 'ios')
-  if (browserResult !== null) return browserResult as PluginResult
   return copySharePayload(payload, 'ios')
 }
 
@@ -77,15 +119,15 @@ async function requestIOSPayment(payload: PaymentPayload) {
   }
   // #endif
 
-  return simulatePayment('ios', payload)
+  return simulatePayment('ios', payload, 'iOS 端未传入真实支付签名，已走模拟支付')
 }
 
 export function createIOSPlugins(): PlatformPlugins {
   return {
     platform: 'ios',
     share: {
-      send: shareByIOSApp,
-      system: (payload) => shareByIOSApp({ ...payload, provider: 'system' }),
+      send: shareByIOS,
+      system: (payload) => shareByIOS({ ...payload, provider: 'system' }),
       copy: (payload) => copySharePayload(payload, 'ios')
     },
     payment: {
@@ -94,7 +136,7 @@ export function createIOSPlugins(): PlatformPlugins {
     location: createLocationApis('ios', { preferNative: true }),
     modal: createModalApis('ios'),
     device: {
-      getInfo: getIOSHardwareInfo
+      getInfo: getIosHardwareInfo
     }
   }
 }

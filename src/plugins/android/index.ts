@@ -1,4 +1,4 @@
-import { browserShare, copySharePayload, createLocationApis, createModalApis, getMockDeviceInfo, mapAppShareProvider, mapAppShareScene, mapPaymentProvider, requestUniPayment, simulatePayment } from '../shared'
+import { copySharePayload, createLocationApis, createModalApis, getMockDeviceInfo, mapAppShareProvider, mapAppShareScene, mapPaymentProvider, requestUniPayment, simulatePayment } from '../shared'
 import type { PaymentPayload, PlatformPlugins, PluginResult, SharePayload } from '../types'
 
 export function getAndroidHardwareInfo(): string {
@@ -14,11 +14,44 @@ export function getAndroidHardwareInfo(): string {
   }
   // #endif
   
-  // Return a simulation if testing in non-app environment
-  return getMockDeviceInfo('Android Mock');
+  const info = uni.getSystemInfoSync();
+  return `Android Mock: ${info.brand} ${info.model} (SDK 34)`;
 }
 
-async function shareByAndroidApp(payload: SharePayload): Promise<PluginResult> {
+export function getAndroidNetworkDetails(): { type: string; ip: string } {
+  // #ifdef APP-PLUS
+  try {
+    const mainActivity = plus.android.runtimeMainActivity();
+    const NetworkPluginClass = plus.android.importClass("com.uniapp.plugins.NetworkPlugin");
+    if (NetworkPluginClass) {
+      const type = (NetworkPluginClass as any).getNetworkType(mainActivity);
+      const ip = (NetworkPluginClass as any).getLocalIpAddress();
+      return { type, ip };
+    }
+  } catch (e) {
+    // Fallback if load fails
+  }
+  // #endif
+  
+  return { type: 'WiFi (Android Mock)', ip: '192.168.1.102' };
+}
+
+export function pingAndroidHost(host: string, timeoutMs: number): string {
+  // #ifdef APP-PLUS
+  try {
+    const NetworkPluginClass = plus.android.importClass("com.uniapp.plugins.NetworkPlugin");
+    if (NetworkPluginClass) {
+      return (NetworkPluginClass as any).pingHost(host, timeoutMs);
+    }
+  } catch (e: any) {
+    return `Android Ping Error: ${e.message || e}`;
+  }
+  // #endif
+  
+  return `Android Mock Ping: Success 45ms (Target: ${host})`;
+}
+
+async function shareByAndroid(payload: SharePayload): Promise<PluginResult> {
   // #ifdef APP-PLUS
   if (payload.provider === 'system') {
     return new Promise((resolve) => {
@@ -75,8 +108,6 @@ async function shareByAndroidApp(payload: SharePayload): Promise<PluginResult> {
   })
   // #endif
 
-  const browserResult = await browserShare(payload, 'android')
-  if (browserResult !== null) return browserResult as PluginResult
   return copySharePayload(payload, 'android')
 }
 
@@ -90,29 +121,15 @@ async function requestAndroidPayment(payload: PaymentPayload) {
   }
   // #endif
 
-  if (payload.paymentUrl) {
-    // #ifdef H5
-    if (typeof window !== 'undefined') {
-      window.open(payload.paymentUrl, '_blank')
-      return {
-        ok: true,
-        platform: 'android',
-        message: '已打开支付链接，请在浏览器中继续完成支付',
-        transactionId: payload.orderNo
-      } satisfies PluginResult & { transactionId?: string }
-    }
-    // #endif
-  }
-
-  return simulatePayment('android', payload)
+  return simulatePayment('android', payload, 'Android 端未传入真实支付签名，已走模拟支付')
 }
 
 export function createAndroidPlugins(): PlatformPlugins {
   return {
     platform: 'android',
     share: {
-      send: shareByAndroidApp,
-      system: (payload) => shareByAndroidApp({ ...payload, provider: 'system' }),
+      send: shareByAndroid,
+      system: (payload) => shareByAndroid({ ...payload, provider: 'system' }),
       copy: (payload) => copySharePayload(payload, 'android')
     },
     payment: {

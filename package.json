@@ -1,6 +1,6 @@
 {
   "name": "uniapp-template-ts-vue3",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A reusable uni-app template for H5, mini programs and app targets.",
   "private": true,
   "type": "module",
