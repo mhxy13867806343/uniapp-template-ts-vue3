@@ -113,6 +113,10 @@ function getLevelTagType(level: string) {
   background: #fff;
   border-bottom: 1rpx solid var(--app-line);
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.03);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .summary-card,

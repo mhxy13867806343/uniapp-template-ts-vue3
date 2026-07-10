@@ -36,6 +36,51 @@ const faqCategories = [
     ]
   },
   {
+    title: '💳 支付交易与退款',
+    items: [
+      {
+        id: 'faq-31',
+        q: '多端支付是如何封装并运行的？',
+        a: '项目内置了支付画廊（payment-gallery），将微信小程序支付、H5支付宝唤起及APP SDK三方收银整合演示。实际对接时，需使用 `uni.requestPayment` 传入后端签名的 OrderInfo 调起底层通道。'
+      },
+      {
+        id: 'faq-32',
+        q: '退款审核后，原路退回需要多久到账？',
+        a: '根据微信支付/支付宝官方通道时效，微信零钱/支付宝余额一般为20分钟至2小时到账，借记卡原路退回为1-3个工作日，信用卡一般为2-5个工作日，具体可在支付专区查看逻辑。'
+      }
+    ]
+  },
+  {
+    title: '📱 社交分享与海报保存',
+    items: [
+      {
+        id: 'faq-41',
+        q: '保存海报至相册在各端的授权流程是什么？',
+        a: '我们封装了 `saveImageToAlbum` 工具。在小程序与 App 端会静默检查 `scope.writePhotosAlbum` 权限，若未授权则拉起系统级确认框引导授权；在普通 H5 下则转换为触发 File Blob 下载，避免白屏。'
+      },
+      {
+        id: 'faq-42',
+        q: 'H5 浏览器分享卡片如何自定义微信标题 and 描述？',
+        a: '普通 H5 微信内自定义分享卡片需要引入微信 JS-SDK（JSSDK），通过向后端请求 API 获取签名参数配置 `wx.updateAppMessageShareData`。微信小程序则直接在页面内重写 `onShareAppMessage` 钩子即可。'
+      }
+    ]
+  },
+  {
+    title: '🔒 权限申请与隐私合规',
+    items: [
+      {
+        id: 'faq-51',
+        q: '首次打开应用如何弹出用户隐私协议确认框？',
+        a: '微信小程序平台目前强制执行隐私协议开发规范。在 `manifest.json` 中声明隐私白名单后，页面会自动在入库前检测 `uni.onNeedPrivacyAuthorization`。用户点击同意隐私弹窗后才会放行核心 API 调用。'
+      },
+      {
+        id: 'faq-52',
+        q: '怎么判断用户在系统设置里彻底关闭了相册/相机权限？',
+        a: '在 App 端如果调用 API 失败并返回 auth deny 标识，可以调用 HTML5+ 原生系统的 `plus.runtime.openURL("app-settings:")` 引导用户直接前往手机 OS 权限设置页面手动开启权限。'
+      }
+    ]
+  },
+  {
     title: '🛠️ 跨端打包与排错',
     items: [
       {
@@ -46,7 +91,7 @@ const faqCategories = [
       {
         id: 'faq-6',
         q: '样式在微信小程序与 H5 显示不一致？',
-        a: '微信小程序不支持部分 H5 端专有的 CSS 样式（如复杂的 `backdrop-filter` 视平台兼容性而定）。在编写样式时，推荐优先使用 UniApp 官方推荐的 `rpx` 单位或标准的 Flex 弹性盒模型，尽量避免使用 ad-hoc 的原生选择器。'
+        a: '微信小程序不支持部分 H5 端专有的 CSS 样式（如复杂的 `backdrop-filter` 视平台兼容性而定）。在编写样式时，推荐优先使用 UniApp 官方推荐 of `rpx` 单位或标准的 Flex 弹性盒模型，尽量避免使用 ad-hoc 的原生选择器。'
       }
     ]
   }

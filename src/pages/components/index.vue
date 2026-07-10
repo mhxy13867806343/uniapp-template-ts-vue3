@@ -3,11 +3,49 @@ import PageShell from '@/components/PageShell.vue'
 import { customComponents } from '@/utils/customComponents'
 import { componentGroups, type ComponentItem } from '@/utils/wotComponents'
 
+const activeTab = ref('all')
+
+const tabs = [
+  { name: 'all', label: '全部' },
+  { name: 'custom', label: '第三方组件' },
+  { name: '基础', label: '基础' },
+  { name: '导航', label: '导航' },
+  { name: '录入', label: '录入' },
+  { name: '反馈', label: '反馈' },
+  { name: '展示', label: '展示' },
+  { name: '组合式API', label: '组合式API' }
+]
+
 const totalCount = computed(() => {
   return componentGroups.reduce((total, group) => total + group.items.length, 0)
 })
 
 const customCount = computed(() => customComponents.length)
+
+const filteredCustomComponents = computed(() => {
+  if (activeTab.value === 'all' || activeTab.value === 'custom') {
+    return customComponents
+  }
+
+  return []
+})
+
+const filteredComponentGroups = computed(() => {
+  if (activeTab.value === 'all') {
+    return componentGroups
+  }
+
+  if (activeTab.value === 'custom') {
+    return []
+  }
+
+  return componentGroups.filter(group => group.title === activeTab.value)
+})
+
+const visibleCount = computed(() => {
+  const groupCount = filteredComponentGroups.value.reduce((total, group) => total + group.items.length, 0)
+  return filteredCustomComponents.value.length + groupCount
+})
 
 function handleComponentTap(item: ComponentItem) {
   uni.navigateTo({
@@ -28,7 +66,31 @@ function handleCustomTap(path: string) {
     :description="`这里新增了 ${customCount} 个独立封装的第三方组件，同时保留 ${totalCount} 个 Wot UI 基础条目。`"
   >
     <view class="component-catalog">
-      <view class="custom-section">
+      <view class="summary-card">
+        <view>
+          <view class="summary-title">组件中心</view>
+          <view class="summary-desc">用 tabs 快速切换第三方组件和 Wot 原始组件分类，找组件会更顺手。</view>
+        </view>
+        <wd-tag type="primary">{{ visibleCount }} 个条目</wd-tag>
+      </view>
+
+      <view class="tabs-container">
+        <wd-tabs v-model="activeTab" custom-class="custom-tabs">
+          <wd-tab
+            v-for="tab in tabs"
+            :key="tab.name"
+            :name="tab.name"
+            :title="tab.label"
+          />
+        </wd-tabs>
+      </view>
+
+      <view
+        v-if="activeTab === 'all' || activeTab === 'custom'"
+        class="custom-section"
+      >
+        <view class="catalog-label">第三方组件目录</view>
+
         <view class="custom-summary">
           <view>
             <view class="custom-title">第三方组件</view>
@@ -37,9 +99,9 @@ function handleCustomTap(path: string) {
           <view class="custom-count">{{ customCount }} 个组件</view>
         </view>
 
-        <view class="custom-list">
+        <view v-if="filteredCustomComponents.length" class="custom-list">
           <view
-            v-for="item in customComponents"
+            v-for="item in filteredCustomComponents"
             :key="item.path"
             class="custom-card"
             @click="handleCustomTap(item.path)"
@@ -59,12 +121,14 @@ function handleCustomTap(path: string) {
             <text class="custom-arrow">&gt;</text>
           </view>
         </view>
+
+        <view v-else class="empty-tip">当前标签下没有第三方组件条目。</view>
       </view>
 
-      <view class="catalog-label">Wot UI 原始组件目录</view>
+      <view v-if="filteredComponentGroups.length" class="catalog-label">Wot UI 原始组件目录</view>
 
       <view
-        v-for="group in componentGroups"
+        v-for="group in filteredComponentGroups"
         :key="group.title"
         class="catalog-section"
       >
@@ -84,6 +148,14 @@ function handleCustomTap(path: string) {
           />
         </wd-cell-group>
       </view>
+
+      <view
+        v-if="!filteredComponentGroups.length && !filteredCustomComponents.length"
+        class="empty-panel"
+      >
+        <view class="empty-panel__title">当前分类没有组件</view>
+        <view class="empty-panel__desc">可以切换到其他 tabs 继续查看。</view>
+      </view>
     </view>
   </PageShell>
 </template>
@@ -91,15 +163,46 @@ function handleCustomTap(path: string) {
 <style lang="scss" scoped>
 .component-catalog {
   display: grid;
-  gap: 28rpx;
+  gap: 24rpx;
 }
 
+.tabs-container {
+  position: sticky;
+  top: var(--window-top);
+  z-index: 100;
+  background: #fff;
+  border-bottom: 1rpx solid var(--app-line);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.03);
+}
+
+.summary-card,
 .custom-section,
 .catalog-section {
   overflow: hidden;
   border: 1rpx solid var(--app-line);
   border-radius: 12rpx;
   background: #fff;
+}
+
+.summary-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24rpx;
+  padding: 32rpx;
+}
+
+.summary-title {
+  color: var(--app-ink);
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.summary-desc {
+  margin-top: 12rpx;
+  color: var(--app-muted);
+  font-size: 26rpx;
+  line-height: 1.6;
 }
 
 .custom-summary {
@@ -194,6 +297,31 @@ function handleCustomTap(path: string) {
   color: #5f6b7a;
   font-size: 22rpx;
   font-weight: 700;
+}
+
+.empty-tip,
+.empty-panel {
+  padding: 28rpx;
+  color: var(--app-muted);
+  font-size: 25rpx;
+}
+
+.empty-panel {
+  border: 1rpx dashed #d8e0ec;
+  border-radius: 12rpx;
+  background: #fafcff;
+}
+
+.empty-panel__title {
+  color: var(--app-ink);
+  font-size: 28rpx;
+  font-weight: 700;
+}
+
+.empty-panel__desc {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  line-height: 1.6;
 }
 
 .catalog-label {
