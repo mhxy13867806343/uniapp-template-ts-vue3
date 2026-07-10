@@ -1,4 +1,4 @@
-import { browserShare, copySharePayload, createModalApis, getMockDeviceInfo, mapAppShareProvider, mapAppShareScene, mapPaymentProvider, requestUniPayment, simulatePayment } from '../shared'
+import { browserShare, copySharePayload, createLocationApis, createModalApis, getMockDeviceInfo, mapAppShareProvider, mapAppShareScene, mapPaymentProvider, requestUniPayment, simulatePayment } from '../shared'
 import type { PaymentPayload, PlatformPlugins, PluginResult, SharePayload } from '../types'
 
 export function getIOSHardwareInfo() {
@@ -91,6 +91,7 @@ export function createIOSPlugins(): PlatformPlugins {
     payment: {
       request: requestIOSPayment
     },
+    location: createLocationApis('ios', { preferNative: true }),
     modal: createModalApis('ios'),
     device: {
       getInfo: getIOSHardwareInfo

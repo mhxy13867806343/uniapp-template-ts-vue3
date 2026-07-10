@@ -1,4 +1,4 @@
-import { browserShare, copySharePayload, createModalApis, getMockDeviceInfo, mapAppShareProvider, mapAppShareScene, mapPaymentProvider, requestUniPayment, simulatePayment } from '../shared'
+import { browserShare, copySharePayload, createLocationApis, createModalApis, getMockDeviceInfo, mapAppShareProvider, mapAppShareScene, mapPaymentProvider, requestUniPayment, simulatePayment } from '../shared'
 import type { PaymentPayload, PlatformPlugins, PluginResult, SharePayload } from '../types'
 
 export function getAndroidHardwareInfo(): string {
@@ -118,6 +118,7 @@ export function createAndroidPlugins(): PlatformPlugins {
     payment: {
       request: requestAndroidPayment
     },
+    location: createLocationApis('android', { preferNative: true }),
     modal: createModalApis('android'),
     device: {
       getInfo: getAndroidHardwareInfo

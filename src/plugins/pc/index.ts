@@ -1,4 +1,4 @@
-import { browserShare, copySharePayload, createModalApis, getMockDeviceInfo, simulatePayment } from '../shared'
+import { browserShare, copySharePayload, createLocationApis, createModalApis, getMockDeviceInfo, simulatePayment } from '../shared'
 import type { PaymentPayload, PlatformPlugins, PluginResult, SharePayload } from '../types'
 
 export function getPcHardwareInfo(): string {
@@ -40,6 +40,7 @@ export function createPcPlugins(): PlatformPlugins {
     payment: {
       request: requestPcPayment
     },
+    location: createLocationApis('pc'),
     modal: createModalApis('pc'),
     device: {
       getInfo: getPcHardwareInfo

@@ -35,6 +35,31 @@ export interface PaymentResult<T = unknown> extends PluginResult<T> {
   transactionId?: string
 }
 
+export interface LocationPayload {
+  type?: 'wgs84' | 'gcj02'
+  isHighAccuracy?: boolean
+  altitude?: boolean
+  geocode?: boolean
+  timeout?: number
+}
+
+export interface OpenLocationPayload {
+  latitude: number
+  longitude: number
+  name?: string
+  address?: string
+  scale?: number
+}
+
+export interface LocationResult<T = unknown> extends PluginResult<T> {
+  latitude?: number
+  longitude?: number
+  accuracy?: number
+  altitude?: number
+  address?: string
+  name?: string
+}
+
 export interface AlertPayload {
   title?: string
   content: string
@@ -72,6 +97,11 @@ export interface PlatformPlugins {
   }
   payment: {
     request: (payload: PaymentPayload) => Promise<PaymentResult>
+  }
+  location: {
+    getCurrent: (payload?: LocationPayload) => Promise<LocationResult>
+    choose: () => Promise<LocationResult>
+    openMap: (payload: OpenLocationPayload) => Promise<PluginResult>
   }
   modal: {
     alert: (payload: AlertPayload) => Promise<PluginResult>

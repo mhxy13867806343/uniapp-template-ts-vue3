@@ -1,4 +1,5 @@
 import { defineComponent, h } from 'vue'
+import { neoMoreComponents, neoMoreDemoMap } from './extra-library-more'
 
 type Tone = 'brand' | 'success' | 'warning' | 'slate'
 
@@ -344,7 +345,8 @@ export const neoExtraComponents = {
   NeoHighlightCard: createInfoCardComponent('NeoHighlightCard', { title: '重点提示', subtitle: '今天有 3 项关键风险需要优先关注并处理。', meta: '重点', tone: 'warning' }),
   NeoPromoBanner: createInfoCardComponent('NeoPromoBanner', { title: '促销横幅', subtitle: '限时活动进行中，最高可享 6 折优惠。', actionText: '立即查看', tone: 'warning' }),
   NeoServicePanel: createActionPanelComponent('NeoServicePanel', { title: '服务能力', subtitle: '适合展示交付能力、售后能力和支持入口。', actions: ['快速响应', '专属顾问', '7x24 支持'], tone: 'success' }),
-  NeoFeatureMatrix: createMetricGridComponent('NeoFeatureMatrix', { title: '能力矩阵', items: [{ label: '审批流', value: '支持' }, { label: '多组织', value: '支持' }, { label: '自动化', value: '支持' }, { label: '开放接口', value: '支持' }], tone: 'brand' })
+  NeoFeatureMatrix: createMetricGridComponent('NeoFeatureMatrix', { title: '能力矩阵', items: [{ label: '审批流', value: '支持' }, { label: '多组织', value: '支持' }, { label: '自动化', value: '支持' }, { label: '开放接口', value: '支持' }], tone: 'brand' }),
+  ...neoMoreComponents
 } as const
 
 export const neoExtraDemoMap: Record<string, DemoEntry> = {
@@ -400,5 +402,6 @@ export const neoExtraDemoMap: Record<string, DemoEntry> = {
   'neo-highlight-card': { component: neoExtraComponents.NeoHighlightCard },
   'neo-promo-banner': { component: neoExtraComponents.NeoPromoBanner },
   'neo-service-panel': { component: neoExtraComponents.NeoServicePanel },
-  'neo-feature-matrix': { component: neoExtraComponents.NeoFeatureMatrix }
+  'neo-feature-matrix': { component: neoExtraComponents.NeoFeatureMatrix },
+  ...neoMoreDemoMap
 }

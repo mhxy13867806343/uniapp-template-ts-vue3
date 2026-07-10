@@ -1,4 +1,4 @@
-import { copySharePayload, createModalApis, getMockDeviceInfo, requestUniPayment, simulatePayment } from '../shared'
+import { copySharePayload, createLocationApis, createModalApis, getMockDeviceInfo, requestUniPayment, simulatePayment } from '../shared'
 import type { PaymentPayload, PlatformPlugins, PluginResult, SharePayload } from '../types'
 
 export function getMiniProgramHardwareInfo(): string {
@@ -48,6 +48,7 @@ export function createMiniProgramPlugins(): PlatformPlugins {
     payment: {
       request: requestMiniProgramPayment
     },
+    location: createLocationApis('miniProgram'),
     modal: createModalApis('miniProgram'),
     device: {
       getInfo: getMiniProgramHardwareInfo

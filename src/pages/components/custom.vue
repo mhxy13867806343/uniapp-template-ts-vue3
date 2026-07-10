@@ -19,6 +19,7 @@ import NeoRadioGroup from '@/components/neo/NeoRadioGroup.vue'
 import NeoRate from '@/components/neo/NeoRate.vue'
 import NeoSearchBar from '@/components/neo/NeoSearchBar.vue'
 import NeoSkeleton from '@/components/neo/NeoSkeleton.vue'
+import NeoShowcaseRenderer from '@/components/neo/NeoShowcaseRenderer.vue'
 import NeoStepper from '@/components/neo/NeoStepper.vue'
 import NeoSwitch from '@/components/neo/NeoSwitch.vue'
 import NeoTagInput from '@/components/neo/NeoTagInput.vue'
@@ -29,14 +30,44 @@ import NeoTimeline from '@/components/neo/NeoTimeline.vue'
 import NeoToast from '@/components/neo/NeoToast.vue'
 import NeoUpload from '@/components/neo/NeoUpload.vue'
 import { neoExtraDemoMap } from '@/components/neo/extra-library'
-import { customComponents, findCustomComponent, getCustomComponentCode, getCustomComponentScenes } from '@/utils/customComponents'
+import { customComponents, findCustomComponent, getCustomComponentCode, getCustomComponentLevel, getCustomComponentLevelLabel, getCustomComponentScenes } from '@/utils/customComponents'
 
 const currentPath = ref(customComponents[0].path)
+const activeLevel = ref<'all' | 'basic' | 'intermediate' | 'advanced'>('all')
 
 const currentComponent = computed(() => findCustomComponent(currentPath.value))
 const currentCode = computed(() => getCustomComponentCode(currentPath.value))
 const currentScenes = computed(() => getCustomComponentScenes(currentPath.value))
 const extraDemo = computed(() => neoExtraDemoMap[currentPath.value])
+const currentLevelLabel = computed(() => getCustomComponentLevelLabel(currentPath.value))
+
+const levelTabs = [
+  { value: 'all', label: '全部', desc: '查看全部第三方组件示例。' },
+  { value: 'basic', label: '基础', desc: '输入、反馈、容器、轻交互等基础件。' },
+  { value: 'intermediate', label: '中级', desc: '信息组合、摘要卡片、流程和业务组合件。' },
+  { value: 'advanced', label: '高级', desc: '看板、工作台、策略、履约和经营类复杂组件。' }
+] as const
+
+const levelCounts = computed(() => ({
+  basic: customComponents.filter(item => getCustomComponentLevel(item.path) === 'basic').length,
+  intermediate: customComponents.filter(item => getCustomComponentLevel(item.path) === 'intermediate').length,
+  advanced: customComponents.filter(item => getCustomComponentLevel(item.path) === 'advanced').length
+}))
+
+const filteredComponents = computed(() => {
+  if (activeLevel.value === 'all') {
+    return customComponents
+  }
+
+  return customComponents.filter(item => getCustomComponentLevel(item.path) === activeLevel.value)
+})
+
+const sameLevelExamples = computed(() => {
+  const currentLevel = getCustomComponentLevel(currentPath.value)
+  return customComponents
+    .filter(item => getCustomComponentLevel(item.path) === currentLevel && item.path !== currentPath.value)
+    .slice(0, 12)
+})
 
 const boardMetrics = [
   { label: '今日成交', value: '¥28,600', meta: '+12%' },
@@ -151,8 +182,31 @@ onLoad((query) => {
   }
 })
 
+watch(currentPath, (value) => {
+  if (activeLevel.value === 'all') {
+    return
+  }
+
+  const level = getCustomComponentLevel(value)
+  if (level !== activeLevel.value) {
+    activeLevel.value = level
+  }
+})
+
 function selectComponent(path: string) {
   currentPath.value = path
+}
+
+function selectLevel(level: 'all' | 'basic' | 'intermediate' | 'advanced') {
+  activeLevel.value = level
+
+  const nextList = level === 'all'
+    ? customComponents
+    : customComponents.filter(item => getCustomComponentLevel(item.path) === level)
+
+  if (!nextList.some(item => item.path === currentPath.value) && nextList[0]) {
+    currentPath.value = nextList[0].path
+  }
 }
 
 function handleDialogPrimary() {
@@ -199,12 +253,86 @@ function handleActionSelect(value: string) {
         <view class="intro-desc">所有组件都放在 `src/components/neo`，命名和样式完全独立，适合继续往组件库方向扩展。</view>
       </view>
 
+      <view class="level-card">
+        <view class="section-title">示例分级</view>
+        <view class="level-summary">
+          <view class="level-summary__item">
+            <view class="level-summary__value">{{ levelCounts.basic }}</view>
+            <view class="level-summary__label">基础</view>
+          </view>
+          <view class="level-summary__item">
+            <view class="level-summary__value">{{ levelCounts.intermediate }}</view>
+            <view class="level-summary__label">中级</view>
+          </view>
+          <view class="level-summary__item">
+            <view class="level-summary__value">{{ levelCounts.advanced }}</view>
+            <view class="level-summary__label">高级</view>
+          </view>
+        </view>
+
+        <view class="level-tab-row">
+          <view
+            v-for="tab in levelTabs"
+            :key="tab.value"
+            :class="['level-tab', { 'level-tab--active': activeLevel === tab.value }]"
+            @click="selectLevel(tab.value)"
+          >
+            <view class="level-tab__title">{{ tab.label }}</view>
+            <view class="level-tab__desc">{{ tab.desc }}</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="example-card">
+        <view class="example-card__head">
+          <view>
+            <view class="section-title">分级示例清单</view>
+            <view class="example-card__desc">
+              当前显示
+              {{ activeLevel === 'all' ? '全部' : activeLevel === 'basic' ? '基础' : activeLevel === 'intermediate' ? '中级' : '高级' }}
+              组件示例，点击任意卡片可切换到详细预览。
+            </view>
+          </view>
+          <NeoPill :label="`${filteredComponents.length} 个示例`" />
+        </view>
+
+        <view class="example-grid">
+          <view
+            v-for="item in filteredComponents"
+            :key="item.path"
+            :class="['example-tile', { 'example-tile--active': item.path === currentPath }]"
+            @click="selectComponent(item.path)"
+          >
+            <view class="example-tile__head">
+              <view class="example-tile__title">{{ item.title }}</view>
+              <view class="example-tile__level">{{ getCustomComponentLevelLabel(item.path) }}</view>
+            </view>
+            <view class="example-tile__preview">
+              <NeoShowcaseRenderer
+                :path="item.path"
+                compact
+              />
+            </view>
+            <view class="example-tile__summary">{{ item.summary }}</view>
+            <view class="example-tile__tags">
+              <text
+                v-for="tag in item.tags.slice(0, 3)"
+                :key="tag"
+                class="example-tile__tag"
+              >
+                {{ tag }}
+              </text>
+            </view>
+          </view>
+        </view>
+      </view>
+
       <view class="selector-card">
         <view class="section-title">组件切换</view>
         <scroll-view scroll-x class="selector-scroll">
           <view class="selector-row">
             <view
-              v-for="item in customComponents"
+              v-for="item in filteredComponents"
               :key="item.path"
               :class="['selector-chip', { 'selector-chip--active': item.path === currentPath }]"
               @click="selectComponent(item.path)"
@@ -228,8 +356,11 @@ function handleActionSelect(value: string) {
               :key="tag"
               :label="tag"
             />
+            <NeoPill :label="`${currentLevelLabel} 示例`" />
           </view>
         </view>
+
+        <view class="demo-preview-label">效果预览</view>
 
         <NeoMetricBoard
           v-if="currentPath === 'neo-metric-board'"
@@ -580,6 +711,24 @@ function handleActionSelect(value: string) {
         </view>
       </view>
 
+      <view
+        v-if="sameLevelExamples.length"
+        class="info-card"
+      >
+        <view class="section-title">同级更多示例</view>
+        <view class="related-grid">
+          <view
+            v-for="item in sameLevelExamples"
+            :key="item.path"
+            class="related-card"
+            @click="selectComponent(item.path)"
+          >
+            <view class="related-card__title">{{ item.title }}</view>
+            <view class="related-card__summary">{{ item.summary }}</view>
+          </view>
+        </view>
+      </view>
+
       <view class="info-card">
         <view class="section-title">适用场景</view>
         <view class="scene-list">
@@ -611,6 +760,8 @@ function handleActionSelect(value: string) {
 }
 
 .intro-card,
+.level-card,
+.example-card,
 .selector-card,
 .demo-card,
 .info-card {
@@ -656,8 +807,156 @@ function handleActionSelect(value: string) {
 }
 
 .selector-card,
+.level-card,
+.example-card,
 .info-card {
   padding: 28rpx;
+}
+
+.level-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14rpx;
+  margin-top: 20rpx;
+}
+
+.level-summary__item {
+  border-radius: 18rpx;
+  background: #f7f9fc;
+  padding: 22rpx 18rpx;
+}
+
+.level-summary__value {
+  color: #182235;
+  font-size: 34rpx;
+  font-weight: 800;
+}
+
+.level-summary__label {
+  margin-top: 8rpx;
+  color: #6a7485;
+  font-size: 23rpx;
+}
+
+.level-tab-row {
+  display: grid;
+  gap: 14rpx;
+  margin-top: 20rpx;
+}
+
+.level-tab {
+  border: 1rpx solid #e4e9f3;
+  border-radius: 18rpx;
+  background: #fff;
+  padding: 22rpx;
+}
+
+.level-tab--active {
+  border-color: #8fb0ff;
+  background:
+    radial-gradient(circle at top left, rgba(82, 121, 255, 0.12), transparent 46%),
+    #f4f8ff;
+  box-shadow: 0 16rpx 40rpx rgba(61, 95, 192, 0.08);
+}
+
+.level-tab__title {
+  color: #182235;
+  font-size: 28rpx;
+  font-weight: 800;
+}
+
+.level-tab__desc,
+.example-card__desc {
+  margin-top: 10rpx;
+  color: #6a7485;
+  font-size: 24rpx;
+  line-height: 1.7;
+}
+
+.example-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18rpx;
+}
+
+.example-grid,
+.related-grid {
+  display: grid;
+  gap: 16rpx;
+  margin-top: 20rpx;
+}
+
+.example-tile,
+.related-card {
+  border: 1rpx solid #e4e9f3;
+  border-radius: 18rpx;
+  background: #fff;
+  padding: 22rpx;
+}
+
+.example-tile--active {
+  border-color: #8fb0ff;
+  background:
+    radial-gradient(circle at top left, rgba(82, 121, 255, 0.12), transparent 46%),
+    #f4f8ff;
+}
+
+.example-tile__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14rpx;
+}
+
+.example-tile__title,
+.related-card__title {
+  color: #182235;
+  font-size: 27rpx;
+  font-weight: 800;
+}
+
+.example-tile__level {
+  flex-shrink: 0;
+  border-radius: 999rpx;
+  background: #edf3ff;
+  padding: 8rpx 14rpx;
+  color: #426cff;
+  font-size: 20rpx;
+  font-weight: 700;
+}
+
+.example-tile__summary,
+.related-card__summary {
+  margin-top: 10rpx;
+  color: #6a7485;
+  font-size: 23rpx;
+  line-height: 1.65;
+}
+
+.example-tile__preview {
+  overflow: hidden;
+  margin-top: 14rpx;
+  border: 1rpx solid #edf1f6;
+  border-radius: 16rpx;
+  background:
+    linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  padding: 16rpx;
+}
+
+.example-tile__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+  margin-top: 14rpx;
+}
+
+.example-tile__tag {
+  border-radius: 999rpx;
+  background: #f2f5fa;
+  padding: 8rpx 14rpx;
+  color: #607083;
+  font-size: 20rpx;
 }
 
 .selector-scroll {
@@ -706,6 +1005,14 @@ function handleActionSelect(value: string) {
 
 .demo-card {
   padding: 28rpx;
+}
+
+.demo-preview-label {
+  margin: 24rpx 0 18rpx;
+  color: #426cff;
+  font-size: 22rpx;
+  font-weight: 800;
+  letter-spacing: 1rpx;
 }
 
 .demo-head {

@@ -1,4 +1,4 @@
-import { browserShare, copySharePayload, createModalApis, getMockDeviceInfo, simulatePayment } from '../shared'
+import { browserShare, copySharePayload, createLocationApis, createModalApis, getMockDeviceInfo, simulatePayment } from '../shared'
 import type { PaymentPayload, PlatformPlugins, PluginResult, SharePayload } from '../types'
 
 export function getH5HardwareInfo(): string {
@@ -40,6 +40,7 @@ export function createH5Plugins(): PlatformPlugins {
     payment: {
       request: requestH5Payment
     },
+    location: createLocationApis('h5'),
     modal: createModalApis('h5'),
     device: {
       getInfo: getH5HardwareInfo

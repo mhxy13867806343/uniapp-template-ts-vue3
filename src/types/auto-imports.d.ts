@@ -69,6 +69,8 @@ declare global {
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
   const getCustomComponentCode: typeof import('../utils/customComponents').getCustomComponentCode
+  const getCustomComponentLevel: typeof import('../utils/customComponents').getCustomComponentLevel
+  const getCustomComponentLevelLabel: typeof import('../utils/customComponents').getCustomComponentLevelLabel
   const getCustomComponentScenes: typeof import('../utils/customComponents').getCustomComponentScenes
   const getFeedsByScene: typeof import('../utils/waterfallFeeds').getFeedsByScene
   const getPlatformInfo: typeof import('../utils/platform').getPlatformInfo
@@ -116,6 +118,9 @@ declare global {
   const navigateToExample: typeof import('../utils/exampleScenarios').navigateToExample
   const neoExtraMetaList: typeof import('../utils/neoExtraData').neoExtraMetaList
   const neoExtraMetaMap: typeof import('../utils/neoExtraData').neoExtraMetaMap
+  const neoExtraMoreCatalog: typeof import('../utils/neoExtraMoreCatalog').neoExtraMoreCatalog
+  const neoExtraMoreMetaList: typeof import('../utils/neoExtraMoreData').neoExtraMoreMetaList
+  const neoExtraMoreMetaMap: typeof import('../utils/neoExtraMoreData').neoExtraMoreMetaMap
   const newsFeeds: typeof import('../utils/waterfallFeeds').newsFeeds
   const nextTick: typeof import('vue').nextTick
   const numberToChinese: typeof import('../utils/format').numberToChinese
@@ -235,7 +240,7 @@ declare global {
   export type { CachePayload, CacheOptions } from '../utils/cache'
   import('../utils/cache')
   // @ts-ignore
-  export type { CustomComponentItem } from '../utils/customComponents'
+  export type { CustomComponentItem, CustomComponentLevel } from '../utils/customComponents'
   import('../utils/customComponents')
   // @ts-ignore
   export type { AppEnvMode } from '../utils/env'
@@ -246,6 +251,9 @@ declare global {
   // @ts-ignore
   export type { DateInput, VisualLengthOptions } from '../utils/format'
   import('../utils/format')
+  // @ts-ignore
+  export type { MoreComponentSpec } from '../utils/neoExtraMoreCatalog'
+  import('../utils/neoExtraMoreCatalog')
   // @ts-ignore
   export type { PlatformTarget, PlatformInfo } from '../utils/platform'
   import('../utils/platform')
@@ -337,6 +345,8 @@ declare module 'vue' {
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getCurrentWatcher: UnwrapRef<typeof import('vue')['getCurrentWatcher']>
     readonly getCustomComponentCode: UnwrapRef<typeof import('../utils/customComponents')['getCustomComponentCode']>
+    readonly getCustomComponentLevel: UnwrapRef<typeof import('../utils/customComponents')['getCustomComponentLevel']>
+    readonly getCustomComponentLevelLabel: UnwrapRef<typeof import('../utils/customComponents')['getCustomComponentLevelLabel']>
     readonly getCustomComponentScenes: UnwrapRef<typeof import('../utils/customComponents')['getCustomComponentScenes']>
     readonly getFeedsByScene: UnwrapRef<typeof import('../utils/waterfallFeeds')['getFeedsByScene']>
     readonly getPlatformInfo: UnwrapRef<typeof import('../utils/platform')['getPlatformInfo']>
@@ -384,6 +394,9 @@ declare module 'vue' {
     readonly navigateToExample: UnwrapRef<typeof import('../utils/exampleScenarios')['navigateToExample']>
     readonly neoExtraMetaList: UnwrapRef<typeof import('../utils/neoExtraData')['neoExtraMetaList']>
     readonly neoExtraMetaMap: UnwrapRef<typeof import('../utils/neoExtraData')['neoExtraMetaMap']>
+    readonly neoExtraMoreCatalog: UnwrapRef<typeof import('../utils/neoExtraMoreCatalog')['neoExtraMoreCatalog']>
+    readonly neoExtraMoreMetaList: UnwrapRef<typeof import('../utils/neoExtraMoreData')['neoExtraMoreMetaList']>
+    readonly neoExtraMoreMetaMap: UnwrapRef<typeof import('../utils/neoExtraMoreData')['neoExtraMoreMetaMap']>
     readonly newsFeeds: UnwrapRef<typeof import('../utils/waterfallFeeds')['newsFeeds']>
     readonly nextTick: UnwrapRef<typeof import('vue')['nextTick']>
     readonly numberToChinese: UnwrapRef<typeof import('../utils/format')['numberToChinese']>

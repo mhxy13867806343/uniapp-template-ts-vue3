@@ -7,7 +7,10 @@ export interface CustomComponentItem {
   group: string
 }
 
+export type CustomComponentLevel = 'basic' | 'intermediate' | 'advanced'
+
 import { neoExtraMetaList, neoExtraMetaMap } from './neoExtraData'
+import { neoExtraMoreMetaList, neoExtraMoreMetaMap } from './neoExtraMoreData'
 
 export const customComponents: CustomComponentItem[] = [
   {
@@ -226,7 +229,8 @@ export const customComponents: CustomComponentItem[] = [
     tags: ['独立实现', '基础件', '折叠'],
     group: '第三方组件'
   },
-  ...neoExtraMetaList
+  ...neoExtraMetaList,
+  ...neoExtraMoreMetaList
 ]
 
 export function findCustomComponent(path?: string) {
@@ -237,6 +241,11 @@ export function getCustomComponentCode(path: string) {
   const extraMeta = neoExtraMetaMap[path]
   if (extraMeta) {
     return extraMeta.code
+  }
+
+  const moreExtraMeta = neoExtraMoreMetaMap[path]
+  if (moreExtraMeta) {
+    return moreExtraMeta.code
   }
 
   if (path === 'neo-metric-board') {
@@ -542,6 +551,11 @@ export function getCustomComponentScenes(path: string) {
     return extraMeta.scenes
   }
 
+  const moreExtraMeta = neoExtraMoreMetaMap[path]
+  if (moreExtraMeta) {
+    return moreExtraMeta.scenes
+  }
+
   if (path === 'neo-metric-board') {
     return [
       '首页经营看板',
@@ -755,4 +769,102 @@ export function getCustomComponentScenes(path: string) {
     '销售线索池',
     '项目成员资料页'
   ]
+}
+
+const basicComponentPaths = new Set([
+  'neo-button',
+  'neo-field',
+  'neo-notice-strip',
+  'neo-empty-state',
+  'neo-card',
+  'neo-badge',
+  'neo-tabs',
+  'neo-dialog',
+  'neo-toast',
+  'neo-dropdown',
+  'neo-stepper',
+  'neo-skeleton',
+  'neo-switch',
+  'neo-radio-group',
+  'neo-checkbox-group',
+  'neo-date-picker',
+  'neo-textarea',
+  'neo-search-bar',
+  'neo-upload',
+  'neo-action-sheet',
+  'neo-tag-input',
+  'neo-rate',
+  'neo-timeline',
+  'neo-collapse',
+  'neo-prompt-card',
+  'neo-form-group',
+  'neo-empty-search',
+  'neo-segmented',
+  'neo-filter-chips',
+  'neo-breadcrumb',
+  'neo-cell',
+  'neo-avatar',
+  'neo-avatar-group',
+  'neo-price-tag',
+  'neo-coupon-card',
+  'neo-fab',
+  'neo-toolbar',
+  'neo-chat-shortcut',
+  'neo-reaction-bar',
+  'neo-calendar-strip',
+  'neo-badge-wall'
+])
+
+const advancedKeywords = [
+  '看板',
+  '矩阵',
+  '路线图',
+  '工作区',
+  '发布',
+  '里程碑',
+  '排期',
+  '结算',
+  '物流',
+  '风险',
+  '营收',
+  '洞察',
+  '工单',
+  '审计',
+  '动态流',
+  '能力',
+  '培训',
+  '客户健康',
+  '留存',
+  '漏斗',
+  '仓库',
+  '库存',
+  '配送',
+  '税务',
+  '活动',
+  '线索',
+  '客服',
+  '排队',
+  '路线'
+]
+
+export function getCustomComponentLevel(path: string): CustomComponentLevel {
+  if (basicComponentPaths.has(path)) {
+    return 'basic'
+  }
+
+  const component = findCustomComponent(path)
+  const content = `${component.title} ${component.summary} ${component.tags.join(' ')}`
+
+  if (advancedKeywords.some(keyword => content.includes(keyword))) {
+    return 'advanced'
+  }
+
+  return 'intermediate'
+}
+
+export function getCustomComponentLevelLabel(path: string) {
+  const level = getCustomComponentLevel(path)
+  if (level === 'basic') return '基础'
+  if (level === 'advanced') return '高级'
+  return '中级'
 }

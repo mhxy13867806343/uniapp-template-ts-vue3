@@ -1,4 +1,4 @@
-import { copySharePayload, createModalApis, getMockDeviceInfo, mapAppShareProvider, mapAppShareScene, mapPaymentProvider, requestUniPayment, simulatePayment } from '../shared'
+import { copySharePayload, createLocationApis, createModalApis, getMockDeviceInfo, mapAppShareProvider, mapAppShareScene, mapPaymentProvider, requestUniPayment, simulatePayment } from '../shared'
 import type { PaymentPayload, PlatformPlugins, PluginResult, SharePayload } from '../types'
 
 function getHarmonyHardwareInfo() {
@@ -89,6 +89,7 @@ export function createHarmonyOSPlugins(): PlatformPlugins {
     payment: {
       request: requestHarmonyPayment
     },
+    location: createLocationApis('harmonyOS', { preferNative: true }),
     modal: createModalApis('harmonyOS'),
     device: {
       getInfo: getHarmonyHardwareInfo

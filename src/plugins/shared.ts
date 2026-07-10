@@ -4,6 +4,9 @@ import type {
   AlertPayload,
   ConfirmPayload,
   ConfirmResult,
+  LocationPayload,
+  LocationResult,
+  OpenLocationPayload,
   PaymentPayload,
   PaymentResult,
   PlatformPlugins,
@@ -140,6 +143,170 @@ export async function simulatePayment(platform: PluginPlatform, payload: Payment
     message: message || '已完成模拟支付，可继续对接真实支付签名参数',
     transactionId: payload.orderNo || `mock-${Date.now()}`
   } satisfies PaymentResult
+}
+
+function normalizeLocationResult(platform: PluginPlatform, raw: Record<string, unknown>, message = '定位成功'): LocationResult {
+  return {
+    ok: true,
+    platform,
+    message,
+    latitude: Number(raw.latitude || 0),
+    longitude: Number(raw.longitude || 0),
+    accuracy: Number(raw.accuracy || 0) || undefined,
+    altitude: Number(raw.altitude || 0) || undefined,
+    address: String(raw.address || raw.addr || raw.poiName || ''),
+    name: String(raw.name || raw.poiName || ''),
+    raw
+  }
+}
+
+export async function requestCurrentLocation(
+  platform: PluginPlatform,
+  payload: LocationPayload = {},
+  preferNative = false,
+) {
+  // #ifdef APP-PLUS
+  if (preferNative && typeof plus !== 'undefined' && plus.geolocation) {
+    return new Promise<LocationResult>((resolve) => {
+      plus.geolocation.getCurrentPosition(
+        (position: any) => {
+          const coords = (position.coords || {}) as Record<string, unknown>
+          const address = (position.address || {}) as Record<string, unknown>
+          resolve(normalizeLocationResult(platform, {
+            ...coords,
+            address: String(address.street || address.poiName || address.city || '')
+          }, '原生定位成功'))
+        },
+        (raw: any) => {
+          resolve({
+            ok: false,
+            platform,
+            message: `原生定位失败: ${String(raw.message || raw.code || 'unknown')}`,
+            raw
+          })
+        },
+        {
+          enableHighAccuracy: payload.isHighAccuracy ?? true,
+          geocode: payload.geocode ?? true,
+          timeout: payload.timeout ?? 15000,
+          coordsType: payload.type || 'gcj02'
+        } as any
+      )
+    })
+  }
+  // #endif
+
+  // #ifdef H5
+  if (typeof navigator !== 'undefined' && navigator.geolocation) {
+    return new Promise<LocationResult>((resolve) => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          resolve(normalizeLocationResult(platform, {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+            altitude: position.coords.altitude || undefined
+          }, '浏览器定位成功'))
+        },
+        (raw) => {
+          resolve({
+            ok: false,
+            platform,
+            message: `浏览器定位失败: ${raw.message}`,
+            raw
+          })
+        },
+        {
+          enableHighAccuracy: payload.isHighAccuracy ?? true,
+          timeout: payload.timeout ?? 15000
+        }
+      )
+    })
+  }
+  // #endif
+
+  return new Promise<LocationResult>((resolve) => {
+    uni.getLocation({
+      type: payload.type || 'gcj02',
+      isHighAccuracy: payload.isHighAccuracy ?? true,
+      altitude: payload.altitude ?? false,
+      geocode: payload.geocode ?? true,
+      success: (raw: Record<string, unknown>) => {
+        resolve(normalizeLocationResult(platform, raw))
+      },
+      fail: (raw: Record<string, unknown>) => {
+        resolve({
+          ok: false,
+          platform,
+          message: `定位失败: ${String(raw.errMsg || 'unknown')}`,
+          raw
+        })
+      }
+    } as any)
+  })
+}
+
+export async function chooseLocation(platform: PluginPlatform) {
+  return new Promise<LocationResult>((resolve) => {
+    uni.chooseLocation({
+      success: (raw: any) => {
+        resolve(normalizeLocationResult(platform, raw, '位置选择成功'))
+      },
+      fail: (raw: Record<string, unknown>) => {
+        resolve({
+          ok: false,
+          platform,
+          message: `位置选择失败: ${String(raw.errMsg || 'unknown')}`,
+          raw
+        })
+      }
+    })
+  })
+}
+
+export async function openMapLocation(platform: PluginPlatform, payload: OpenLocationPayload) {
+  return new Promise<PluginResult>((resolve) => {
+    uni.openLocation({
+      latitude: payload.latitude,
+      longitude: payload.longitude,
+      name: payload.name,
+      address: payload.address,
+      scale: payload.scale || 16,
+      success: (raw) => {
+        resolve({
+          ok: true,
+          platform,
+          message: '已打开地图定位',
+          raw
+        })
+      },
+      fail: (raw) => {
+        resolve({
+          ok: false,
+          platform,
+          message: `打开地图失败: ${String((raw as Record<string, unknown>).errMsg || 'unknown')}`,
+          raw
+        })
+      }
+    })
+  })
+}
+
+export function createLocationApis(
+  platform: PluginPlatform,
+  options: { preferNative?: boolean } = {},
+): PlatformPlugins['location'] {
+  return {
+    getCurrent(payload) {
+      return requestCurrentLocation(platform, payload, options.preferNative)
+    },
+    choose() {
+      return chooseLocation(platform)
+    },
+    openMap(payload) {
+      return openMapLocation(platform, payload)
+    }
+  }
 }
 
 export function createModalApis(platform: PluginPlatform): PlatformPlugins['modal'] {
