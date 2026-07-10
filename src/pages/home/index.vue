@@ -275,6 +275,18 @@ function navToWebsocketPage() {
   })
 }
 
+function navToUdpPage() {
+  uni.navigateTo({
+    url: '/pages/framework/udp'
+  })
+}
+
+function navToWorkerPage() {
+  uni.navigateTo({
+    url: '/pages/framework/worker'
+  })
+}
+
 function navToEcommerceZone() {
   uni.navigateTo({
     url: '/pages/ecommerce/index'
@@ -442,6 +454,52 @@ appStore.markReady()
               <view class="share-link-meta ml-2">
                 <text class="share-link-title font-bold text-ink">进入 WebSocket 示例页</text>
                 <text class="share-link-desc">支持连接、重连、断开、自定义消息发送和日志查看，tabs 下切换 6 种 ws 示例。</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+        </view>
+      </view>
+
+      <view class="panel-section bottom-share-section mt-3">
+        <view class="section-head font-bold mb-2">
+          <text>📡 UDP 调试台</text>
+          <wd-tag type="warning">后端桥接示例</wd-tag>
+        </view>
+        <view class="share-desc-info mb-3">
+          UDP 在 H5 里不能直接原生发送，所以这里配了一套 FastAPI 后端桥接。前端通过 HTTP 触发 UDP 报文发送，再用 WebSocket 实时订阅后端收到的 UDP 事件。
+        </view>
+
+        <view class="share-links-list flex-column">
+          <view class="share-link-row flex justify-between items-center p-2" @click="navToUdpPage">
+            <view class="flex items-center">
+              <text class="share-link-icon">📶</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">进入 UDP 调试台</text>
+                <text class="share-link-desc">支持 6 种 UDP 场景 tabs、发送报文、查看回包、订阅后端 UDP 事件流。</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+        </view>
+      </view>
+
+      <view class="panel-section bottom-share-section mt-3">
+        <view class="section-head font-bold mb-2">
+          <text>🧵 Worker 示例中心</text>
+          <wd-tag type="success">6种后台任务</wd-tag>
+        </view>
+        <view class="share-desc-info mb-3">
+          补了一套 Worker 示例页，用来演示把计算密集型任务放到 Worker 线程里执行。H5 环境优先使用真实 Worker，不支持的端会自动降级为主线程模拟执行。
+        </view>
+
+        <view class="share-links-list flex-column">
+          <view class="share-link-row flex justify-between items-center p-2" @click="navToWorkerPage">
+            <view class="flex items-center">
+              <text class="share-link-icon">⚙️</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">进入 Worker 示例页</text>
+                <text class="share-link-desc">支持素数统计、Fibonacci、排序、JSON 处理、分块统计、词频分析 6 种任务。</text>
               </view>
             </view>
             <wd-icon name="arrow-right" size="16px" color="#94a3b8" />

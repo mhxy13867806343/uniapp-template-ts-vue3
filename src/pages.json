@@ -346,6 +346,18 @@
       }
     },
     {
+      "path": "pages/framework/udp",
+      "style": {
+        "navigationBarTitleText": "UDP 调试台"
+      }
+    },
+    {
+      "path": "pages/framework/worker",
+      "style": {
+        "navigationBarTitleText": "Worker 示例中心"
+      }
+    },
+    {
       "path": "pages/framework/styles",
       "style": {
         "navigationBarTitleText": "样式规范"

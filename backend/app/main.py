@@ -2,18 +2,47 @@ import asyncio
 import contextlib
 import json
 import random
+from contextlib import asynccontextmanager
 from collections import defaultdict
 from datetime import datetime
 from typing import Any, DefaultDict, Dict, Set
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+
+from app.udp_runtime import UdpEventStore, create_udp_server, udp_roundtrip
+
+
+UDP_HOST = "127.0.0.1"
+UDP_PORT = 9999
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    loop = asyncio.get_running_loop()
+    event_store = UdpEventStore()
+
+    def on_udp_event(event: Dict[str, Any]) -> None:
+        event_store.push(event)
+        loop.create_task(manager.broadcast("udp-events", event))
+
+    transport, _protocol = await create_udp_server(loop, UDP_HOST, UDP_PORT, on_udp_event)
+    app.state.udp_transport = transport
+    app.state.udp_host = UDP_HOST
+    app.state.udp_port = UDP_PORT
+    app.state.udp_event_store = event_store
+    try:
+        yield
+    finally:
+        transport.close()
 
 
 app = FastAPI(
-    title="UniApp WebSocket Lab Backend",
-    description="给 UniApp 前端的 6 种 WebSocket 示例页提供本地测试服务。",
-    version="0.1.0",
+    title="UniApp Socket Lab Backend",
+    description="给 UniApp 前端的 WebSocket 和 UDP 示例页提供本地测试服务。",
+    version="0.2.0",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
@@ -56,18 +85,35 @@ class ConnectionManager:
         if not self.groups[group]:
             self.groups.pop(group, None)
 
-    async def send_json(self, websocket: WebSocket, payload: Dict[str, Any]) -> None:
-        await websocket.send_text(json_dumps(payload))
+    async def send_json(self, websocket: WebSocket, payload: Dict[str, Any]) -> bool:
+        try:
+            await websocket.send_text(json_dumps(payload))
+            return True
+        except (WebSocketDisconnect, RuntimeError):
+            return False
 
     async def broadcast(self, group: str, payload: Dict[str, Any]) -> None:
+        stale: Set[WebSocket] = set()
         for websocket in list(self.groups.get(group, set())):
-            await self.send_json(websocket, payload)
+            ok = await self.send_json(websocket, payload)
+            if not ok:
+                stale.add(websocket)
+        for websocket in stale:
+            self.disconnect(group, websocket)
 
     def count(self, group: str) -> int:
         return len(self.groups.get(group, set()))
 
 
 manager = ConnectionManager()
+
+
+class UdpSendPayload(BaseModel):
+    host: str = Field(default=UDP_HOST, description="目标 UDP 主机")
+    port: int = Field(default=UDP_PORT, description="目标 UDP 端口")
+    message: str = Field(default="", description="发送内容")
+    timeout_ms: int = Field(default=1500, description="等待响应超时时间")
+    expect_response: bool = Field(default=True, description="是否等待服务端响应")
 
 
 @app.get("/")
@@ -77,6 +123,7 @@ async def index() -> Dict[str, Any]:
         "message": "FastAPI WebSocket test backend is running.",
         "docs": "/docs",
         "health": "/health",
+        "udp_status": "/udp/status",
         "scenarios": [
             "/ws/echo",
             "/ws/chat",
@@ -84,6 +131,7 @@ async def index() -> Dict[str, Any]:
             "/ws/orders",
             "/ws/ticker",
             "/ws/presence",
+            "/ws/udp-events",
         ],
     }
 
@@ -103,7 +151,55 @@ async def scenarios() -> Dict[str, Any]:
             {"key": "orders", "path": "/ws/orders", "description": "订单状态自动推送"},
             {"key": "ticker", "path": "/ws/ticker", "description": "价格与库存波动流"},
             {"key": "presence", "path": "/ws/presence", "description": "在线人数状态同步"},
+            {"key": "udp-events", "path": "/ws/udp-events", "description": "UDP 事件实时推送"},
         ]
+    }
+
+
+@app.get("/udp/status")
+async def udp_status() -> Dict[str, Any]:
+    return {
+        "host": app.state.udp_host,
+        "port": app.state.udp_port,
+        "event_count": app.state.udp_event_store.count(),
+        "events_path": "/udp/events",
+        "stream_path": "/ws/udp-events",
+        "time": now_text(),
+    }
+
+
+@app.get("/udp/events")
+async def udp_events() -> Dict[str, Any]:
+    return {
+        "items": app.state.udp_event_store.list(),
+        "count": app.state.udp_event_store.count(),
+    }
+
+
+@app.post("/udp/send")
+async def udp_send(payload: UdpSendPayload) -> Dict[str, Any]:
+    loop = asyncio.get_running_loop()
+    message = payload.message or json.dumps(
+        {"type": "udp", "scene": "echo", "time": now_text()},
+        ensure_ascii=False,
+    )
+    result = await loop.run_in_executor(
+        None,
+        udp_roundtrip,
+        payload.host,
+        payload.port,
+        message,
+        payload.timeout_ms if payload.expect_response else 1,
+    )
+    return {
+        "target_host": result.target_host,
+        "target_port": result.target_port,
+        "sent_text": result.sent_text,
+        "response_text": result.response_text,
+        "response_hex": result.response_hex,
+        "response_from": result.response_from,
+        "timeout": result.timeout,
+        "time": now_text(),
     }
 
 
@@ -365,3 +461,34 @@ async def websocket_presence(websocket: WebSocket) -> None:
                 "time": now_text(),
             },
         )
+
+
+@app.websocket("/ws/udp-events")
+async def websocket_udp_events(websocket: WebSocket) -> None:
+    await manager.connect("udp-events", websocket)
+    try:
+        await websocket.send_text(
+            json_dumps(
+                {
+                    "event": "ready",
+                    "scene": "udp",
+                    "message": "udp events stream connected",
+                    "status_path": "/udp/status",
+                    "time": now_text(),
+                }
+            )
+        )
+        await websocket.send_text(
+            json_dumps(
+                {
+                    "event": "history",
+                    "scene": "udp",
+                    "items": app.state.udp_event_store.list()[:12],
+                    "time": now_text(),
+                }
+            )
+        )
+        while True:
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        manager.disconnect("udp-events", websocket)
