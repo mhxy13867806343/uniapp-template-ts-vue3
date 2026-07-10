@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import PageShell from '@/components/PageShell.vue'
-import { executeTask } from '@/workers/labRuntime'
+import { TASK_CANCELLED_MESSAGE, executeTask } from '@/workers/labRuntime'
 
 type WorkerExampleKey = 'prime' | 'fibonacci' | 'sort' | 'json' | 'chunk' | 'word'
-type WorkerStatus = 'idle' | 'ready' | 'running' | 'done' | 'error'
+type WorkerStatus = 'idle' | 'ready' | 'running' | 'done' | 'error' | 'cancelled'
 type WorkerLogType = 'system' | 'send' | 'receive' | 'error'
 
 interface WorkerExampleItem {
@@ -25,9 +25,12 @@ interface WorkerLogItem {
 
 interface WorkerResponse {
   id: number
-  ok: boolean
-  type: WorkerExampleKey
+  phase: 'progress' | 'complete' | 'error' | 'cancelled'
+  ok?: boolean
+  type?: WorkerExampleKey
   duration: number
+  progress?: number
+  message?: string
   result?: Record<string, unknown>
   error?: string
 }
@@ -92,7 +95,11 @@ const logs = ref<WorkerLogItem[]>([])
 const resultText = ref('')
 const taskCount = ref(0)
 const lastDuration = ref(0)
+const progress = ref(0)
+const progressText = ref('等待执行')
+const activeTaskId = ref<number | null>(null)
 const workerMode = ref<'worker' | 'fallback'>('fallback')
+const cancelledTaskIds = new Set<number>()
 
 let worker: Worker | null = null
 let logSeed = 1
@@ -106,7 +113,8 @@ const statusText = computed(() => {
     ready: '可执行',
     running: '执行中',
     done: '已完成',
-    error: '执行失败'
+    error: '执行失败',
+    cancelled: '已取消'
   }
   return map[status.value]
 })
@@ -117,7 +125,8 @@ const statusTagType = computed(() => {
     ready: 'success',
     running: 'warning',
     done: 'success',
-    error: 'danger'
+    error: 'danger',
+    cancelled: 'warning'
   }
   return map[status.value]
 })
@@ -155,23 +164,89 @@ function clearLogs() {
 async function fallbackExecute(id: number, type: WorkerExampleKey, rawPayload: string) {
   const startedAt = Date.now()
   try {
-    const result = executeTask(type, rawPayload)
+    const result = await executeTask(type, rawPayload, {
+      onProgress(nextProgress, message) {
+        if (cancelledTaskIds.has(id)) return
+        progress.value = nextProgress
+        progressText.value = message || `已完成 ${nextProgress}%`
+      },
+      isCancelled() {
+        return cancelledTaskIds.has(id)
+      }
+    })
     return {
       id,
+      phase: 'complete' as const,
       ok: true,
       type,
       duration: Date.now() - startedAt,
       result
     }
   } catch (error) {
+    const message = error instanceof Error ? error.message : '当前平台不支持真实 Worker，且降级执行失败'
+    if (message === TASK_CANCELLED_MESSAGE || cancelledTaskIds.has(id)) {
+      return {
+        id,
+        phase: 'cancelled' as const,
+        type,
+        duration: Date.now() - startedAt,
+        message: '任务已取消'
+      }
+    }
     return {
       id,
+      phase: 'error' as const,
       ok: false,
       type,
       duration: Date.now() - startedAt,
-      error: error instanceof Error ? error.message : '当前平台不支持真实 Worker，且降级执行失败'
+      error: message
     }
   }
+}
+
+function resetTaskView() {
+  resultText.value = ''
+  progress.value = 0
+  progressText.value = '等待执行'
+}
+
+function applyTaskResponse(message: WorkerResponse, sourceTitle: string) {
+  if (activeTaskId.value !== message.id) return
+
+  lastDuration.value = message.duration
+
+  if (message.phase === 'progress') {
+    progress.value = message.progress || 0
+    progressText.value = message.message || `已完成 ${message.progress || 0}%`
+    pushLog('system', `${sourceTitle}进度`, `${progress.value}% ${progressText.value}`)
+    return
+  }
+
+  activeTaskId.value = null
+  taskCount.value += 1
+  cancelledTaskIds.delete(message.id)
+
+  if (message.phase === 'cancelled') {
+    status.value = 'cancelled'
+    progressText.value = message.message || '任务已取消'
+    pushLog('system', `${sourceTitle}已取消`, progressText.value)
+    toast.warning('任务已取消')
+    return
+  }
+
+  if (message.phase === 'error') {
+    status.value = 'error'
+    resultText.value = JSON.stringify({ error: message.error }, null, 2)
+    pushLog('error', `${sourceTitle}失败`, resultText.value)
+    toast.error('任务执行失败')
+    return
+  }
+
+  status.value = 'done'
+  progress.value = 100
+  progressText.value = '任务执行完成'
+  resultText.value = JSON.stringify(message.result, null, 2)
+  pushLog('receive', `${sourceTitle}完成`, resultText.value)
 }
 
 function initWorker() {
@@ -190,14 +265,7 @@ function initWorker() {
   pushLog('system', '初始化 Worker', '真实 Worker 已就绪')
 
   worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
-    const message = event.data
-    taskCount.value += 1
-    lastDuration.value = message.duration
-    status.value = message.ok ? 'done' : 'error'
-    resultText.value = message.ok
-      ? JSON.stringify(message.result, null, 2)
-      : JSON.stringify({ error: message.error }, null, 2)
-    pushLog(message.ok ? 'receive' : 'error', '收到 Worker 响应', resultText.value)
+    applyTaskResponse(event.data, 'Worker')
   }
 
   worker.onerror = (error) => {
@@ -208,6 +276,11 @@ function initWorker() {
 }
 
 async function runTask() {
+  if (status.value === 'running' && activeTaskId.value !== null) {
+    toast.warning('当前已有任务在执行，请先取消或等待完成')
+    return
+  }
+
   const currentPayload = payload.value.trim()
   if (!currentPayload) {
     toast.error('请输入任务数据')
@@ -216,13 +289,17 @@ async function runTask() {
 
   initWorker()
   status.value = 'running'
-  resultText.value = ''
+  resetTaskView()
   const id = taskSeed++
+  activeTaskId.value = id
+  progressText.value = '任务已投递，等待开始'
+  cancelledTaskIds.delete(id)
 
   pushLog('send', `发送任务 - ${currentExample.value.title}`, currentPayload)
 
   if (workerMode.value === 'worker' && worker) {
     worker.postMessage({
+      action: 'run',
       id,
       type: activeTab.value,
       payload: currentPayload
@@ -231,33 +308,65 @@ async function runTask() {
   }
 
   const response = await fallbackExecute(id, activeTab.value, currentPayload)
-  taskCount.value += 1
-  lastDuration.value = response.duration
-  status.value = response.ok ? 'done' : 'error'
-  resultText.value = response.ok
-    ? JSON.stringify(response.result, null, 2)
-    : JSON.stringify({ error: response.error }, null, 2)
-  pushLog(response.ok ? 'receive' : 'error', '收到降级执行结果', resultText.value)
+  applyTaskResponse(response, '降级执行')
+}
+
+function cancelCurrentTask() {
+  if (activeTaskId.value === null || status.value !== 'running') {
+    toast.warning('当前没有执行中的任务')
+    return
+  }
+
+  const id = activeTaskId.value
+  cancelledTaskIds.add(id)
+  progressText.value = '正在取消任务'
+  pushLog('system', '发送取消请求', `任务 #${id}`)
+
+  if (workerMode.value === 'worker' && worker) {
+    worker.postMessage({
+      action: 'cancel',
+      id
+    })
+    return
+  }
+
+  setTimeout(() => {
+    if (activeTaskId.value === id) {
+      applyTaskResponse({
+        id,
+        phase: 'cancelled',
+        duration: lastDuration.value,
+        message: '任务已取消'
+      }, '降级执行')
+    }
+  }, 0)
 }
 
 function terminateWorker() {
   if (worker) {
+    if (activeTaskId.value !== null) {
+      cancelledTaskIds.add(activeTaskId.value)
+    }
     worker.terminate()
     worker = null
     workerMode.value = 'fallback'
     status.value = 'idle'
+    activeTaskId.value = null
+    resetTaskView()
     pushLog('system', '终止 Worker', '真实 Worker 已终止')
     toast.success('Worker 已终止')
     return
   }
 
   status.value = 'idle'
+  activeTaskId.value = null
+  resetTaskView()
   pushLog('system', '重置状态', '当前没有运行中的真实 Worker，已重置示例状态')
 }
 
 watch(activeTab, () => {
   payload.value = currentExample.value.payload
-  resultText.value = ''
+  resetTaskView()
   pushLog('system', '切换示例', `当前示例：${currentExample.value.title}`)
 })
 
@@ -279,7 +388,7 @@ onUnmounted(() => {
       <view class="hero-card">
         <view>
           <view class="hero-title">Worker 任务实验室</view>
-          <view class="hero-desc">默认优先使用真实 Web Worker；如果当前端不支持，就切换为主线程降级执行并保留同样的任务输入输出结构。</view>
+          <view class="hero-desc">默认优先使用真实 Web Worker；如果当前端不支持，就切换为主线程降级执行，并补上进度回传和取消任务能力。</view>
         </view>
         <wd-tag :type="statusTagType" plain>{{ statusText }}</wd-tag>
       </view>
@@ -306,10 +415,19 @@ onUnmounted(() => {
         <view class="tips-card">
           <view class="tips-title">运行说明</view>
           <view class="tips-line">真实 Worker：适合 H5 调试和浏览器运行。</view>
-          <view class="tips-line">降级执行：适合当前端环境不支持 Worker 时继续看输入输出与任务结构。</view>
+          <view class="tips-line">降级执行：适合当前端环境不支持 Worker 时继续看输入输出、进度更新与取消逻辑。</view>
+        </view>
+        <view class="progress-wrap">
+          <view class="progress-head">
+            <text>任务进度</text>
+            <text>{{ progress }}%</text>
+          </view>
+          <wd-progress :percentage="progress" />
+          <view class="progress-text">{{ progressText }}</view>
         </view>
         <view class="action-row">
           <wd-button size="small" type="primary" @click="runTask">{{ currentExample.actionLabel }}</wd-button>
+          <wd-button size="small" type="warning" plain @click="cancelCurrentTask">取消当前任务</wd-button>
           <wd-button size="small" plain @click="initWorker">初始化 Worker</wd-button>
           <wd-button size="small" plain @click="terminateWorker">终止 / 重置</wd-button>
         </view>
