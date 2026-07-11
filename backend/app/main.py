@@ -1,10 +1,13 @@
 import asyncio
+import base64
 import contextlib
 import json
 import random
+import uuid
 from contextlib import asynccontextmanager
 from collections import defaultdict
 from datetime import datetime
+from pathlib import Path
 from typing import Any, DefaultDict, Dict, Set
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -16,12 +19,46 @@ from app.udp_runtime import UdpEventStore, create_udp_server, udp_roundtrip
 
 UDP_HOST = "127.0.0.1"
 UDP_PORT = 9999
+BACKEND_ROOT = Path(__file__).resolve().parents[1]
+TRANSFER_ROOT = BACKEND_ROOT / "storage" / "transfer"
+TRANSFER_UPLOAD_ROOT = TRANSFER_ROOT / "uploads"
+TRANSFER_SAMPLE_FILE = TRANSFER_ROOT / "sample-transfer-demo.txt"
+TRANSFER_SAMPLE_CHUNK_SIZE = 128 * 1024
+
+
+def ensure_transfer_sample_file() -> None:
+    TRANSFER_ROOT.mkdir(parents=True, exist_ok=True)
+    TRANSFER_UPLOAD_ROOT.mkdir(parents=True, exist_ok=True)
+    if TRANSFER_SAMPLE_FILE.exists():
+        return
+
+    sample_block = (
+        "UniApp transfer worker demo | chunk upload | chunk download | "
+        "multi-thread like concurrency | fastapi backend | "
+        "web worker preprocessing | "
+        "这是一个用于分片上传下载联调的样例文件。\n"
+    )
+    repeated = sample_block * 9000
+    TRANSFER_SAMPLE_FILE.write_text(repeated, encoding="utf-8")
+
+
+def bytes_to_base64(data: bytes) -> str:
+    return base64.b64encode(data).decode("utf-8")
+
+
+def base64_to_bytes(data: str) -> bytes:
+    return base64.b64decode(data.encode("utf-8"))
+
+
+def file_checksum(data: bytes) -> int:
+    return sum(data) % 1000000007
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     loop = asyncio.get_running_loop()
     event_store = UdpEventStore()
+    ensure_transfer_sample_file()
 
     def on_udp_event(event: Dict[str, Any]) -> None:
         event_store.push(event)
@@ -32,6 +69,7 @@ async def lifespan(app: FastAPI):
     app.state.udp_host = UDP_HOST
     app.state.udp_port = UDP_PORT
     app.state.udp_event_store = event_store
+    app.state.transfer_sessions = {}
     try:
         yield
     finally:
@@ -114,6 +152,23 @@ class UdpSendPayload(BaseModel):
     message: str = Field(default="", description="发送内容")
     timeout_ms: int = Field(default=1500, description="等待响应超时时间")
     expect_response: bool = Field(default=True, description="是否等待服务端响应")
+
+
+class TransferInitPayload(BaseModel):
+    filename: str = Field(default="demo-upload.txt", description="原始文件名")
+    size_bytes: int = Field(default=0, description="文件大小")
+    chunk_size: int = Field(default=TRANSFER_SAMPLE_CHUNK_SIZE, description="分片大小")
+    total_chunks: int = Field(default=1, description="分片数量")
+
+
+class TransferChunkPayload(BaseModel):
+    upload_id: str = Field(description="上传会话 ID")
+    index: int = Field(description="分片索引")
+    data: str = Field(description="base64 编码的分片内容")
+
+
+class TransferCompletePayload(BaseModel):
+    upload_id: str = Field(description="上传会话 ID")
 
 
 @app.get("/")
@@ -199,6 +254,172 @@ async def udp_send(payload: UdpSendPayload) -> Dict[str, Any]:
         "response_hex": result.response_hex,
         "response_from": result.response_from,
         "timeout": result.timeout,
+        "time": now_text(),
+    }
+
+
+@app.get("/transfer/manifest")
+async def transfer_manifest(chunk_size: int = TRANSFER_SAMPLE_CHUNK_SIZE) -> Dict[str, Any]:
+    ensure_transfer_sample_file()
+    size_bytes = TRANSFER_SAMPLE_FILE.stat().st_size
+    normalized_chunk_size = max(16 * 1024, chunk_size)
+    total_chunks = max(1, (size_bytes + normalized_chunk_size - 1) // normalized_chunk_size)
+    return {
+        "file_id": "sample-transfer-demo",
+        "filename": TRANSFER_SAMPLE_FILE.name,
+        "size_bytes": size_bytes,
+        "chunk_size": normalized_chunk_size,
+        "total_chunks": total_chunks,
+        "checksum": file_checksum(TRANSFER_SAMPLE_FILE.read_bytes()),
+        "download_chunk_path": "/transfer/download-chunk",
+        "time": now_text(),
+    }
+
+
+@app.get("/transfer/download-chunk")
+async def transfer_download_chunk(index: int, chunk_size: int = TRANSFER_SAMPLE_CHUNK_SIZE) -> Dict[str, Any]:
+    ensure_transfer_sample_file()
+    normalized_chunk_size = max(16 * 1024, chunk_size)
+    file_bytes = TRANSFER_SAMPLE_FILE.read_bytes()
+    total_chunks = max(1, (len(file_bytes) + normalized_chunk_size - 1) // normalized_chunk_size)
+
+    if index < 0 or index >= total_chunks:
+        return {
+            "ok": False,
+            "message": f"chunk index {index} out of range",
+            "total_chunks": total_chunks,
+            "time": now_text(),
+        }
+
+    start = index * normalized_chunk_size
+    end = min(len(file_bytes), start + normalized_chunk_size)
+    chunk = file_bytes[start:end]
+    return {
+        "ok": True,
+        "index": index,
+        "chunk_size": normalized_chunk_size,
+        "size": len(chunk),
+        "total_chunks": total_chunks,
+        "filename": TRANSFER_SAMPLE_FILE.name,
+        "data": bytes_to_base64(chunk),
+        "time": now_text(),
+    }
+
+
+@app.post("/transfer/upload/init")
+async def transfer_upload_init(payload: TransferInitPayload) -> Dict[str, Any]:
+    upload_id = uuid.uuid4().hex[:16]
+    upload_dir = TRANSFER_UPLOAD_ROOT / upload_id
+    upload_dir.mkdir(parents=True, exist_ok=True)
+
+    app.state.transfer_sessions[upload_id] = {
+        "upload_id": upload_id,
+        "filename": payload.filename,
+        "size_bytes": payload.size_bytes,
+        "chunk_size": payload.chunk_size,
+        "total_chunks": payload.total_chunks,
+        "received_chunks": set(),
+        "upload_dir": str(upload_dir),
+        "merged_path": "",
+        "created_at": now_text(),
+    }
+
+    return {
+        "upload_id": upload_id,
+        "filename": payload.filename,
+        "total_chunks": payload.total_chunks,
+        "chunk_size": payload.chunk_size,
+        "time": now_text(),
+    }
+
+
+@app.post("/transfer/upload/chunk")
+async def transfer_upload_chunk(payload: TransferChunkPayload) -> Dict[str, Any]:
+    session = app.state.transfer_sessions.get(payload.upload_id)
+    if not session:
+        return {
+            "ok": False,
+            "message": "upload session not found",
+            "time": now_text(),
+        }
+
+    upload_dir = Path(session["upload_dir"])
+    part_path = upload_dir / f"{payload.index:06d}.part"
+    chunk_bytes = base64_to_bytes(payload.data)
+    part_path.write_bytes(chunk_bytes)
+    session["received_chunks"].add(payload.index)
+
+    return {
+        "ok": True,
+        "upload_id": payload.upload_id,
+        "index": payload.index,
+        "received_count": len(session["received_chunks"]),
+        "total_chunks": session["total_chunks"],
+        "chunk_size": len(chunk_bytes),
+        "time": now_text(),
+    }
+
+
+@app.get("/transfer/upload/status/{upload_id}")
+async def transfer_upload_status(upload_id: str) -> Dict[str, Any]:
+    session = app.state.transfer_sessions.get(upload_id)
+    if not session:
+        return {
+            "ok": False,
+            "message": "upload session not found",
+            "time": now_text(),
+        }
+
+    return {
+        "ok": True,
+        "upload_id": upload_id,
+        "filename": session["filename"],
+        "received_count": len(session["received_chunks"]),
+        "total_chunks": session["total_chunks"],
+        "size_bytes": session["size_bytes"],
+        "merged_path": session["merged_path"],
+        "created_at": session["created_at"],
+        "time": now_text(),
+    }
+
+
+@app.post("/transfer/upload/complete")
+async def transfer_upload_complete(payload: TransferCompletePayload) -> Dict[str, Any]:
+    session = app.state.transfer_sessions.get(payload.upload_id)
+    if not session:
+        return {
+            "ok": False,
+            "message": "upload session not found",
+            "time": now_text(),
+        }
+
+    total_chunks = session["total_chunks"]
+    missing = [index for index in range(total_chunks) if index not in session["received_chunks"]]
+    if missing:
+        return {
+            "ok": False,
+            "message": "missing chunks",
+            "missing": missing[:12],
+            "time": now_text(),
+        }
+
+    upload_dir = Path(session["upload_dir"])
+    merged_path = upload_dir / f"merged-{session['filename']}"
+    with merged_path.open("wb") as merged_file:
+        for index in range(total_chunks):
+            part_path = upload_dir / f"{index:06d}.part"
+            merged_file.write(part_path.read_bytes())
+
+    merged_bytes = merged_path.read_bytes()
+    session["merged_path"] = str(merged_path)
+
+    return {
+        "ok": True,
+        "upload_id": payload.upload_id,
+        "filename": session["filename"],
+        "merged_size": len(merged_bytes),
+        "checksum": file_checksum(merged_bytes),
+        "merged_path": str(merged_path),
         "time": now_text(),
     }
 

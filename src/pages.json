@@ -358,6 +358,12 @@
       }
     },
     {
+      "path": "pages/framework/transfer",
+      "style": {
+        "navigationBarTitleText": "分片传输实验室"
+      }
+    },
+    {
       "path": "pages/framework/styles",
       "style": {
         "navigationBarTitleText": "样式规范"

@@ -287,6 +287,12 @@ function navToWorkerPage() {
   })
 }
 
+function navToTransferPage() {
+  uni.navigateTo({
+    url: '/pages/framework/transfer'
+  })
+}
+
 function navToEcommerceZone() {
   uni.navigateTo({
     url: '/pages/ecommerce/index'
@@ -500,6 +506,29 @@ appStore.markReady()
               <view class="share-link-meta ml-2">
                 <text class="share-link-title font-bold text-ink">进入 Worker 示例页</text>
                 <text class="share-link-desc">支持素数统计、Fibonacci、排序、JSON 处理、分块统计、词频分析 6 种任务。</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+        </view>
+      </view>
+
+      <view class="panel-section bottom-share-section mt-3">
+        <view class="section-head font-bold mb-2">
+          <text>📦 分片传输实验室</text>
+          <wd-tag type="primary">上传 / 下载 / Worker</wd-tag>
+        </view>
+        <view class="share-desc-info mb-3">
+          新增了分片上传下载联调页：先由 Worker 预处理分片，再通过多路并发请求完成上传和下载，适合演示大文件传输、断点续传思路和前端并发调度。
+        </view>
+
+        <view class="share-links-list flex-column">
+          <view class="share-link-row flex justify-between items-center p-2" @click="navToTransferPage">
+            <view class="flex items-center">
+              <text class="share-link-icon">🧩</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">进入分片传输实验室</text>
+                <text class="share-link-desc">支持 Worker 分片、并发上传、并发下载、下载合并、任务取消与进度回传。</text>
               </view>
             </view>
             <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
