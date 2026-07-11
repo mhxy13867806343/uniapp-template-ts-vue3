@@ -222,6 +222,7 @@ declare global {
   const useId: typeof import('vue').useId
   const useMessage: typeof import('wot-design-uni').useMessage
   const useModel: typeof import('vue').useModel
+  const useMusicStore: typeof import('../store/music').useMusicStore
   const useNotify: typeof import('wot-design-uni').useNotify
   const usePagePagination: typeof import('../hooks/pagination').usePagePagination
   const usePlatform: typeof import('../hooks/usePlatform').usePlatform
@@ -520,6 +521,7 @@ declare module 'vue' {
     readonly useId: UnwrapRef<typeof import('vue')['useId']>
     readonly useMessage: UnwrapRef<typeof import('wot-design-uni')['useMessage']>
     readonly useModel: UnwrapRef<typeof import('vue')['useModel']>
+    readonly useMusicStore: UnwrapRef<typeof import('../store/music')['useMusicStore']>
     readonly useNotify: UnwrapRef<typeof import('wot-design-uni')['useNotify']>
     readonly usePagePagination: UnwrapRef<typeof import('../hooks/pagination')['usePagePagination']>
     readonly usePlatform: UnwrapRef<typeof import('../hooks/usePlatform')['usePlatform']>

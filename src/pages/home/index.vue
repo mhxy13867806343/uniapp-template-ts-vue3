@@ -305,6 +305,12 @@ function navToTransferPage() {
   })
 }
 
+function navToMusicPage() {
+  uni.navigateTo({
+    url: '/pages/music/index'
+  })
+}
+
 function navToEcommerceZone() {
   uni.navigateTo({
     url: '/pages/ecommerce/index'
@@ -407,6 +413,29 @@ appStore.markReady()
               <wd-button size="small" type="primary" @click="navToEcommercePage(item.browseRoute)">去浏览</wd-button>
               <wd-button size="small" plain @click="navToEcommercePage(item.orderRoute)">去下单</wd-button>
             </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="panel-section bottom-share-section mt-3">
+        <view class="section-head font-bold mb-2">
+          <text>🎵 网易云音乐接口页</text>
+          <wd-tag type="danger">首页 / 搜索 / 详情</wd-tag>
+        </view>
+        <view class="share-desc-info mb-3">
+          新增了一个基于 NeteaseCloudMusicApi 的音乐页面，从首页可直接进入。里面已经接好 Banner、推荐歌单、新歌速递、热榜、搜索、歌曲详情、歌单详情等链路。
+        </view>
+
+        <view class="share-links-list flex-column">
+          <view class="share-link-row flex justify-between items-center p-2" @click="navToMusicPage">
+            <view class="flex items-center">
+              <text class="share-link-icon">🎧</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">进入网易云音乐接口页</text>
+                <text class="share-link-desc">支持首页推荐、搜索歌曲、点歌进详情、点歌单看曲目列表，开发态通过 Vite 代理直连接口。</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
           </view>
         </view>
       </view>

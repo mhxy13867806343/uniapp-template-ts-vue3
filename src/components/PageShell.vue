@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppTabbar from './AppTabbar.vue'
+import GlobalPlayer from '@/components/music/GlobalPlayer.vue'
 
 defineProps<{
   title: string
@@ -17,6 +18,8 @@ defineProps<{
     <view class="page-section">
       <slot />
     </view>
+
+    <GlobalPlayer />
 
     <AppTabbar />
   </view>

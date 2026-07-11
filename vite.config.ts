@@ -62,7 +62,14 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       host: '0.0.0.0',
-      port: 5173
+      port: 5173,
+      proxy: {
+        '/music-api': {
+          target: 'https://neteasecloudmusicapi-main-api.vercel.app',
+          changeOrigin: true,
+          rewrite: path => path.replace(/^\/music-api/u, '')
+        }
+      }
     }
   }
 })

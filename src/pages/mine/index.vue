@@ -2,10 +2,12 @@
 import { onShow } from '@dcloudio/uni-app'
 import PageShell from '@/components/PageShell.vue'
 import { useUserStore } from '@/store'
+import { useMusicStore } from '@/store/music'
 import { navigateTo } from '@/utils/router'
 import { exampleScenarios, navigateToExample } from '@/utils/exampleScenarios'
 
 const userStore = useUserStore()
+const musicStore = useMusicStore()
 
 // State for active collapse groups
 const activeCollapses = ref<string[]>([])
@@ -39,6 +41,13 @@ function logout() {
     icon: 'none'
   })
 }
+
+function playSong(song: any, list: any[]) {
+  musicStore.playSong(song, list)
+  uni.navigateTo({
+    url: `/pages/music/detail?mode=song&id=${song.id}`
+  })
+}
 </script>
 
 <template>
@@ -65,6 +74,42 @@ function logout() {
         <wd-cell title="消息通知" :value="unreadMsgCount" is-link clickable @click="navigateTo('/pages/other/messages')" />
         <wd-cell title="应用设置" is-link clickable @click="navigateTo('/pages/other/settings')" />
       </wd-cell-group>
+
+      <!-- Music Center -->
+      <view class="panel mt-4">
+        <view class="toolbox-header mb-3">
+          <text class="toolbox-title">音乐中心</text>
+        </view>
+        <wd-collapse>
+          <wd-collapse-item :title="`我的收藏 (${musicStore.favoriteSongs.length}首)`" name="favorites">
+            <view class="song-list">
+              <view v-for="song in musicStore.favoriteSongs" :key="song.id" class="song-row" @click="playSong(song, musicStore.favoriteSongs)">
+                <image v-if="song.picUrl" class="song-cover" :src="song.picUrl" mode="aspectFill" />
+                <view class="song-main">
+                  <view class="song-name">{{ song.name }}</view>
+                  <view class="song-meta">{{ song.artists.join('/') }}</view>
+                </view>
+              </view>
+              <view v-if="!musicStore.favoriteSongs.length" class="empty-tip">暂无收藏</view>
+            </view>
+          </wd-collapse-item>
+          <wd-collapse-item :title="`最近播放 (${musicStore.playHistory.length}首)`" name="history">
+            <view class="song-list">
+              <view v-for="song in musicStore.playHistory" :key="song.id" class="song-row" @click="playSong(song, musicStore.playHistory)">
+                <image v-if="song.picUrl" class="song-cover" :src="song.picUrl" mode="aspectFill" />
+                <view class="song-main">
+                  <view class="song-name">{{ song.name }}</view>
+                  <view class="song-meta">{{ song.artists.join('/') }}</view>
+                </view>
+              </view>
+              <view v-if="!musicStore.playHistory.length" class="empty-tip">暂无播放历史</view>
+            </view>
+          </wd-collapse-item>
+          <wd-collapse-item title="创建的歌单 (0个)" name="playlists">
+            <view class="empty-tip">暂无自建歌单</view>
+          </wd-collapse-item>
+        </wd-collapse>
+      </view>
 
       <!-- Advanced examples toolbox (100 Examples) -->
       <view class="panel mt-4">
@@ -188,6 +233,57 @@ function logout() {
 
 .mt-4 {
   margin-top: 32rpx;
+}
+
+.song-list {
+  display: grid;
+  gap: 16rpx;
+}
+
+.song-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 16rpx;
+  border-radius: 12rpx;
+  background: #f8fafc;
+}
+
+.song-cover {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 8rpx;
+  background: #eee;
+}
+
+.song-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.song-name {
+  font-size: 28rpx;
+  color: var(--app-ink);
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-meta {
+  font-size: 24rpx;
+  color: var(--app-muted);
+  margin-top: 4rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.empty-tip {
+  color: var(--app-muted);
+  font-size: 24rpx;
+  padding: 20rpx;
+  text-align: center;
 }
 
 :deep(.wd-collapse-item__header) {
