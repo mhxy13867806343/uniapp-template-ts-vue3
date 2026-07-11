@@ -73,6 +73,11 @@ declare global {
   const getAppMessageShare: typeof import('../utils/share').getAppMessageShare
   const getComponentApi: typeof import('../utils/wotComponents').getComponentApi
   const getComponentCode: typeof import('../utils/wotComponents').getComponentCode
+  const getComponentDocUrl: typeof import('../utils/wotComponents').getComponentDocUrl
+  const getComponentEvents: typeof import('../utils/wotComponents').getComponentEvents
+  const getComponentScenes: typeof import('../utils/wotComponents').getComponentScenes
+  const getComponentSlots: typeof import('../utils/wotComponents').getComponentSlots
+  const getComponentSummary: typeof import('../utils/wotComponents').getComponentSummary
   const getCurrentInstance: typeof import('vue').getCurrentInstance
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
@@ -290,7 +295,7 @@ declare global {
   export type { WaterfallScene, WaterfallFeed } from '../utils/waterfallFeeds'
   import('../utils/waterfallFeeds')
   // @ts-ignore
-  export type { ComponentItem, ComponentGroup, ApiRow } from '../utils/wotComponents'
+  export type { ComponentItem, ComponentGroup, ApiRow, EventRow, SlotRow } from '../utils/wotComponents'
   import('../utils/wotComponents')
 }
 
@@ -366,6 +371,11 @@ declare module 'vue' {
     readonly getAppMessageShare: UnwrapRef<typeof import('../utils/share')['getAppMessageShare']>
     readonly getComponentApi: UnwrapRef<typeof import('../utils/wotComponents')['getComponentApi']>
     readonly getComponentCode: UnwrapRef<typeof import('../utils/wotComponents')['getComponentCode']>
+    readonly getComponentDocUrl: UnwrapRef<typeof import('../utils/wotComponents')['getComponentDocUrl']>
+    readonly getComponentEvents: UnwrapRef<typeof import('../utils/wotComponents')['getComponentEvents']>
+    readonly getComponentScenes: UnwrapRef<typeof import('../utils/wotComponents')['getComponentScenes']>
+    readonly getComponentSlots: UnwrapRef<typeof import('../utils/wotComponents')['getComponentSlots']>
+    readonly getComponentSummary: UnwrapRef<typeof import('../utils/wotComponents')['getComponentSummary']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getCurrentWatcher: UnwrapRef<typeof import('vue')['getCurrentWatcher']>

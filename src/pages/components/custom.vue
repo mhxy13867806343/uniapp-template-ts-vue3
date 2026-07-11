@@ -176,14 +176,28 @@ const collapseItems = [
   { title: '补充备注', name: 'remark', content: '这里可以放业务备注、风险提示和后续跟进建议。', meta: '可选阅读' }
 ]
 
+function scrollToCurrentDemo(duration = 280) {
+  // 统一滚到预览区，避免切换成功但页面停在上方，看起来像没响应。
+  nextTick(() => {
+    setTimeout(() => {
+      uni.pageScrollTo({
+        selector: '#current-component-demo',
+        duration
+      })
+    }, 40)
+  })
+}
+
 onLoad((query) => {
   if (typeof query?.path === 'string') {
     currentPath.value = decodeURIComponent(query.path)
+    scrollToCurrentDemo(0)
   }
 })
 
 watch(currentPath, (value) => {
   if (activeLevel.value === 'all') {
+    scrollToCurrentDemo()
     return
   }
 
@@ -191,9 +205,16 @@ watch(currentPath, (value) => {
   if (level !== activeLevel.value) {
     activeLevel.value = level
   }
+
+  scrollToCurrentDemo()
 })
 
 function selectComponent(path: string) {
+  if (currentPath.value === path) {
+    scrollToCurrentDemo()
+    return
+  }
+
   currentPath.value = path
 }
 
@@ -344,7 +365,7 @@ function handleActionSelect(value: string) {
         </scroll-view>
       </view>
 
-      <view class="demo-card">
+      <view id="current-component-demo" class="demo-card">
         <view class="demo-head">
           <view>
             <view class="demo-title">{{ currentComponent.title }}</view>
@@ -942,6 +963,7 @@ function handleActionSelect(value: string) {
   background:
     linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   padding: 16rpx;
+  pointer-events: none;
 }
 
 .example-tile__tags {
