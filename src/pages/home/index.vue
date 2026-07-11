@@ -252,7 +252,7 @@ function navToSharePage(type: 'wechat' | 'system' | 'poster') {
   })
 }
 
-function navToApiPage(type: 'interface' | 'storage' | 'routing' | 'fileSystem' | 'bluetooth' | 'scan' | 'canvas' | 'contact' | 'biometrics' | 'media' | 'location' | 'network' | 'keyboard' | 'worker') {
+function navToApiPage(type: 'interface' | 'storage' | 'routing' | 'fileSystem' | 'bluetooth' | 'scan' | 'canvas' | 'contact' | 'biometrics' | 'media' | 'location' | 'network' | 'keyboard' | 'worker' | 'device') {
   const urlMap = {
     interface: '/pages/uni-api/interface',
     storage: '/pages/uni-api/storage',
@@ -267,7 +267,8 @@ function navToApiPage(type: 'interface' | 'storage' | 'routing' | 'fileSystem' |
     location: '/pages/uni-api/location',
     network: '/pages/uni-api/network',
     keyboard: '/pages/uni-api/keyboard',
-    worker: '/pages/uni-api/worker'
+    worker: '/pages/uni-api/worker',
+    device: '/pages/uni-api/device'
   }
   uni.navigateTo({
     url: urlMap[type]
@@ -600,10 +601,10 @@ appStore.markReady()
       <view class="panel-section bottom-share-section mt-3">
         <view class="section-head font-bold mb-2">
           <text>🔧 UniApp 核心 API 演示专区</text>
-          <wd-tag type="primary">14类能力中心</wd-tag>
+          <wd-tag type="primary">15类能力中心</wd-tag>
         </view>
         <view class="share-desc-info mb-3">
-          现在已经把界面、存储、路由、文件系统、蓝牙、扫码、画布、联系人、生物认证、媒体、位置、网络、键盘、Worker 这些能力都补成了统一封装 + 可交互演示页：
+          现在已经把界面、存储、路由、文件系统、蓝牙、扫码、画布、联系人、生物认证、媒体、位置、网络、键盘、Worker、设备 这些能力都补成了统一封装 + 可交互演示页：
         </view>
 
         <view class="share-links-list flex-column">
@@ -759,6 +760,17 @@ appStore.markReady()
               <view class="share-link-meta ml-2">
                 <text class="share-link-title font-bold text-ink">Worker APIs</text>
                 <text class="share-link-desc">检测 uni.createWorker、创建静态 worker、发送消息和跳转到框架 Worker 实验室。</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+
+          <view class="share-link-row flex justify-between items-center p-2 mt-2" @click="navToApiPage('device')">
+            <view class="flex items-center">
+              <text class="share-link-icon">📱</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">设备 APIs</text>
+                <text class="share-link-desc">系统信息、窗口信息、网络类型、剪贴板、拨号、授权、设置和震动反馈。</text>
               </view>
             </view>
             <wd-icon name="arrow-right" size="16px" color="#94a3b8" />

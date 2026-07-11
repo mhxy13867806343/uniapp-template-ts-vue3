@@ -281,6 +281,12 @@
       }
     },
     {
+      "path": "pages/uni-api/device",
+      "style": {
+        "navigationBarTitleText": "设备 APIs"
+      }
+    },
+    {
       "path": "pages/examples/multi-step-refund",
       "style": {
         "navigationBarTitleText": "分步售后退款"
