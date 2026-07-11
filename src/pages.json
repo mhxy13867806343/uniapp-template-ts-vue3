@@ -83,6 +83,24 @@
       }
     },
     {
+      "path": "pages/lol/index",
+      "style": {
+        "navigationBarTitleText": "英雄大厅",
+        "navigationBarBackgroundColor": "#111827",
+        "navigationBarTextStyle": "white",
+        "backgroundColor": "#111827"
+      }
+    },
+    {
+      "path": "pages/lol/detail",
+      "style": {
+        "navigationBarTitleText": "英雄详情",
+        "navigationBarBackgroundColor": "#0f141c",
+        "navigationBarTextStyle": "white",
+        "backgroundColor": "#0f141c"
+      }
+    },
+    {
       "path": "pages/examples/basic",
       "style": {
         "navigationBarTitleText": "基础示例"

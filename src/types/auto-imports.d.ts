@@ -257,6 +257,9 @@ declare global {
   export type { UserProfile } from '../store/user'
   import('../store/user')
   // @ts-ignore
+  export type { PlayMode } from '../store/music'
+  import('../store/music')
+  // @ts-ignore
   export type { CachePayload, CacheOptions } from '../utils/cache'
   import('../utils/cache')
   // @ts-ignore

@@ -311,6 +311,12 @@ function navToMusicPage() {
   })
 }
 
+function navToLolPage() {
+  uni.navigateTo({
+    url: '/pages/lol/index'
+  })
+}
+
 function navToEcommerceZone() {
   uni.navigateTo({
     url: '/pages/ecommerce/index'
@@ -433,6 +439,30 @@ appStore.markReady()
               <view class="share-link-meta ml-2">
                 <text class="share-link-title font-bold text-ink">进入网易云音乐接口页</text>
                 <text class="share-link-desc">支持首页推荐、搜索歌曲、点歌进详情、点歌单看曲目列表，开发态通过 Vite 代理直连接口。</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+        </view>
+      </view>
+
+      <!-- LOL Hero Database Entry -->
+      <view class="panel-section bottom-share-section mt-3">
+        <view class="section-head font-bold mb-2">
+          <text>🎮 英雄联盟英雄数据库</text>
+          <wd-tag type="warning">官方实时数据 / 皮肤大图 / 语音包</wd-tag>
+        </view>
+        <view class="share-desc-info mb-3">
+          直连接口获取最新全英雄数据！集成英雄检索与角色筛选、皮肤高清大图阻碍式幻灯查看、被动/Q/W/E/R技能图文详情、以及中英文出场与禁用原生语音包试听。
+        </view>
+
+        <view class="share-links-list flex-column">
+          <view class="share-link-row flex justify-between items-center p-2" @click="navToLolPage">
+            <view class="flex items-center">
+              <text class="share-link-icon">⚔️</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">进入英雄大厅</text>
+                <text class="share-link-desc">查看全英雄属性、切选皮肤轮播原画、研究技能冷却射程，播放人物台词配音语音包。</text>
               </view>
             </view>
             <wd-icon name="arrow-right" size="16px" color="#94a3b8" />

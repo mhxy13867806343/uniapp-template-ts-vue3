@@ -2,10 +2,24 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { getSongUrl, type SongItem } from '@/apis/music'
 
+export type PlayMode = 'order' | 'loop' | 'shuffle'
+
+const PLAY_MODE_TEXT: Record<PlayMode, string> = {
+  order: '顺序播放',
+  loop: '单曲循环',
+  shuffle: '随机播放'
+}
+
 export const useMusicStore = defineStore('music', () => {
   const playlist = ref<SongItem[]>([])
   const currentIndex = ref(-1)
   const playing = ref(false)
+  const playMode = ref<PlayMode>('order')
+
+  const modeCache = uni.getStorageSync('music:play_mode')
+  if (modeCache === 'order' || modeCache === 'loop' || modeCache === 'shuffle') {
+    playMode.value = modeCache
+  }
   const currentTime = ref(0)
   const duration = ref(0)
   const playHistory = ref<SongItem[]>([])
@@ -46,7 +60,7 @@ export const useMusicStore = defineStore('music', () => {
       
       innerAudioContext.onEnded(() => {
         playing.value = false
-        playNext()
+        handleSongEnd()
       })
       
       innerAudioContext.onTimeUpdate(() => {
@@ -157,17 +171,49 @@ export const useMusicStore = defineStore('music', () => {
     }
   }
 
+  function getRandomIndex() {
+    if (playlist.value.length <= 1) return currentIndex.value
+    let next = currentIndex.value
+    while (next === currentIndex.value) {
+      next = Math.floor(Math.random() * playlist.value.length)
+    }
+    return next
+  }
+
+  function handleSongEnd() {
+    if (playlist.value.length === 0) return
+    if (playMode.value === 'loop') {
+      startPlayback()
+      return
+    }
+    playNext()
+  }
+
   function playNext() {
     if (playlist.value.length === 0) return
-    currentIndex.value = (currentIndex.value + 1) % playlist.value.length
+    currentIndex.value = playMode.value === 'shuffle'
+      ? getRandomIndex()
+      : (currentIndex.value + 1) % playlist.value.length
     startPlayback()
   }
 
   function playPrev() {
     if (playlist.value.length === 0) return
-    currentIndex.value = (currentIndex.value - 1 + playlist.value.length) % playlist.value.length
+    currentIndex.value = playMode.value === 'shuffle'
+      ? getRandomIndex()
+      : (currentIndex.value - 1 + playlist.value.length) % playlist.value.length
     startPlayback()
   }
+
+  function togglePlayMode() {
+    const modes: PlayMode[] = ['order', 'loop', 'shuffle']
+    const next = modes[(modes.indexOf(playMode.value) + 1) % modes.length]
+    playMode.value = next
+    uni.setStorageSync('music:play_mode', next)
+    uni.showToast({ title: PLAY_MODE_TEXT[next], icon: 'none' })
+  }
+
+  const playModeText = computed(() => PLAY_MODE_TEXT[playMode.value])
 
   function seek(position: number) {
     const audio = getAudioContext()
@@ -184,9 +230,12 @@ export const useMusicStore = defineStore('music', () => {
     playHistory,
     favoriteSongs,
     playlistVisible,
+    playMode,
+    playModeText,
     playSong,
     addSong,
     togglePlay,
+    togglePlayMode,
     playNext,
     playPrev,
     seek,
