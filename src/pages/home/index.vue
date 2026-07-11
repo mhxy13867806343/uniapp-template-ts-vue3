@@ -252,11 +252,22 @@ function navToSharePage(type: 'wechat' | 'system' | 'poster') {
   })
 }
 
-function navToApiPage(type: 'interface' | 'storage' | 'routing') {
+function navToApiPage(type: 'interface' | 'storage' | 'routing' | 'fileSystem' | 'bluetooth' | 'scan' | 'canvas' | 'contact' | 'biometrics' | 'media' | 'location' | 'network' | 'keyboard' | 'worker') {
   const urlMap = {
     interface: '/pages/uni-api/interface',
     storage: '/pages/uni-api/storage',
-    routing: '/pages/uni-api/routing'
+    routing: '/pages/uni-api/routing',
+    fileSystem: '/pages/uni-api/file-system',
+    bluetooth: '/pages/uni-api/bluetooth',
+    scan: '/pages/uni-api/scan',
+    canvas: '/pages/uni-api/canvas',
+    contact: '/pages/uni-api/contact',
+    biometrics: '/pages/uni-api/biometrics',
+    media: '/pages/uni-api/media',
+    location: '/pages/uni-api/location',
+    network: '/pages/uni-api/network',
+    keyboard: '/pages/uni-api/keyboard',
+    worker: '/pages/uni-api/worker'
   }
   uni.navigateTo({
     url: urlMap[type]
@@ -589,10 +600,10 @@ appStore.markReady()
       <view class="panel-section bottom-share-section mt-3">
         <view class="section-head font-bold mb-2">
           <text>🔧 UniApp 核心 API 演示专区</text>
-          <wd-tag type="primary">3类核心组件</wd-tag>
+          <wd-tag type="primary">14类能力中心</wd-tag>
         </view>
         <view class="share-desc-info mb-3">
-          精选封装了微信/App常用的界面反馈、导航Tab定制、异步/同步数据存储管理与路由历史堆栈的可视化调试演示：
+          现在已经把界面、存储、路由、文件系统、蓝牙、扫码、画布、联系人、生物认证、媒体、位置、网络、键盘、Worker 这些能力都补成了统一封装 + 可交互演示页：
         </view>
 
         <view class="share-links-list flex-column">
@@ -627,6 +638,127 @@ appStore.markReady()
               <view class="share-link-meta ml-2">
                 <text class="share-link-title font-bold text-ink">页面栈与路由 APIs</text>
                 <text class="share-link-desc">抓取小程序/App原生路由历史堆栈，navigateTo/redirectTo 状态演示</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+
+          <view class="share-link-row flex justify-between items-center p-2 mt-2" @click="navToApiPage('fileSystem')">
+            <view class="flex items-center">
+              <text class="share-link-icon">📁</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">文件系统 APIs</text>
+                <text class="share-link-desc">saveFile、已保存文件列表、文件信息读取、文档打开等能力测试。</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+
+          <view class="share-link-row flex justify-between items-center p-2 mt-2" @click="navToApiPage('bluetooth')">
+            <view class="flex items-center">
+              <text class="share-link-icon">📶</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">蓝牙 APIs</text>
+                <text class="share-link-desc">蓝牙适配器、扫描附近设备、查看状态和设备列表读取。</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+
+          <view class="share-link-row flex justify-between items-center p-2 mt-2" @click="navToApiPage('scan')">
+            <view class="flex items-center">
+              <text class="share-link-icon">📷</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">扫码 APIs</text>
+                <text class="share-link-desc">通用扫码、二维码、条形码三种入口，适合支付码和物流码场景。</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+
+          <view class="share-link-row flex justify-between items-center p-2 mt-2" @click="navToApiPage('canvas')">
+            <view class="flex items-center">
+              <text class="share-link-icon">🎨</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">画布 APIs</text>
+                <text class="share-link-desc">Canvas 绘制、导出图片、读取图片信息和 OffscreenCanvas 检测。</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+
+          <view class="share-link-row flex justify-between items-center p-2 mt-2" @click="navToApiPage('contact')">
+            <view class="flex items-center">
+              <text class="share-link-icon">👥</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">联系人 APIs</text>
+                <text class="share-link-desc">新增联系人与选择联系人，适合 CRM、邀请和售后回访场景。</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+
+          <view class="share-link-row flex justify-between items-center p-2 mt-2" @click="navToApiPage('biometrics')">
+            <view class="flex items-center">
+              <text class="share-link-icon">🧬</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">生物认证 APIs</text>
+                <text class="share-link-desc">检测支持模式、设备录入状态，以及指纹和人脸认证动作。</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+
+          <view class="share-link-row flex justify-between items-center p-2 mt-2" @click="navToApiPage('media')">
+            <view class="flex items-center">
+              <text class="share-link-icon">🖼️</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">媒体 APIs</text>
+                <text class="share-link-desc">图片和视频选择、预览、图片信息读取，适合头像、相册和短视频场景。</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+
+          <view class="share-link-row flex justify-between items-center p-2 mt-2" @click="navToApiPage('location')">
+            <view class="flex items-center">
+              <text class="share-link-icon">📍</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">位置 APIs</text>
+                <text class="share-link-desc">当前位置、地图选点、打开地图和持续定位，适合配送与门店导航。</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+
+          <view class="share-link-row flex justify-between items-center p-2 mt-2" @click="navToApiPage('network')">
+            <view class="flex items-center">
+              <text class="share-link-icon">🌐</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">网络 APIs</text>
+                <text class="share-link-desc">统一测试 request 和 WebSocket 封装，直接复用本地 FastAPI 服务联调。</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+
+          <view class="share-link-row flex justify-between items-center p-2 mt-2" @click="navToApiPage('keyboard')">
+            <view class="flex items-center">
+              <text class="share-link-icon">⌨️</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">键盘 APIs</text>
+                <text class="share-link-desc">键盘高度监听与隐藏键盘，适合聊天输入框和安全键盘场景。</text>
+              </view>
+            </view>
+            <wd-icon name="arrow-right" size="16px" color="#94a3b8" />
+          </view>
+
+          <view class="share-link-row flex justify-between items-center p-2 mt-2" @click="navToApiPage('worker')">
+            <view class="flex items-center">
+              <text class="share-link-icon">🧵</text>
+              <view class="share-link-meta ml-2">
+                <text class="share-link-title font-bold text-ink">Worker APIs</text>
+                <text class="share-link-desc">检测 uni.createWorker、创建静态 worker、发送消息和跳转到框架 Worker 实验室。</text>
               </view>
             </view>
             <wd-icon name="arrow-right" size="16px" color="#94a3b8" />

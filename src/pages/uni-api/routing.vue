@@ -1,4 +1,14 @@
 <script setup lang="ts">
+import {
+  confirm,
+  getCurrentPageStack,
+  navigateBack,
+  navigateTo,
+  preloadPage,
+  reLaunch,
+  redirectTo,
+  switchTab
+} from '@/apis/uni'
 import PageShell from '@/components/PageShell.vue'
 
 const toast = useToast('routing-toast')
@@ -8,76 +18,49 @@ const realPages = ref<any[]>([])
 const navParams = ref('id=1024&source=routing_api')
 
 function refreshRouterStack() {
-  try {
-    const pages = getCurrentPages()
-    realPages.value = pages.map((p: any) => ({
-      route: p.route || '未知页面',
-      options: p.options || {}
-    }))
-  } catch (e) {
-    realPages.value = [{ route: 'pages/uni-api/routing', options: {} }]
+  const pages = getCurrentPageStack()
+  realPages.value = pages.length ? pages : [{ route: 'pages/uni-api/routing', options: {} }]
+}
+
+async function handleNavigateTo() {
+  await navigateTo(`/pages/uni-api/storage?${navParams.value}`)
+  toast.success('navigateTo 跳转成功')
+}
+
+async function handleRedirectTo() {
+  await redirectTo(`/pages/uni-api/interface?${navParams.value}`)
+  toast.success('redirectTo 重定向成功')
+}
+
+async function handleSwitchTab() {
+  await switchTab('/pages/home/index')
+  toast.success('switchTab 切换 Tab 成功')
+}
+
+async function handleReLaunch() {
+  const approved = await confirm({
+    title: '确认全局重启',
+    content: 'reLaunch 将关闭所有历史页面栈并重新加载首页，确认继续吗？'
+  })
+  if (approved) {
+    await reLaunch('/pages/home/index?relaunch=true')
   }
 }
 
-function handleNavigateTo() {
-  uni.navigateTo({
-    url: `/pages/uni-api/storage?${navParams.value}`,
-    success: () => {
-      toast.success('navigateTo 跳转成功')
-    }
-  })
-}
-
-function handleRedirectTo() {
-  uni.redirectTo({
-    url: `/pages/uni-api/interface?${navParams.value}`,
-    success: () => {
-      toast.success('redirectTo 重定向成功')
-    }
-  })
-}
-
-function handleSwitchTab() {
-  uni.switchTab({
-    url: '/pages/home/index',
-    success: () => {
-      toast.success('switchTab 切换 Tab 成功')
-    }
-  })
-}
-
-function handleReLaunch() {
-  uni.showModal({
-    title: '确认全局重启',
-    content: 'reLaunch 将关闭所有历史页面栈并重新加载首页，确认继续吗？',
-    success: (res) => {
-      if (res.confirm) {
-        uni.reLaunch({
-          url: '/pages/home/index?relaunch=true'
-        })
-      }
-    }
-  })
-}
-
-function handleNavigateBack() {
-  const pages = getCurrentPages()
+async function handleNavigateBack() {
+  const pages = getCurrentPageStack()
   if (pages.length <= 1) {
     toast.warning('已经处于根级页面，无法再退栈')
     return
   }
-  uni.navigateBack({
-    delta: 1
-  })
+  await navigateBack({ delta: 1 })
 }
 
-function handlePreloadPage() {
+async function handlePreloadPage() {
   // uni.preloadPage is only supported on certain MP platforms and App
   // #ifdef APP-PLUS || MP-WEIXIN
   try {
-    uni.preloadPage({
-      url: '/pages/uni-api/storage'
-    })
+    await preloadPage('/pages/uni-api/storage')
     toast.success('预加载 pages/uni-api/storage 页面资源成功')
   } catch (e: any) {
     toast.warning(`预加载失败: ${e.message}`)

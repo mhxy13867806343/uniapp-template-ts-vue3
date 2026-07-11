@@ -1,4 +1,15 @@
 <script setup lang="ts">
+import {
+  clearStorageSync,
+  confirm,
+  getStorage,
+  getStorageInfo,
+  getStorageInfoSync,
+  getStorageSync,
+  removeStorageSync,
+  setStorage,
+  setStorageSync
+} from '@/apis/uni'
 import PageShell from '@/components/PageShell.vue'
 
 const toast = useToast('storage-toast')
@@ -22,23 +33,19 @@ function logCommand(command: string, success: boolean, result: string) {
   refreshStorageInfo()
 }
 
-function handleSetStorageAsync() {
+async function handleSetStorageAsync() {
   if (!storageKey.value.trim()) {
     toast.warning('请输入 Key')
     return
   }
-  uni.setStorage({
-    key: storageKey.value.trim(),
-    data: storageVal.value,
-    success: () => {
-      toast.success('异步写入成功')
-      logCommand(`uni.setStorage({ key: "${storageKey.value}", data: ... })`, true, 'Success')
-    },
-    fail: (err) => {
-      toast.error('写入失败')
-      logCommand('uni.setStorage', false, err.errMsg)
-    }
-  })
+  try {
+    await setStorage(storageKey.value.trim(), storageVal.value)
+    toast.success('异步写入成功')
+    logCommand(`setStorage("${storageKey.value}", ...)`, true, 'Success')
+  } catch (err: any) {
+    toast.error('写入失败')
+    logCommand('setStorage', false, err?.errMsg || err?.message || 'Error')
+  }
 }
 
 function handleSetStorageSync() {
@@ -47,33 +54,30 @@ function handleSetStorageSync() {
     return
   }
   try {
-    uni.setStorageSync(storageKey.value.trim(), storageVal.value)
+    setStorageSync(storageKey.value.trim(), storageVal.value)
     toast.success('同步写入成功')
-    logCommand(`uni.setStorageSync("${storageKey.value}", ...)`, true, 'Success')
+    logCommand(`setStorageSync("${storageKey.value}", ...)`, true, 'Success')
   } catch (e: any) {
     toast.error('写入失败')
-    logCommand('uni.setStorageSync', false, e.message || 'Error')
+    logCommand('setStorageSync', false, e.message || 'Error')
   }
 }
 
-function handleGetStorageAsync() {
+async function handleGetStorageAsync() {
   if (!queryKey.value.trim()) {
     toast.warning('请输入查询 Key')
     return
   }
-  uni.getStorage({
-    key: queryKey.value.trim(),
-    success: (res) => {
-      queryResult.value = typeof res.data === 'object' ? JSON.stringify(res.data) : String(res.data)
-      toast.success('异步获取成功')
-      logCommand(`uni.getStorage({ key: "${queryKey.value}" })`, true, `Data: ${queryResult.value}`)
-    },
-    fail: (err) => {
-      queryResult.value = '(未命中或已失效)'
-      toast.warning('未找到对应数据')
-      logCommand(`uni.getStorage({ key: "${queryKey.value}" })`, false, err.errMsg)
-    }
-  })
+  try {
+    const res = await getStorage(queryKey.value.trim())
+    queryResult.value = typeof res.data === 'object' ? JSON.stringify(res.data) : String(res.data)
+    toast.success('异步获取成功')
+    logCommand(`getStorage("${queryKey.value}")`, true, `Data: ${queryResult.value}`)
+  } catch (err: any) {
+    queryResult.value = '(未命中或已失效)'
+    toast.warning('未找到对应数据')
+    logCommand(`getStorage("${queryKey.value}")`, false, err?.errMsg || err?.message || 'Error')
+  }
 }
 
 function handleGetStorageSync() {
@@ -82,19 +86,19 @@ function handleGetStorageSync() {
     return
   }
   try {
-    const val = uni.getStorageSync(queryKey.value.trim())
+    const val = getStorageSync(queryKey.value.trim())
     if (val !== undefined && val !== null && val !== '') {
       queryResult.value = typeof val === 'object' ? JSON.stringify(val) : String(val)
       toast.success('同步获取成功')
-      logCommand(`uni.getStorageSync("${queryKey.value}")`, true, `Data: ${queryResult.value}`)
+      logCommand(`getStorageSync("${queryKey.value}")`, true, `Data: ${queryResult.value}`)
     } else {
       queryResult.value = '(未命中或为空)'
       toast.warning('未找到对应数据')
-      logCommand(`uni.getStorageSync("${queryKey.value}")`, false, 'Empty/Not Found')
+      logCommand(`getStorageSync("${queryKey.value}")`, false, 'Empty/Not Found')
     }
   } catch (e: any) {
     queryResult.value = 'Error reading'
-    logCommand(`uni.getStorageSync("${queryKey.value}")`, false, e.message || 'Error')
+    logCommand(`getStorageSync("${queryKey.value}")`, false, e.message || 'Error')
   }
 }
 
@@ -104,48 +108,42 @@ function handleRemoveStorage() {
     return
   }
   try {
-    uni.removeStorageSync(queryKey.value.trim())
+    removeStorageSync(queryKey.value.trim())
     toast.success('移除成功')
-    logCommand(`uni.removeStorageSync("${queryKey.value}")`, true, 'Removed')
+    logCommand(`removeStorageSync("${queryKey.value}")`, true, 'Removed')
   } catch (e: any) {
-    logCommand('uni.removeStorageSync', false, e.message || 'Error')
+    logCommand('removeStorageSync', false, e.message || 'Error')
   }
 }
 
-function refreshStorageInfo() {
+async function refreshStorageInfo() {
   try {
-    const info = uni.getStorageInfoSync()
+    const info = getStorageInfoSync()
     storageDetails.value = {
       keys: info.keys,
       currentSize: info.currentSize,
       limitSize: info.limitSize
     }
   } catch (e) {
-    // Fail-safe async fallback
-    uni.getStorageInfo({
-      success: (res) => {
-        storageDetails.value = {
-          keys: res.keys,
-          currentSize: res.currentSize,
-          limitSize: res.limitSize
-        }
-      }
-    })
+    const res = await getStorageInfo()
+    storageDetails.value = {
+      keys: res.keys,
+      currentSize: res.currentSize,
+      limitSize: res.limitSize
+    }
   }
 }
 
-function handleClearStorage() {
-  uni.showModal({
+async function handleClearStorage() {
+  const approved = await confirm({
     title: '确认清空',
-    content: '此操作将彻底清除该项目在当前端所占用的所有本地缓存数据，确认继续吗？',
-    success: (res) => {
-      if (res.confirm) {
-        uni.clearStorageSync()
-        toast.success('缓存彻底清空')
-        logCommand('uni.clearStorageSync()', true, 'Cleared All')
-      }
-    }
+    content: '此操作将彻底清除该项目在当前端所占用的所有本地缓存数据，确认继续吗？'
   })
+  if (approved) {
+    clearStorageSync()
+    toast.success('缓存彻底清空')
+    logCommand('clearStorageSync()', true, 'Cleared All')
+  }
 }
 
 onMounted(() => {

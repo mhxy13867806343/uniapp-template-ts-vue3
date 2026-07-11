@@ -1,4 +1,20 @@
 <script setup lang="ts">
+import {
+  hideLoading,
+  hideNavigationBarLoading,
+  pageScrollTo,
+  setNavigationBarColor,
+  setNavigationBarTitle,
+  setTabBarBadge,
+  showActionSheet,
+  showLoading,
+  showModal,
+  showNavigationBarLoading,
+  showTabBarRedDot,
+  showToast,
+  hideTabBarRedDot,
+  removeTabBarBadge
+} from '@/apis/uni'
 import PageShell from '@/components/PageShell.vue'
 
 const toast = useToast('interface-toast')
@@ -10,7 +26,7 @@ const tabBadgeText = ref('99+')
 
 // Actions
 function triggerToast() {
-  uni.showToast({
+  showToast({
     title: '触发消息提示成功',
     icon: 'success',
     duration: 2000
@@ -18,54 +34,46 @@ function triggerToast() {
 }
 
 function triggerLoading() {
-  uni.showLoading({
-    title: '数据加载中...'
-  })
+  showLoading('数据加载中...')
   setTimeout(() => {
-    uni.hideLoading()
+    hideLoading()
     toast.success('加载状态已关闭')
   }, 2000)
 }
 
-function triggerModal() {
-  uni.showModal({
+async function triggerModal() {
+  const res = await showModal({
     title: '系统警告',
     content: '这是一个使用 uni.showModal 调用出来的标准跨端对话框确认演示。',
-    confirmColor: '#ef4444',
-    success: (res) => {
-      if (res.confirm) {
-        toast.success('您点击了确认')
-      } else {
-        toast.warning('您点击了取消')
-      }
-    }
+    confirmColor: '#ef4444'
   })
+  if (res.confirm) {
+    toast.success('您点击了确认')
+  } else {
+    toast.warning('您点击了取消')
+  }
 }
 
-function triggerActionSheet() {
-  uni.showActionSheet({
-    itemList: ['保存图片至相册', '转发分享给微信好友', '收藏该资源卡片', '投诉反馈违规'],
-    success: (res) => {
-      const items = ['保存图片至相册', '转发分享给微信好友', '收藏该资源卡片', '投诉反馈违规']
-      toast.success(`您选中了选项: ${items[res.tapIndex]}`)
-    }
+async function triggerActionSheet() {
+  const items = ['保存图片至相册', '转发分享给微信好友', '收藏该资源卡片', '投诉反馈违规']
+  const res = await showActionSheet({
+    itemList: items
   })
+  toast.success(`您选中了选项: ${items[res.tapIndex]}`)
 }
 
-function setNavTitle() {
+async function setNavTitle() {
   if (!navTitle.value.trim()) {
     toast.warning('请输入标题文字')
     return
   }
-  uni.setNavigationBarTitle({
-    title: navTitle.value.trim()
-  })
+  await setNavigationBarTitle(navTitle.value.trim())
   toast.success('设置成功，看最上方顶部标题！')
 }
 
-function changeNavColor(color: string) {
+async function changeNavColor(color: string) {
   navColorOption.value = color
-  uni.setNavigationBarColor({
+  await setNavigationBarColor({
     frontColor: '#ffffff', // must be #ffffff or #000000
     backgroundColor: color,
     animation: {
@@ -77,52 +85,52 @@ function changeNavColor(color: string) {
 }
 
 function showNavLoading() {
-  uni.showNavigationBarLoading()
+  showNavigationBarLoading()
   setTimeout(() => {
-    uni.hideNavigationBarLoading()
+    hideNavigationBarLoading()
   }, 3000)
   toast.success('开启标题栏加载圈（3秒后自动关闭）')
 }
 
-function setBadge() {
-  uni.setTabBarBadge({
+async function setBadge() {
+  await setTabBarBadge({
     index: 0,
     text: tabBadgeText.value
   })
   toast.success('已为第 1 个 Tab 增加气泡数量')
 }
 
-function removeBadge() {
-  uni.removeTabBarBadge({
+async function removeBadge() {
+  await removeTabBarBadge({
     index: 0
   })
   toast.success('已清除 Tab 气泡')
 }
 
-function showRedDot() {
-  uni.showTabBarRedDot({
+async function showRedDot() {
+  await showTabBarRedDot({
     index: 1
   })
   toast.success('已在第 2 个 Tab 开启小红点')
 }
 
-function hideRedDot() {
-  uni.hideTabBarRedDot({
+async function hideRedDot() {
+  await hideTabBarRedDot({
     index: 1
   })
   toast.success('已隐藏 Tab 小红点')
 }
 
-function scrollToBottom() {
-  uni.pageScrollTo({
+async function scrollToBottom() {
+  await pageScrollTo({
     scrollTop: 9999,
     duration: 300
   })
   toast.success('平滑滚动到页面底部')
 }
 
-function scrollToTop() {
-  uni.pageScrollTo({
+async function scrollToTop() {
+  await pageScrollTo({
     scrollTop: 0,
     duration: 300
   })

@@ -1,17 +1,13 @@
+import { navigateTo as uniNavigateTo, redirectTo as uniRedirectTo, safeNavigateBack } from '@/apis/uni'
+
 export function navigateTo(url: string) {
-  uni.navigateTo({ url })
+  return uniNavigateTo(url)
 }
 
 export function redirectTo(url: string) {
-  uni.redirectTo({ url })
+  return uniRedirectTo(url)
 }
 
 export function navigateBack() {
-  const pages = getCurrentPages()
-  if (pages.length > 1) {
-    uni.navigateBack()
-    return
-  }
-
-  uni.switchTab({ url: '/pages/home/index' })
+  return safeNavigateBack('/pages/home/index')
 }

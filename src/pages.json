@@ -1,4 +1,5 @@
 {
+  "workers": "static/workers",
   "easycom": {
     "autoscan": true,
     "custom": {
@@ -211,6 +212,72 @@
       "path": "pages/uni-api/routing",
       "style": {
         "navigationBarTitleText": "页面与路由 APIs"
+      }
+    },
+    {
+      "path": "pages/uni-api/file-system",
+      "style": {
+        "navigationBarTitleText": "文件系统 APIs"
+      }
+    },
+    {
+      "path": "pages/uni-api/bluetooth",
+      "style": {
+        "navigationBarTitleText": "蓝牙 APIs"
+      }
+    },
+    {
+      "path": "pages/uni-api/scan",
+      "style": {
+        "navigationBarTitleText": "扫码 APIs"
+      }
+    },
+    {
+      "path": "pages/uni-api/canvas",
+      "style": {
+        "navigationBarTitleText": "画布 APIs"
+      }
+    },
+    {
+      "path": "pages/uni-api/contact",
+      "style": {
+        "navigationBarTitleText": "联系人 APIs"
+      }
+    },
+    {
+      "path": "pages/uni-api/biometrics",
+      "style": {
+        "navigationBarTitleText": "生物认证 APIs"
+      }
+    },
+    {
+      "path": "pages/uni-api/media",
+      "style": {
+        "navigationBarTitleText": "媒体 APIs"
+      }
+    },
+    {
+      "path": "pages/uni-api/location",
+      "style": {
+        "navigationBarTitleText": "位置 APIs"
+      }
+    },
+    {
+      "path": "pages/uni-api/network",
+      "style": {
+        "navigationBarTitleText": "网络 APIs"
+      }
+    },
+    {
+      "path": "pages/uni-api/keyboard",
+      "style": {
+        "navigationBarTitleText": "键盘 APIs"
+      }
+    },
+    {
+      "path": "pages/uni-api/worker",
+      "style": {
+        "navigationBarTitleText": "Worker APIs"
       }
     },
     {
