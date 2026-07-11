@@ -1,0 +1,1 @@
+import{j as e,m as t}from"./PageShell.vue_vue_type_script_setup_true_lang.DevMn9Qs.js";const r=Symbol("wd-cell-group"),s={...e,title:String,value:String,useSlot:t(!1),border:t(!1),insert:t(!1)};export{r as C,s as c};
